@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="data:," />
-    <title>移民美国 · 在美国生活 | American Life</title>
+    <title>在美国生活 | American Life</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans:wght@400;600;700;900&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -526,6 +526,28 @@
       .mktcell .mbtn:disabled{opacity:.45;cursor:default;}
       .condtag{display:inline-block;font-size:11px;font-weight:900;border-radius:99px;padding:1px 8px;background:var(--blue-soft);color:var(--blue);margin-left:5px;vertical-align:1px;}
 
+      /* ---------- 新入口：选州 → 选城 → 广场 → 选活法 ---------- */
+      .entry-actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 16px;}
+      .entry-actions .btn{flex:1 1 150px;}
+      .stategrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 18px;}
+      @media (min-width:480px){ .stategrid{grid-template-columns:repeat(3,minmax(0,1fr));} }
+      .statebtn{font:inherit;text-align:start;cursor:pointer;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:14px;padding:11px 12px;min-height:74px;box-shadow:0 4px 14px rgba(33,48,74,.08);}
+      .statebtn:hover,.statebtn:active{border-color:var(--gold);}
+      .statebtn strong{display:block;font-size:15.5px;line-height:1.25;}
+      .statebtn span{display:block;font-size:12px;line-height:1.45;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+      .statebtn .openmark{display:inline-block;color:var(--green);background:var(--green-soft);border-radius:999px;padding:2px 8px;margin-top:7px;font-size:11px;font-weight:900;}
+      .citychoice{display:flex;gap:13px;align-items:flex-start;width:100%;font:inherit;text-align:start;cursor:pointer;color:var(--ink);background:var(--card);border:2.5px solid var(--line);border-radius:18px;padding:15px 16px;margin:0 0 12px;box-shadow:var(--shadow);}
+      .citychoice:hover,.citychoice:active{border-color:var(--gold);}
+      .citychoice .cic{font-size:38px;line-height:1;flex:0 0 auto;}
+      .citychoice h3{margin:0 0 4px;font-size:19px;font-weight:900;}
+      .citychoice p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.55;}
+      .citychoice .ctags{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;}
+      .landing-note{background:var(--blue-soft);color:var(--blue);border-radius:14px;padding:12px 14px;font-size:14px;font-weight:700;line-height:1.6;margin:0 0 14px;}
+      @media (prefers-color-scheme: dark){ .landing-note{color:#9dc0ff;} }
+      .construction-note{background:var(--gold-soft);border:2px dashed var(--gold);border-radius:14px;padding:13px 14px;font-size:14px;line-height:1.6;font-weight:700;margin:0 0 14px;}
+      .life-route .ric{font-size:40px;}
+      .life-route.soon{opacity:.72;border-style:dashed;}
+
       /* ---------- AL3D 真 3D 场景层（样板：入口广场 / 餐馆内景 / 我的家） ---------- */
       .al3d-wrap{position:relative;width:100%;aspect-ratio:520/300;line-height:0;background:#8fd2ff;}
       .al3d-world{position:absolute;inset:0;line-height:0;}
@@ -589,7 +611,7 @@
         retryBtn:"重打本关", failTitle:"这一关没过去", againRoute:"换条路重开", sameRoute:"重走这条路",
         winTitle:"过关啦！", scoreLabel:"本关得分",
         cash:"现金", health:"健康", happy:"快乐", status:"身份", yearN:"第 {n} 年", ageN:"{n} 岁",
-        statusStages:["初到美国","站稳脚跟","身份办理中","永久居民","美国公民"],
+        statusStages:["新住户","安顿下来","有自己的家","事业起步","本地通"],
         finalTitle:"你的人生结局",
         finalScore:"人生总分", shareBtn:"📋 复制我的美国人生", copied:"已复制！去粘贴分享给朋友吧",
         shareHead:"我在《移民美国 · 在美国生活》里过完了一生：",
@@ -749,7 +771,7 @@
         retryBtn:"Retry this level", failTitle:"That level didn't go your way", againRoute:"Start over on another road", sameRoute:"Walk this road again",
         winTitle:"Level cleared!", scoreLabel:"Level score",
         cash:"Cash", health:"Health", happy:"Happiness", status:"Status", yearN:"Year {n}", ageN:"Age {n}",
-        statusStages:["Just arrived","Getting settled","Status in progress","Permanent resident","U.S. Citizen"],
+        statusStages:["New neighbor","Settling in","A home of your own","Career taking off","Local insider"],
         finalTitle:"Your American Life — The Ending",
         finalScore:"Life score", shareBtn:"📋 Copy my American life", copied:"Copied! Paste it anywhere to share",
         shareHead:"I lived a whole life in \"American Life\":",
@@ -909,7 +931,7 @@
         retryBtn:"Reintentar nivel", failTitle:"Ese nivel no salió bien", againRoute:"Empezar por otro camino", sameRoute:"Repetir este camino",
         winTitle:"¡Nivel superado!", scoreLabel:"Puntos del nivel",
         cash:"Dinero", health:"Salud", happy:"Felicidad", status:"Estatus", yearN:"Año {n}", ageN:"{n} años",
-        statusStages:["Recién llegado","Instalándose","Estatus en trámite","Residente permanente","Ciudadano de EE. UU."],
+        statusStages:["Vecino nuevo","Instalándote","Un hogar propio","Carrera en marcha","Conocedor local"],
         finalTitle:"Tu vida americana: el final",
         finalScore:"Puntuación de vida", shareBtn:"📋 Copiar mi vida americana", copied:"¡Copiado! Pégalo donde quieras para compartir",
         shareHead:"Viví una vida entera en «Vida Americana»:",
@@ -1010,7 +1032,7 @@
         retryBtn:"यह लेवल फिर से", failTitle:"यह लेवल ठीक नहीं गया", againRoute:"दूसरे रास्ते से शुरुआत", sameRoute:"यही रास्ता फिर से",
         winTitle:"लेवल पूरा!", scoreLabel:"लेवल के अंक",
         cash:"पैसे", health:"सेहत", happy:"खुशी", status:"स्थिति", yearN:"साल {n}", ageN:"उम्र {n}",
-        statusStages:["अभी-अभी पहुँचे","बस रहे हैं","स्थिति प्रक्रिया में","स्थायी निवासी","अमेरिकी नागरिक"],
+        statusStages:["नए पड़ोसी","बस रहे हैं","अपना घर","करियर आगे बढ़ रहा है","स्थानीय जानकार"],
         finalTitle:"आपकी अमेरिकी ज़िंदगी — अंत",
         finalScore:"ज़िंदगी के अंक", shareBtn:"📋 मेरी अमेरिकी ज़िंदगी कॉपी करें", copied:"कॉपी हो गया! साझा करने के लिए कहीं भी चिपकाएँ",
         shareHead:"मैंने «अमेरिकी जीवन» में पूरी एक ज़िंदगी जी ली:",
@@ -1111,7 +1133,7 @@
         retryBtn:"Réessayer ce niveau", failTitle:"Ce niveau ne s'est pas bien passé", againRoute:"Repartir sur une autre route", sameRoute:"Refaire cette route",
         winTitle:"Niveau réussi !", scoreLabel:"Score du niveau",
         cash:"Argent", health:"Santé", happy:"Bonheur", status:"Statut", yearN:"Année {n}", ageN:"{n} ans",
-        statusStages:["À peine arrivé","En cours d'installation","Statut en cours","Résident permanent","Citoyen américain"],
+        statusStages:["Nouvel arrivant","Bien installé","Chez soi","Carrière lancée","Connaisseur du coin"],
         finalTitle:"Votre vie américaine — la fin",
         finalScore:"Score de vie", shareBtn:"📋 Copier ma vie américaine", copied:"Copié ! Collez-le où vous voulez pour le partager",
         shareHead:"J'ai vécu toute une vie dans « Vie Américaine » :",
@@ -4880,6 +4902,663 @@
     };
     for (const code in PATCH6){ if (LANGS[code]) deepMerge(LANGS[code], PATCH6[code]); }
 
+    /* ---------------- 改造轮 PATCH7（2026-10-26 新入口 + 去移民化骨架） ----------------
+       只换框架与文案：新入口（选州→选城→广场→活法）、中性生活阶段、
+       并把原 Study / Born+Family / Working / Business+Invest 关卡线改写为
+       上学 / 出生 / 工作 / 经商。关卡数值、结算、星级与存档结构不变。 */
+    const PATCH7 = {
+      zh: {
+        ui: {
+          title:"在美国生活", subtitle:"", gameName:"在美国生活",
+          tagline:"先选一座城，再选一种活法：上学、出生、工作、经商——在真实的美国城市里过日子。",
+          routeQ:"你想怎么在这座城生活？", routeSub:"四种活法，四条人生线。选一条开始；走完还可以回来换一种。",
+          status:"生活阶段", statusStages:["新住户","安顿下来","有自己的家","事业起步","本地通"],
+          loginTitle:"先领金币，再选城市", loginSub:"注册 / 登录即送 {n} 金币。金币只花在明码标价的可选消费上（比如家具）；主线靠现金收入走完——工资、家人支持、奖学金都是现金，金币不够也不会卡住人生。",
+          needLogin:"先在上方注册 / 登录领金币，才能开始选城哦。",
+          ticketFree:"无开局费用", ticketTag:"无开局费用", ticketPaid:"出发！",
+          shopSub:"金币用于明码标价的可选消费：家具、商店好物和喜欢的小东西。金币只能买进，不能兑现。",
+          settleSupport:"家人支持",
+          shareHead:"我在《在美国生活》里过完了一种人生：",
+          disclaimerShort:"纯属娱乐，不构成法律、税务或投资建议。",
+          aboutText:"《在美国生活》是一款轻松的人生模拟小游戏，由 VelaGrid Technologies 发行运营。先选州、再选城市，然后上学、在这座城出生长大、工作或经商。所有人物与故事均为虚构，只为娱乐。",
+          disclaimerText:"本游戏纯属娱乐，不构成法律、税务或投资建议。游戏中的学校、工作、住房、税务与经商流程均为简化演绎，不反映真实规则或个人结果。涉及现实事务，请咨询有资质的专业人士。",
+          degreeTitle:"选一个学习计划", degreeNote:"不同计划的学费、校内工作和奖学金不同；毕业后走职业线，不再有抽签规则。",
+          degreeBachelor:"本科计划", degreeBachelorDesc:"学费约 $27,000/年，校内打工贴补，家人支持与奖学金一起覆盖主要开支。",
+          degreeMaster:"硕士计划", degreeMasterDesc:"学费约 $34,000/年，助教收入更高，奖学金也更厚。",
+          degreePhd:"博士计划", degreePhdDesc:"多为全额资助：学费免除，每年约 $26,000 津贴。",
+          lotteryBtn:"开始挑战", lotteryRolling:"挑战进行中…", lotteryWin:"挑战成功！", lotteryLose:"这次没过，调整一下再来。",
+          how1:"先选一个州、再选一座城，你就站到那座城的入口广场上了。",
+          how2:"选一种活法——上学、出生、工作或经商——沿着关卡地图一关一关往前走：做选择、玩小游戏、过关解锁下一关。",
+          how3:"盯住你的现金、健康和快乐——哪一项都不能掉到零。",
+          how4:"最终目标：安顿下来、有自己的家、事业起步，成为这座城的本地通。",
+          lotteryPitySure:"", lotteryPityHint:"", lotteryDegreeSure:"",
+          entry:{
+            mapTitle:"先选一个州", mapSub:"50 个州都在这张大地图上。点一个州，再选首府或已有深度城市。",
+            capitalTag:"首府 · 骨架", deepTag:"可深度游玩", currentTag:"当前城市", districtTag:"特区",
+            farmTag:"农场试点", farmTitle:"Ohio 农场区", farmSub:"Columbus 附近的农场入口先立住：玉米地、农舍和乡村生活下一轮开放。",
+            chooseCity:"在 {state} 选城市", chooseCitySub:"首府先立骨架；标为可深度游玩的城市可以直接开始四种活法。",
+            chooseLife:"你想在 {city} 怎么生活？", chooseLifeSub:"你已经站在城市入口广场。选一条活法开始，也可以先看看城市名片。",
+            backStates:"← 换个州", backCities:"← 换个城市", viewCard:"城市名片",
+            plazaNote:"{city} 的入口广场：地标、街景和城市节奏都在这儿。选一条活法，正式住下来。",
+            construction:"建设中", constructionMsg:"{city} 先开放入口广场和城市名片；完整关卡线正在建设中。先去同州的可玩城市，或换个州看看。",
+            skeletonNote:"骨架城市：地标、文化一句话和入口广场先行，完整关卡稍后补上。",
+            farmSoon:"农场玩法建设中", farmSoonMsg:"农场入口先立住：种玉米、开拖拉机和农场主生活下一轮开放。这一轮先从 Columbus 开始上学、出生、工作或经商。",
+            soonBtn:"看看其他城市", startBtn:"就从这里开始"
+          }
+        },
+        routes: {
+          study:{ name:"上学", icon:"🎓", desc:"在这座城上学：选课程、报到、住宿舍或合租、做项目、找第一份工作，把学生生活过成自己的起点。", tags:["$5,000 起步","18 岁开始","校园与第一份工作"] },
+          born:{ name:"出生", icon:"👶", desc:"就在这座城出生长大：和家人住在一起，上学、交朋友、课后打工、考驾照，再走向大学、工作和自己的家。", tags:["12 岁开始","一家人同城生活","童年到成年"] },
+          work:{ name:"工作", icon:"💪", desc:"在这座城工作生活：找第一份工作、上岗、攒钱、考证、开车跑长途，再把经验变成带新人的底气。", tags:["$5,000 起步","24 岁开始","工作与技能"] },
+          family:{ name:"出生", icon:"👶", desc:"就在这座城出生长大：和家人住在一起，上学、交朋友、课后打工、考驾照，再走向大学、工作和自己的家。", tags:["12 岁开始","一家人同城生活","童年到成年"] },
+          invest:{ name:"经商", icon:"🏪", desc:"在这座城开店做生意：选址、开餐馆、过检查、攒口碑、开第二家店，成为街区里熟脸的老板。", tags:["$5,000 起步","35 岁开始","开店与扩张"] }
+        },
+        levels: {
+          s1:{name:"语言与分班关", sub:"摸底、选课、定节奏", goal:"选一个合预算、合节奏的学习计划，稳稳开局。"},
+          s2:{name:"申请关", sub:"学校、文书、录取信", goal:"比较不同项目，选最适合你的那一个。"},
+          s3:{name:"新生报到关", sub:"学生服务大厅", goal:"办完报到、领学生卡，找到校园里能帮你的资源。"},
+          s4:{name:"第一学期安家关", sub:"宿舍、室友、校内打工", goal:"在学校附近住下来，把第一学期过顺。"},
+          s5:{name:"读书年关", sub:"课程、项目、朋友", goal:"认真读书，也把作品和朋友都攒下来。"},
+          s6:{name:"第一份工作关", sub:"招聘会与面试", goal:"把学到的东西变成第一份正式 offer。"},
+          s7:{name:"职业里程碑关", sub:"大项目与晋升通道", goal:"在一个真实项目里证明自己，往上走一步。"},
+          s8:{name:"街区扎根关", sub:"工作、朋友与社区", goal:"把生活过到工作之外：参与、帮忙、被需要。"},
+          s9:{name:"校友新篇关", sub:"回校分享，带新同学", goal:"把经验讲给新同学听，再开启自己的下一章。"},
+          w1:{name:"城市第一周关", sub:"住处、工作板、预算表", goal:"找到第一份工作，把每周预算立起来。"},
+          w6:{name:"技能证书关", sub:"培训换来更好的班次", goal:"拿到证书，够格去更好的岗位和班次。"},
+          w8:{name:"本地熟手关", sub:"经验变成领导力", goal:"带一带新人，以本地熟手的身份收官。"},
+          i1:{name:"选址开店关", sub:"客流、租金、合不合拍", goal:"选一个付得起的店面，签下租约。"},
+          i5:{name:"第二家店关", sub:"扩张也不能丢品质", goal:"开第二家店，并带出一支靠得住的团队。"},
+          i7:{name:"街区人气店关", sub:"一家店织进一座城", goal:"和团队、熟客一起庆祝这家小店。"},
+          f1:{name:"一家人安家关", sub:"全家一起看房", goal:"帮家里选一处离学校和工作都不远的住处。"},
+          f2:{name:"新学期关", sub:"新同学与新日常", goal:"在学校站稳脚跟，交到第一个朋友。"},
+          f5:{name:"大学与第一份工作关", sub:"申请、offer、发薪日", goal:"选好下一步，和家人一起庆祝进步。"},
+          f6:{name:"全家庆祝关", sub:"回头看，再向前", goal:"纪念一家人一起走过的路。"}
+        },
+        ev: {
+          s2e2:{t:"文书题目是：「为什么选这座城、这个专业？」你对着空白页坐了一下午。",c:["写奶奶：她总说，读书能带你走得更远","套个模板，拼一篇「标准答案」"],r:["写着写着你有点想哭，改着改着又笑了——写得真。","是写完了——但换谁都能套上。"]},
+          s3e1:{t:"报到日，学生服务大厅排起长队：注册、学生卡、课程表，一样都不能少。前面同学的资料夹掉了一地。",c:["深呼吸，按清单一样样办，轮到你时稳稳当当","先帮前面同学捡资料，再一起往前挪"],r:["每一项都办得利落，学生卡到手，校园生活正式开始。","队伍里互相帮一把，报到慢了点，心里暖了点。"]},
+          s3e2:{t:"辅导员问你：这学期最想用上哪些校园资源——写作中心、职业中心，还是社团招新？",c:["写作中心 + 职业中心，先把学习和工作都铺好路","先专心上课，资源以后再说"],r:["你的学期计划一下子清楚了：学习有人帮，工作有方向。","课是稳了，只是几个招新报名你错过了。"]},
+          s4e1:{t:"开学第一天早上，你在宿舍（或合租屋）醒来，窗外就是这座城。室友探头问：要不要一起去逛逛校园和周边？",c:["去！先把周边摸熟，新生活开始","先 unpack 行李睡个好觉，明天再逛"],r:["校园、超市、公交站都摸清了，心里有底。","睡了个饱觉，第二天精神满满去上课。"]},
+          remit1:{t:"开学前一周，家里寄来的包裹到了：新袜子、茶叶、一张手写小纸条——「吃好睡好，钱的事不用你操心。」视频里妈妈又念叨了一遍。包裹不用买、不用还，是家人实实在在的支持。",c:["收下，给家里发几张校园照片报平安","先视频聊一会儿，说说这周过得怎么样"],r:["照片发过去，家里群立刻热闹起来。新学期，心里稳多了。","聊完心里暖暖的：吃好睡好，剩下的慢慢来。"]},
+          s5e3:{t:"感恩节，本地同学邀请你去家里吃饭，桌上有一只巨大的火鸡。",c:["去！带一盘妈妈教的饺子","婉拒——在宿舍吃泡面赶作业"],r:["饺子被一扫而空，你还被邀请圣诞再来。日子过着过着，就有了熟人。","面吃完了，作业也写完了——就是有一点点孤单。"]},
+          s7e1:{t:"经理把一个看得见成果的大项目交给你带：做成了，晋升通道就打开。团队都在看你怎么开局。",c:["接！先列计划、拉齐分工，第一周就出成果","先申请两周培训，补齐短板再接"],r:["项目启动得干净利落，经理在周会上点了你的名。","培训补上了关键一课，你接得更稳了。"]},
+          s8e1:{t:"社区中心请你帮忙办街区集市：摊位、音乐、孩子们的游戏，都缺人手。",c:["去帮忙！周末搭摊位、带活动","这阵子工作太忙，先顾工作"],r:["集市热热闹闹，你认识了半条街的邻居。","工作没落下，只是集市照片看着有点眼馋。"]},
+          s8e2:{t:"两年过去：升职、换了更好的公寓。看着窗外的城市灯火，你想起刚来读书时的自己。",c:["给家里打个长电话，只报喜事","请朋友吃顿好的，纪念一下"],r:["电话那头妈妈笑着说：我娃出息了。","这一顿，吃的是这些年的滋味。"]},
+          s8e3:{t:"学校和社区一起给你发了「年度导师」小奖牌：你带的新同学，都顺利找到了方向。",c:["把奖牌收好，先谢谢一路帮过你的人","请团队和朋友吃饭庆祝"],r:["奖牌挂在书桌旁——提醒你，扎根就是互相照亮。","这一桌人，就是你在这座城的家人。"]},
+          s9e1:{t:"校友分享会上，轮到你给新同学讲第一年的经验：选课、打工、别怕开口求助。",c:["自信开讲，把踩过的坑都讲清","有点紧张，先把提纲列满一页"],r:["讲完掌声一片，几个新同学追着加你联系方式。","提纲救了场，讲得稳稳当当。"]},
+          s9e2:{t:"你带的新同学第一次走进教室，你站在门口，想起自己当年的样子。下一章，要去哪儿？",c:["继续当导师，把这份热乎气传下去","定个新目标：下一站，已经在路上了"],r:["故事讲完了——而你知道，下一章会更精彩。","你合上笔记本，向新目标出发。"]},
+          w1e1:{t:"在这座城的第一周，你先租下一间小屋：离公交站近，房租在预算内。行李放下，工作板打开。",c:["就这间——先站稳，预算要紧","多花一点，住安静些；休息好才能干好活"],r:["屋子不大，但便宜是真的便宜，预算一下子松了。","房间亮堂，你睡了近来第一个好觉。"]},
+          w1e2:{t:"街角餐馆在招帮厨兼服务员：管一顿工作餐，班次稳定，小费另算。老板让你先试一个班。",c:["试！先有收入再说","再找找白班工作，作息更规律"],r:["一个班下来腰酸背痛——口袋里也有了第一笔自己挣的钱。","又找了两天，差点把预算找空；最后你还是回来试了班——先上岗。"]},
+          w6e1:{t:"培训中心有个对口证书班：学完能去更好的岗位、拿更稳的班次。学费不便宜，但能分期。",c:["报名！证书是给以后铺路","先攒一年钱，准备充分再读"],r:["你走出培训中心，手里多了课表，心里多了底气。","准备的那一年，你把资料和预算都理得清清楚楚。"]},
+          w6e2:{t:"爸爸住院康复，住处离你不远。你握着电话，心里盘算着怎么排班去陪他。",c:["买好菜送过去，天天陪他吃饭聊天","订好营养餐送上门，自己每天打电话"],r:["爸爸说：你工作忙，还天天来——好好干，别惦记我们。","餐送到了，电话也天天打，你把班排得满满当当去陪他。"]},
+          w8e1:{t:"老板请你带新人：把这些年摸出来的门道，教给刚上岗的年轻人。",c:["做一份简单清楚的上手指南","直接在岗位上边干边教"],r:["新人们上手飞快，老板说：这才叫熟手。","手把手教出来的徒弟，个个都靠谱。"]},
+          w8e2:{t:"在最熟的那家小餐馆，团队给你办了工作周年小聚：从第一周的小屋，到今天的熟手。",c:["举杯谢谢这一路的伙伴","给家里视频：看看，我在这座城站稳了"],r:["这一杯，敬这些年，也敬一起干活的人。","电话那头沉默了一会儿，爸爸说：好，好，给我们争气。"]},
+          i1e1:{t:"你带着积蓄在这座城看店面。中介摆出两个：一个在热闹街区，客流旺、租金高；一个在安静街道，便宜、没人气。",c:["热闹街区那间：贵，但客流就是钱","安静街道那间：省下的钱投装修和宣传"],r:["签约那天房东笑：上一个租户也是开餐馆的——祝你运气比他好。","店面落定，装修马拉松开始。"]},
+          i5e1:{t:"开第二家店之前，会计和店长把计划摊开：租金、人工、税费、备货——三大本，一项项过。",c:["自己逐项核对，把缺口都补上","信任团队，自己盯紧出品就行"],r:["计划落地的那天，你长长舒了口气。","会计说计划很完整——你的账，一直很干净。"]},
+          i5e2:{t:"忙着扩张的这些日子，你的店慢慢成了街区的客厅：节庆聚餐、学生夜宵、邻里小聚都在这儿。",c:["继续办！店是生意，也是街区的日子","专注经营，活动偶尔办"],r:["你的店上了本地「值得专程去的十家小餐馆」名单。","口碑在社区里悄悄传开。"]},
+          i7e1:{t:"本地报纸把你的店评为「街区最爱」：这些年，一家店、一支团队、十几个员工，还有两个出去自己开店的徒弟。",c:["感慨：功劳是整个团队的","淡定：日子还长，一步一步来"],r:["消息传开那晚，你请全店吃了一顿好的。","你把明天的围裙熨得平平整整。"]},
+          i7e2:{t:"颁奖的小仪式结束，你走出店门——午餐队伍已经排起来了，熟客冲你招手。",c:["回店里系上围裙——今天老板亲自下厨","下午休息，去好好看看这座城"],r:["熟客们不知道，今天的大厨格外开心。","这座城，你终于可以慢慢看了。大结局！"]},
+          f1e1:{t:"一家人一起看中了学校附近的一处住处，租金比预算高一点。爸妈让你也说说想法：通勤、房间、租约，都要算。",c:["拿出清单逐项谈：长租、按时付租，争取降一点","不插话，让爸妈自己定"],r:["你把账算得清楚，房东降了价，还夸你懂事。新家的钥匙到手了。","爸妈商量着签了约——全价。你有点心疼。"]},
+          f1e2:{t:"搬进新家的第一个周末，全家人挤在小厨房里煮面，分工收拾房间。妈妈说：地方不大，心在一起就好。窗外是这座城的灯火。",c:["暗暗定个目标：好好读书，以后让家里住得更宽敞","先睡个好觉——明天还要上学"],r:["那晚你睡得很轻，心里有个小目标亮着。","你睡了个好觉，醒来就是新学期的早晨。"]},
+          f2e1:{t:"新学期第一天，老师请你自我介绍。你站起来，心跳得飞快，全班都在看你。",c:["深呼吸，慢慢说——说错也没关系","小声说完名字，低头坐下"],r:["你讲完，几个同学鼓起掌。课间有人主动来打招呼。","安安静静，但第一步已经迈出去了。一天一天来。"]},
+          f2e2:{t:"同桌总把妈妈做的三明治分你一半，午餐时聊得热乎；他还邀你周末去家里打游戏。",c:["去！带上妈妈做的饺子当谢礼","婉拒——周末要帮家里干活"],r:["饺子大受欢迎。你在这座城交到了第一个朋友。","你帮了家里的忙——只是看着群里照片，有点羡慕。"]},
+          f6e1:{t:"这些年，一家人准备办一顿庆祝晚餐：从第一间小屋，到今天的安稳日子，每个人都有功劳。",c:["和爸妈一起备菜，把相册也整理出来","各自准备拿手菜，晚餐桌上见"],r:["晚餐那天，爸妈答得利落，笑得开怀。","一家人整整齐齐，都顺利完成了各自的目标。"]},
+          f6e2:{t:"晚餐后，全家人翻着相册：第一间小屋、第一天上学、第一份工作……妈妈握着你的手，有点发抖。",c:["握住妈妈的手：妈，我们在这座城过得很好","笑着举杯：这一家人，就是这座城最棒的一家人"],r:["饭后你带爸妈去吃了顿好的。这一次，换你请。","大结局——而你知道，这个家的故事才刚刚开始。"]}
+        },
+        endings: {
+          study:"上学线走完了：从第一堂课到第一份工作，再到回校当导师——读书把日子过宽了，你做到了。",
+          born:"出生线走完了：小屋、教室、方向盘、房产证——在这座出生的城里，你把一辈子过成了自己的故事。",
+          work:"工作线走完了：小屋、油烟、方向盘、房产证——你挣回来的每一分钱，都写着你的名字。",
+          family:"出生线走完了：小屋、教室、方向盘、房产证——在这座出生的城里，你把一辈子过成了自己的故事。",
+          invest:"经商线走完了：一家店、一家人、一座城——你把生意做成了生活，把生活过成了招牌。"
+        },
+        shareTpl:"🗽 路线：{route}｜⏱ 用时：{years} 年｜💰 现金：${cash}｜⭐ 人生评分：{grade}（{score} 分）\n{line}\n你也来试试：你会选哪座美国城市、哪种活法？",
+        cityCards: {
+          col:{ flower:"城市象征：俄亥俄州议会大厦", fact:"哥伦布是俄亥俄州首府，也是州内最大的城市，大学、医疗和物流都很集中。", poem:"河岸灯火起，一座城慢慢有了家的样子。" }
+        }
+      }
+    };
+    Object.assign(PATCH7, {
+      en: {
+        ui: {
+          title:"American Life", subtitle:"", gameName:"American Life",
+          tagline:"Pick a city, then pick a life: study, grow up, work, or run a business — everyday life in real American places.",
+          routeQ:"How do you want to live in this city?", routeSub:"Four ways to live, four life paths. Finish one, then come back and try another.",
+          status:"Life stage", statusStages:["New neighbor","Settling in","A home of your own","Career taking off","Local insider"],
+          loginTitle:"Claim your coins, then pick a city", loginSub:"Sign up / log in for {n} bonus coins. Coins are only for clearly priced extras like furniture; the main path runs on cash income — wages, family support, and scholarships — so running low on coins never blocks your life.",
+          needLogin:"Sign up / log in above to claim your coins before you pick a city.",
+          ticketFree:"No start fee", ticketTag:"No start fee", ticketPaid:"Off you go!",
+          shopSub:"Coins are for clearly priced extras: furniture, shop finds, and little things you love. Coins can only be bought in — never cashed out.",
+          settleSupport:"Family support",
+          shareHead:"I lived a life in American Life:",
+          disclaimerShort:"For entertainment only. Not legal, tax, or investment advice.",
+          aboutText:"American Life is a light life-simulation game published and operated by VelaGrid Technologies. Pick a state, then a city, then study, grow up there, work, or run a business. All characters and stories are fictional, made for entertainment.",
+          disclaimerText:"This game is for entertainment only and does not constitute legal, tax, or investment advice. School, work, housing, tax, and business processes in the game are simplified dramatizations and do not reflect real rules or individual outcomes. For real matters, consult a qualified professional.",
+          degreeTitle:"Pick a study plan", degreeNote:"Plans differ in tuition, campus work, and scholarships. After graduation you follow a career path — there is no draw or lottery rule.",
+          degreeBachelor:"Bachelor's plan", degreeBachelorDesc:"Tuition ≈ $27,000/yr, with campus work, family support, and scholarships covering the main costs.",
+          degreeMaster:"Master's plan", degreeMasterDesc:"Tuition ≈ $34,000/yr, with stronger assistant income and scholarships.",
+          degreePhd:"PhD plan", degreePhdDesc:"Usually fully funded: tuition waived, ≈ $26,000/yr stipend.",
+          lotteryBtn:"Start the challenge", lotteryRolling:"Challenge in progress…", lotteryWin:"Challenge cleared!", lotteryLose:"Not this time — adjust and retry.",
+          how1:"Pick a state, then a city — you land right on that city's entry plaza.",
+          how2:"Pick a way of life — study, born here, work, or business — and climb the map level by level: make choices, play mini-games, clear a level to unlock the next.",
+          how3:"Watch your cash, health and happiness — don't let any of them hit zero.",
+          how4:"Final goal: settle in, have a home of your own, get your career going, and become a local.",
+          lotteryPitySure:"", lotteryPityHint:"", lotteryDegreeSure:"",
+          entry:{
+            mapTitle:"First, pick a state", mapSub:"All 50 states are on the big map. Tap a state, then choose its capital or a deep-play city.",
+            capitalTag:"Capital · starter", deepTag:"Deep play", currentTag:"Current city", districtTag:"District",
+            farmTag:"Farm pilot", farmTitle:"Ohio Farm District", farmSub:"The farm entrance near Columbus is staked out first: cornfields, a farmhouse, and country life open next round.",
+            chooseCity:"Pick a city in {state}", chooseCitySub:"Capitals start as starter cities; cities marked Deep play can start all four lives right away.",
+            chooseLife:"How do you want to live in {city}?", chooseLifeSub:"You are standing in the city's entrance plaza. Pick a way to live — or open the city card first.",
+            backStates:"← Pick another state", backCities:"← Pick another city", viewCard:"City card",
+            plazaNote:"The entrance plaza of {city}: landmark, streets, and the city's rhythm are all here. Pick a life and settle in.",
+            construction:"Under construction", constructionMsg:"{city} opens its entrance plaza and city card first; the full level path is under construction. Try a playable city in the same state, or explore another state.",
+            skeletonNote:"Starter city: landmark, one line of local culture, and the entrance plaza come first; full levels arrive later.",
+            farmSoon:"Farm play is under construction", farmSoonMsg:"The farm gate is in place: corn, tractors, and farm-owner life open next round. This round, start from Columbus — study, born here, work, or business.",
+            soonBtn:"See other cities", startBtn:"Start here"
+          }
+        },
+        routes: {
+          study:{ name:"Study", icon:"🎓", desc:"Go to school in this city: pick classes, check in, live in a dorm or a shared flat, build projects, land a first job — turn student life into your own starting point.", tags:["Start with $5,000","Start at 18","Campus & first job"] },
+          born:{ name:"Born Here", icon:"👶", desc:"Be born and grow up in this city: live with family, go to school, make friends, work after class, get a license, then head to college, work, and a home of your own.", tags:["Start at 12","Family in one city","Childhood to adulthood"] },
+          work:{ name:"Work", icon:"💪", desc:"Work and live in this city: find a first job, get hired, save, earn certificates, drive long hauls, then turn experience into the confidence to train newcomers.", tags:["Start with $5,000","Start at 24","Work & skills"] },
+          family:{ name:"Born Here", icon:"👶", desc:"Be born and grow up in this city: live with family, go to school, make friends, work after class, get a license, then head to college, work, and a home of your own.", tags:["Start at 12","Family in one city","Childhood to adulthood"] },
+          invest:{ name:"Business", icon:"🏪", desc:"Open a business in this city: pick the spot, run the restaurant, pass inspections, build a name, open a second location, and become the owner everyone in the neighborhood knows.", tags:["Start with $5,000","Start at 35","Shops & growth"] }
+        },
+        levels: {
+          s1:{name:"Language & Placement", sub:"Skills check, courses, pace", goal:"Pick a study plan that fits your budget and your pace."},
+          s2:{name:"Applications", sub:"Schools, essays, decisions", goal:"Compare programs and pick the right fit."},
+          s3:{name:"New Student Check-In", sub:"Student services hall", goal:"Finish enrollment, get your student card, and find the campus resources that can help."},
+          s4:{name:"First-Term Housing", sub:"Dorm, roommates, campus job", goal:"Settle in near school and get the first term running smoothly."},
+          s5:{name:"The Study Year", sub:"Classes, projects, friends", goal:"Learn hard — and collect both a portfolio and friends."},
+          s6:{name:"First Job", sub:"Career fair and interviews", goal:"Turn what you learned into a first real offer."},
+          s7:{name:"Career Milestone", sub:"A big project and a path up", goal:"Prove yourself on a real project and move one step up."},
+          s8:{name:"Neighborhood Roots", sub:"Work, friends, community", goal:"Build a life beyond work: join in, help out, be needed."},
+          s9:{name:"Alumni Chapter", sub:"Speak, mentor, begin again", goal:"Share your experience with new students and open your next chapter."},
+          w1:{name:"First Week in the City", sub:"A room, a job board, a budget", goal:"Find a first job and set a weekly budget."},
+          w6:{name:"Skills Certificate", sub:"Training that pays off", goal:"Earn a certificate and qualify for better roles and shifts."},
+          w8:{name:"Local Pro", sub:"Experience becomes leadership", goal:"Mentor newcomers and finish as a local pro."},
+          i1:{name:"Pick a Location", sub:"Foot traffic, rent, and fit", goal:"Choose a space you can afford and sign the lease."},
+          i5:{name:"Second Location", sub:"Grow without losing quality", goal:"Open a second spot and train a team you trust."},
+          i7:{name:"Neighborhood Favorite", sub:"A business woven into a city", goal:"Celebrate the shop, the team, and the regulars."},
+          f1:{name:"A Home for the Family", sub:"House hunting together", goal:"Help the family choose a home that fits school, work, and budget."},
+          f2:{name:"First School Term", sub:"New classmates, new routines", goal:"Find your feet at school and make a first friend."},
+          f5:{name:"College & First Job", sub:"Applications, offers, payday", goal:"Choose your next step and celebrate the family's progress."},
+          f6:{name:"Family Celebration", sub:"Looking back, moving forward", goal:"Mark how far the family has come."}
+        },
+        ev: {
+          s2e2:{t:"Your essay prompt: “Why this city, and why this program?” You stare at the blank page all afternoon.",c:["Write about Grandma: she always said studying takes you further","Grab a template and stitch together a “standard answer”"],r:["You cry a little writing it, then smile through the edits. It rings true.","It's finished — but it could be anyone's story."]},
+          s3e1:{t:"Check-in day. The student services hall has a long line: enrollment, student card, class schedule — nothing can be skipped. The student ahead drops a whole folder of papers.",c:["Deep breath; work the checklist item by item, steady when your turn comes","Help the student ahead pick up the papers, then move forward together"],r:["Everything is done cleanly. Student card in hand — campus life officially begins.","The line helps each other along. Check-in takes a bit longer, and feels a bit warmer."]},
+          s3e2:{t:"Your advisor asks which campus resources you want most this term — the writing center, the career center, or club sign-ups?",c:["Writing center + career center: set up both study and work","Focus on classes first; resources can wait"],r:["Your term plan snaps into focus: help for study, direction for work.","Classes are steady — you just miss a few club sign-ups."]},
+          s4e1:{t:"First morning of term. You wake in your dorm (or shared flat) with the city outside the window. Your roommate peeks in: want a tour of campus and the neighborhood?",c:["Go! Learn the area first — the new life begins","Unpack and sleep well; explore tomorrow"],r:["Campus, grocery store, bus stop — all mapped. You feel grounded.","A full night's sleep, then class with a clear head."]},
+          remit1:{t:"A week before term, a package from home arrives: new socks, tea, and a handwritten note — “Eat well, sleep well, and leave the money worries to us.” On video, Mom says it all again. The package costs nothing and is owed to no one: it is simply family support, in kind.",c:["Accept it, and send campus photos home to say you're fine","Video-call first and talk through the week"],r:["The photos go out and the family chat lights up. The new term feels a lot more solid.","You hang up warm inside: eat well, sleep well, one step at a time."]},
+          s5e3:{t:"Thanksgiving. A local classmate invites you to her family's dinner. There's an enormous turkey.",c:["Go — and bring a plate of homemade dumplings","Decline politely; instant noodles and homework in the dorm"],r:["The dumplings vanish in minutes. You're invited back for Christmas. Life here is growing familiar faces.","Noodles done, homework done — just a little lonely."]},
+          s7e1:{t:"Your manager hands you a visible, make-or-break project to lead: deliver it, and the promotion path opens. The whole team is watching how you start.",c:["Take it! Plan first, align the team, ship something in week one","Ask for two weeks of training first, then take it on fully prepared"],r:["The project launches cleanly, and your manager names you in the weekly meeting.","The training fills the key gap. You take it on, steadier."]},
+          s8e1:{t:"The community center asks you to help run the neighborhood fair: stalls, music, kids' games — all short-handed.",c:["Help out! Set up stalls and run activities on the weekend","Work is slammed right now — focus on work"],r:["The fair is lively, and you meet half the street.","Work stays on track — though the fair photos make you a little wistful."]},
+          s8e2:{t:"Two years on: a promotion, a better apartment. Looking at the city lights, you remember your first student days.",c:["Call home for a long chat — good news only","Take friends out for a proper dinner to mark the moment"],r:["Mom laughs through happy tears on the phone: “My kid made it.”","This dinner tastes like every hard year behind you."]},
+          s8e3:{t:"The school and the neighborhood name you Mentor of the Year: the new students you guided all found their direction.",c:["Put the medal away carefully — and thank everyone who helped you","Treat the team and friends to dinner"],r:["The medal hangs by your desk — a reminder that roots are people lighting each other's way.","The people at this table are your family in this city."]},
+          s9e1:{t:"At the alumni panel, it's your turn to tell new students about year one: picking classes, part-time work, and not being afraid to ask for help.",c:["Speak with confidence, and name every pitfall honestly","Nerves — fill a whole page of outline first"],r:["Applause, and a few new students chase you down for your contact info.","The outline saves the day. You land it, steady."]},
+          s9e2:{t:"The student you mentor walks into a classroom for the first time, and you stand at the door remembering yourself. Where does the next chapter go?",c:["Keep mentoring — pass the warmth along","Set a new goal: the next stop is already on the road"],r:["The story is complete — and you know the next chapter is even better.","You close the notebook and head for the new goal."]},
+          w1e1:{t:"Your first week in this city: you rent a small room near a bus stop, inside budget. Bags down, job board open.",c:["Take it — get steady first; budget matters","Spend a bit more for a quieter room; rest is work fuel"],r:["The room is small, but cheap is cheap — the budget breathes.","A bright room. Your first good sleep in a while."]},
+          w1e2:{t:"The corner restaurant is hiring a kitchen hand who also serves: one staff meal, steady shifts, tips on top. The owner offers a trial shift.",c:["Try it! Income first","Keep looking for day shifts with a steadier rhythm"],r:["Day one ends with a sore back — and your first earnings in your pocket.","Two more days of searching nearly empties your pockets. You take the trial shift anyway — get on board first."]},
+          w6e1:{t:"The training center offers a certificate course for your trade: finish it and better roles and steadier shifts open up. It isn't cheap, but it takes installments.",c:["Enroll! A certificate paves the road ahead","Save for a year and enroll fully prepared"],r:["You walk out with a class schedule — and a steadier heart.","During the prep year, you organize every document and dollar perfectly."]},
+          w6e2:{t:"Your father is recovering after a hospital stay, not far across town. Phone in hand, you work out how to shift your schedule to be with him.",c:["Bring groceries over and eat with him every day","Arrange meal delivery, and call every day"],r:["Your father says: “You're busy — don't worry about us. Do good work.”","The meals land, the calls happen daily, and you stack your shifts to be there."]},
+          w8e1:{t:"Your boss asks you to train the new hires: pass on everything these years taught you.",c:["Write a simple, clear starter guide","Teach right on the floor, hands on"],r:["The newcomers ramp up fast. Your boss says: that's a pro.","Every apprentice you train turns out solid."]},
+          w8e2:{t:"At your favorite diner, the team throws you a small work-anniversary party: from that first-week room to today's local pro.",c:["Raise a glass to everyone who walked with you","Video-call home: “Look — I've made it in this city”"],r:["This glass is for the years, and for the people.","A long silence on the phone. Then your father says: “Good. Good. You did us proud.”"]},
+          i1e1:{t:"You scout storefronts in this city with your savings. The agent shows two: a busy neighborhood space — pricey, with real foot traffic — and a cheap one on a quiet street with none.",c:["The busy space: pricier, but foot traffic is money","The quiet-street space: savings go to renovation and marketing"],r:["Signing day, the landlord grins: “The last tenant here was a restaurant too — may your luck be better.”","Space secured. Now the renovation marathon begins."]},
+          i5e1:{t:"Before a second location, your accountant and manager spread the plan out: rent, staffing, taxes, stock — three thick binders, item by item.",c:["Review every item yourself and fill every gap","Trust the team and focus on the food"],r:["The day the plan lands, you exhale for the first time in weeks.","The accountant says the plan is complete — your books were always clean."]},
+          i5e2:{t:"While you grow, your restaurant becomes the neighborhood's living room: holiday dinners, late-night student meals, small gatherings.",c:["Keep hosting! A restaurant is business — and a neighborhood's living room","Focus on operations; host only now and then"],r:["Your place lands on the local “ten small restaurants worth the trip” list.","Word of mouth spreads quietly through the community."]},
+          i7e1:{t:"The local paper names your shop a Neighborhood Favorite: over the years — one business, one team, a dozen employees, and two apprentices who now run their own places.",c:["Emotional: “The credit belongs to the whole team”","Calm: life is long; one step at a time"],r:["The night the news lands, you treat the whole shop to a proper dinner.","You iron tomorrow's apron to a perfect crease."]},
+          i7e2:{t:"The little awards ceremony ends. You step outside — your restaurant is two blocks away, and the lunch line is already forming, regulars waving.",c:["Back to the restaurant, apron on — today, the boss cooks","Take the afternoon off and go see this city"],r:["The guests don't know it, but today's chef is extra happy.","Now you can take your time with this city. The finale!"]},
+          f1e1:{t:"The family tours a home near school together. The rent is a little over budget, and your parents ask what you think: commute, rooms, and the lease all count.",c:["Speak up with a checklist: long lease, always on time — a fair case for a lower price","Stay quiet and let your parents decide"],r:["Your math is clear, the landlord lowers the price and calls you a good kid. The keys to the new home are in hand.","Your parents talk it through and sign — at full price. It stings a little."]},
+          f1e2:{t:"First weekend in the new home: the whole family cooks noodles squeezed into the small kitchen and unpacks together. Mom says: “Small place is fine, as long as our hearts are together.” Outside: this city's lights.",c:["Set a quiet goal: study hard, and one day give the family more room","Sleep well first — school starts tomorrow"],r:["You sleep lightly that night, a small goal lit in your chest.","A full night's sleep, and you wake to the first school morning."]},
+          f2e1:{t:"First day of the new term. The teacher asks you to introduce yourself. You stand up, heart pounding, and the whole class is watching.",c:["Deep breath, speak slowly — mistakes are okay","Whisper your name, head down, and sit"],r:["You finish, and a few classmates applaud. At break, someone comes over to say hi.","Quiet, but step one is done. One day at a time."]},
+          f2e2:{t:"Your deskmate always shares half of his mom's sandwich with you at lunch and chats away — and invites you over this weekend to play video games.",c:["Go! And bring Mom's homemade dumplings as a thank-you","Decline politely — weekends are for helping at home"],r:["The dumplings are a hit. You've made your first friend in this city.","You help the family — but the photos in the group chat make you a little wistful."]},
+          f6e1:{t:"After all these years, the family plans a celebration dinner: from the first small home to today's steady life, everyone played a part.",c:["Cook with your parents and put the photo album together","Everyone brings a signature dish — see you at the table"],r:["At dinner, your parents answer crisply and laugh out loud.","The whole family, together, each finishing their own goals."]},
+          f6e2:{t:"After dinner, the family flips through the album: the first small home, the first school day, the first job… Mom's hand, holding yours, trembles a little.",c:["Hold Mom's hand: “Mom, we're doing well in this city”","Raise a glass with a grin: this family is this city's best family"],r:["After dinner, you take your parents out for a proper meal. This time, it's on you.","The grand finale — and you know this family's story is only beginning."]}
+        },
+        endings: {
+          study:"The Study Road, complete: from a first lecture to a first job, then back as a mentor — learning widened your life, just like they promised.",
+          born:"The Born Here Road, complete: a small home, classrooms, a steering wheel, a deed — in the city where you were born, you turned a life into your own story.",
+          work:"The Working Road, complete: a small room, kitchen grease, a steering wheel, a deed — every dollar you earned has your name on it.",
+          family:"The Born Here Road, complete: a small home, classrooms, a steering wheel, a deed — in the city where you were born, you turned a life into your own story.",
+          invest:"The Business Road, complete: one restaurant, one family, one city — you turned a business into a life, and a life into a sign people line up for."
+        },
+        shareTpl:"🗽 Route: {route} | ⏱ Time: {years} years | 💰 Cash: ${cash} | ⭐ Life grade: {grade} ({score} pts)\n{line}\nYour turn — which American city, and which life, would you choose?",
+        cityCards: {
+          col:{ flower:"City symbol: the Ohio Statehouse", fact:"Columbus is Ohio's capital and largest city, anchored by universities, health care, and logistics.", poem:"Lights rise along the river, and a city starts to feel like home." }
+        }
+      }
+    });
+    Object.assign(PATCH7, {
+      es: {
+        ui: {
+          title:"Vida Americana", subtitle:"", gameName:"Vida Americana",
+          tagline:"Elige una ciudad y luego una vida: estudiar, crecer allí, trabajar o emprender — la vida diaria en lugares reales de Estados Unidos.",
+          routeQ:"¿Cómo quieres vivir en esta ciudad?", routeSub:"Cuatro formas de vivir, cuatro caminos. Termina uno y vuelve a probar otro.",
+          status:"Etapa de vida", statusStages:["Vecino nuevo","Instalándote","Un hogar propio","Carrera en marcha","Conocedor local"],
+          loginTitle:"Reclama tus monedas y elige ciudad", loginSub:"Regístrate / inicia sesión y recibe {n} monedas. Las monedas son solo para extras con precio claro, como muebles; el camino principal avanza con ingresos en efectivo — sueldos, apoyo familiar y becas — así que quedarte sin monedas nunca bloquea tu vida.",
+          needLogin:"Regístrate / inicia sesión arriba para reclamar tus monedas antes de elegir ciudad.",
+          ticketFree:"Sin costo inicial", ticketTag:"Sin costo inicial", ticketPaid:"¡A empezar!",
+          shopSub:"Las monedas son para extras con precio claro: muebles, hallazgos de la tienda y pequeños gustos. Las monedas solo se compran; no se cambian por dinero.",
+          settleSupport:"Apoyo familiar",
+          shareHead:"Viví una vida en Vida Americana:",
+          disclaimerShort:"Solo entretenimiento. No es asesoría legal, fiscal ni de inversión.",
+          aboutText:"Vida Americana es un juego ligero de simulación de vida, editado y operado por VelaGrid Technologies. Elige un estado y una ciudad, y luego estudia, crece allí, trabaja o emprende. Todos los personajes e historias son ficticios, creados para entretener.",
+          disclaimerText:"Este juego es solo para entretenimiento y no constituye asesoría legal, fiscal ni de inversión. Los procesos de escuela, trabajo, vivienda, impuestos y negocios del juego son dramatizaciones simplificadas y no reflejan reglas reales ni resultados individuales. Para asuntos reales, consulta a un profesional cualificado.",
+          degreeTitle:"Elige un plan de estudios", degreeNote:"Los planes difieren en matrícula, trabajo en el campus y becas. Tras graduarte sigues una carrera: no hay sorteo ni regla de lotería.",
+          degreeBachelor:"Plan de grado", degreeBachelorDesc:"Matrícula ≈ $27,000/año, con trabajo en el campus, apoyo familiar y becas para los gastos principales.",
+          degreeMaster:"Plan de máster", degreeMasterDesc:"Matrícula ≈ $34,000/año, con mejores ingresos de ayudante y becas.",
+          degreePhd:"Plan de doctorado", degreePhdDesc:"Normalmente con financiación completa: matrícula exenta y ≈ $26,000/año de beca.",
+          lotteryBtn:"Empezar el reto", lotteryRolling:"Reto en curso…", lotteryWin:"¡Reto superado!", lotteryLose:"Esta vez no: ajusta y reintenta.",
+          how1:"Elige primero un estado y luego una ciudad: aterrizas directamente en su plaza de entrada.",
+          how2:"Elige una forma de vida — estudiar, nacer aquí, trabajar o emprender — y avanza nivel a nivel por el mapa: toma decisiones, juega minijuegos y supera un nivel para desbloquear el siguiente.",
+          how3:"Cuida tu dinero, tu salud y tu felicidad: no dejes que ninguno llegue a cero.",
+          how4:"Meta final: instalarte, tener tu propia casa, hacer despegar tu carrera y convertirte en un conocedor local.",
+          lotteryPitySure:"", lotteryPityHint:"", lotteryDegreeSure:"",
+          entry:{
+            mapTitle:"Primero, elige un estado", mapSub:"Los 50 estados están en el mapa grande. Toca un estado y elige su capital o una ciudad de juego profundo.",
+            capitalTag:"Capital · inicio", deepTag:"Juego profundo", currentTag:"Ciudad actual", districtTag:"Distrito",
+            farmTag:"Piloto agrícola", farmTitle:"Zona agrícola de Ohio", farmSub:"La entrada agrícola cerca de Columbus queda marcada primero: maizales, una granja y vida rural llegan en la próxima ronda.",
+            chooseCity:"Elige una ciudad en {state}", chooseCitySub:"Las capitales empiezan como ciudades de inicio; las marcadas «Juego profundo» pueden empezar las cuatro vidas enseguida.",
+            chooseLife:"¿Cómo quieres vivir en {city}?", chooseLifeSub:"Estás en la plaza de entrada de la ciudad. Elige una forma de vivir, o abre primero la tarjeta de la ciudad.",
+            backStates:"← Elegir otro estado", backCities:"← Elegir otra ciudad", viewCard:"Tarjeta de la ciudad",
+            plazaNote:"La plaza de entrada de {city}: el monumento, las calles y el ritmo de la ciudad están aquí. Elige una vida y quédate.",
+            construction:"En construcción", constructionMsg:"{city} abre primero su plaza de entrada y su tarjeta; el camino completo de niveles está en construcción. Prueba una ciudad jugable del mismo estado o explora otro estado.",
+            skeletonNote:"Ciudad de inicio: primero el monumento, una frase de cultura local y la plaza de entrada; los niveles completos llegan después.",
+            farmSoon:"El juego agrícola está en construcción", farmSoonMsg:"La puerta de la granja está puesta: maíz, tractores y vida de granjero llegan en la próxima ronda. En esta, empieza desde Columbus: estudiar, nacer aquí, trabajar o emprender.",
+            soonBtn:"Ver otras ciudades", startBtn:"Empezar aquí"
+          }
+        },
+        routes: {
+          study:{ name:"Estudiar", icon:"🎓", desc:"Estudia en esta ciudad: elige clases, regístrate, vive en residencia o piso compartido, haz proyectos y consigue un primer empleo.", tags:["Empieza con $5,000","Empieza a los 18","Campus y primer empleo"] },
+          born:{ name:"Nacer aquí", icon:"👶", desc:"Nace y crece en esta ciudad: vive con tu familia, ve a la escuela, haz amigos, trabaja tras clase, saca el carné y llega a la universidad, el trabajo y tu propia casa.", tags:["Empieza a los 12","Familia en una ciudad","De la infancia a la adultez"] },
+          work:{ name:"Trabajar", icon:"💪", desc:"Trabaja y vive en esta ciudad: busca un primer empleo, ahorra, saca certificados, conduce largas rutas y convierte la experiencia en confianza para formar a otros.", tags:["Empieza con $5,000","Empieza a los 24","Trabajo y habilidades"] },
+          family:{ name:"Nacer aquí", icon:"👶", desc:"Nace y crece en esta ciudad: vive con tu familia, ve a la escuela, haz amigos, trabaja tras clase, saca el carné y llega a la universidad, el trabajo y tu propia casa.", tags:["Empieza a los 12","Familia en una ciudad","De la infancia a la adultez"] },
+          invest:{ name:"Emprender", icon:"🏪", desc:"Abre un negocio en esta ciudad: elige el local, lleva el restaurante, supera inspecciones, hazte un nombre, abre un segundo local y sé el dueño que todo el barrio conoce.", tags:["Empieza con $5,000","Empieza a los 35","Tiendas y crecimiento"] }
+        },
+        levels: {
+          s1:{name:"Idioma y nivelación", sub:"Prueba, cursos y ritmo", goal:"Elige un plan de estudios que encaje con tu presupuesto y tu ritmo."},
+          s2:{name:"Solicitudes", sub:"Escuelas, ensayos, decisiones", goal:"Compara programas y elige el adecuado."},
+          s3:{name:"Registro de nuevo estudiante", sub:"Salón de servicios estudiantiles", goal:"Termina la inscripción, recibe tu tarjeta de estudiante y encuentra los recursos del campus."},
+          s4:{name:"Vivienda del primer trimestre", sub:"Residencia, compañeros, trabajo en el campus", goal:"Instálate cerca de la escuela y arranca bien el trimestre."},
+          s5:{name:"El año de estudios", sub:"Clases, proyectos, amigos", goal:"Aprende en serio, y reúne portafolio y amigos."},
+          s6:{name:"Primer empleo", sub:"Feria laboral y entrevistas", goal:"Convierte lo aprendido en una primera oferta real."},
+          s7:{name:"Hito profesional", sub:"Un gran proyecto y un camino de ascenso", goal:"Demuestra tu valor en un proyecto real y sube un paso."},
+          s8:{name:"Raíces en el barrio", sub:"Trabajo, amigos, comunidad", goal:"Construye una vida más allá del trabajo: participa, ayuda, sé necesario."},
+          s9:{name:"Capítulo de exalumno", sub:"Hablar, mentorizar, empezar de nuevo", goal:"Comparte tu experiencia con nuevos estudiantes y abre tu próximo capítulo."},
+          w1:{name:"Primera semana en la ciudad", sub:"Una habitación, ofertas y un presupuesto", goal:"Encuentra un primer empleo y fija un presupuesto semanal."},
+          w6:{name:"Certificado de habilidades", sub:"Formación que rinde", goal:"Saca un certificado y opta a mejores puestos y turnos."},
+          w8:{name:"Profesional local", sub:"La experiencia se vuelve liderazgo", goal:"Mentoriza a los nuevos y termina como profesional local."},
+          i1:{name:"Elegir el local", sub:"Clientela, alquiler y encaje", goal:"Elige un local que puedas pagar y firma el alquiler."},
+          i5:{name:"Segundo local", sub:"Crecer sin perder calidad", goal:"Abre un segundo local y forma un equipo de confianza."},
+          i7:{name:"Favorito del barrio", sub:"Un negocio tejido en la ciudad", goal:"Celebra la tienda, el equipo y los clientes de siempre."},
+          f1:{name:"Un hogar para la familia", sub:"Buscar casa juntos", goal:"Ayuda a la familia a elegir un hogar que encaje con escuela, trabajo y presupuesto."},
+          f2:{name:"Primer trimestre escolar", sub:"Nuevos compañeros y rutinas", goal:"Adáptate a la escuela y haz un primer amigo."},
+          f5:{name:"Universidad y primer empleo", sub:"Solicitudes, ofertas, día de paga", goal:"Elige tu siguiente paso y celebra el progreso de la familia."},
+          f6:{name:"Celebración familiar", sub:"Mirar atrás, seguir adelante", goal:"Celebra lo lejos que ha llegado la familia."}
+        },
+        ev: {
+          s2e2:{t:"El tema de tu ensayo: «¿Por qué esta ciudad y este programa?». Miras la página en blanco toda la tarde.",c:["Escribir sobre la abuela: siempre dijo que estudiar te lleva más lejos","Tomar una plantilla y armar una «respuesta estándar»"],r:["Lloras un poco al escribirlo y sonríes al corregirlo. Suena verdadero.","Está terminado, pero podría ser la historia de cualquiera."]},
+          s3e1:{t:"Día de registro. La fila del salón de servicios estudiantiles es larga: inscripción, tarjeta de estudiante, horarios. Al estudiante de adelante se le cae una carpeta entera.",c:["Respirar hondo y hacer la lista punto por punto, con calma cuando te toque","Ayudar al de adelante a recoger los papeles y avanzar juntos"],r:["Todo queda hecho sin tropiezos. Tarjeta en mano: la vida en el campus empieza oficialmente.","La fila se ayuda entre sí. El registro tarda un poco más y se siente más cálido."]},
+          s3e2:{t:"Tu asesor pregunta qué recursos del campus quieres más este trimestre: ¿el centro de escritura, el centro de carreras o los clubes?",c:["Centro de escritura + centro de carreras: preparar estudio y trabajo","Centrarse primero en las clases; los recursos pueden esperar"],r:["Tu plan del trimestre se aclara: ayuda para estudiar y rumbo para trabajar.","Las clases van firmes; solo te pierdes algunas inscripciones de clubes."]},
+          s4e1:{t:"Primera mañana del trimestre. Despiertas en tu residencia (o piso compartido) con la ciudad tras la ventana. Tu compañero asoma: ¿quieres conocer el campus y el barrio?",c:["¡Ir! Conocer la zona primero: la nueva vida empieza","Desempacar y dormir bien; explorar mañana"],r:["Campus, supermercado y parada de autobús: todo ubicado. Te sientes con base.","Una noche completa de sueño, y a clase con la cabeza clara."]},
+          remit1:{t:"Una semana antes del trimestre llega un paquete de casa: calcetines nuevos, té y una nota escrita a mano: «Come bien, duerme bien y déjanos a nosotros las preocupaciones de dinero». Por video, mamá lo repite todo. El paquete no cuesta nada ni se debe a nadie: es simplemente apoyo familiar, en especie.",c:["Aceptarlo y mandar fotos del campus para contar que estás bien","Videollamar primero y contar la semana"],r:["Las fotos salen y el chat familiar se enciende. El trimestre se siente mucho más firme.","Cuelgas con calor por dentro: comer bien, dormir bien, paso a paso."]},
+          s5e3:{t:"Acción de Gracias. Una compañera local te invita a cenar con su familia. Hay un pavo enorme.",c:["¡Ir! Y llevar un plato de dumplings caseros","Rechazar con cortesía: fideos instantáneos y tarea en la residencia"],r:["Los dumplings desaparecen en minutos. Te invitan otra vez en Navidad. La vida aquí va sumando caras conocidas.","Fideos listos, tarea lista; solo un poco de soledad."]},
+          s7e1:{t:"Tu jefe te entrega un proyecto visible y decisivo para liderarlo: si sale bien, se abre el camino de ascenso. Todo el equipo mira cómo empiezas.",c:["¡Aceptarlo! Plan primero, equipo alineado y algo entregado en la primera semana","Pedir dos semanas de formación antes de aceptarlo, bien preparado"],r:["El proyecto arranca limpio y tu jefe te nombra en la reunión semanal.","La formación cubre el hueco clave. Lo aceptas con más firmeza."]},
+          s8e1:{t:"El centro comunitario te pide ayuda con la feria del barrio: puestos, música y juegos para niños; falta gente en todo.",c:["¡Ayudar! Montar puestos y llevar actividades el fin de semana","El trabajo está a tope ahora: centrarse en trabajar"],r:["La feria está animadísima y conoces a media calle.","El trabajo sigue en marcha, aunque las fotos de la feria dan algo de envidia."]},
+          s8e2:{t:"Dos años después: un ascenso y un piso mejor. Mirando las luces de la ciudad, recuerdas tus primeros días de estudiante.",c:["Llamar a casa un buen rato, solo buenas noticias","Invitar a los amigos a una buena cena para marcar el momento"],r:["Mamá se ríe con lágrimas de alegría al teléfono: «Mi hijo lo logró».","Esta cena sabe a todos los años duros que quedaron atrás."]},
+          s8e3:{t:"La escuela y el barrio te nombran Mentor del Año: los nuevos estudiantes que guiaste encontraron su rumbo.",c:["Guardar la medalla con cuidado y agradecer a quienes te ayudaron","Invitar al equipo y a los amigos a cenar"],r:["La medalla cuelga junto a tu escritorio: un recordatorio de que echar raíces es iluminarse el camino unos a otros.","La gente de esta mesa es tu familia en esta ciudad."]},
+          s9e1:{t:"En el panel de exalumnos te toca contar el primer año a los nuevos: elegir clases, trabajar a tiempo parcial y no tener miedo de pedir ayuda.",c:["Hablar con confianza y nombrar cada tropiezo con honestidad","Nervios: llenar primero una página entera de esquema"],r:["Aplausos, y algunos estudiantes nuevos te buscan para pedirte contacto.","El esquema salva el día. Lo aterrizas con firmeza."]},
+          s9e2:{t:"El estudiante al que mentorizas entra a un aula por primera vez, y tú, en la puerta, te recuerdas a ti mismo. ¿Hacia dónde va el próximo capítulo?",c:["Seguir mentorizando: pasar el calor adelante","Fijar una nueva meta: la próxima parada ya está en el camino"],r:["La historia está completa, y sabes que el próximo capítulo será aún mejor.","Cierras el cuaderno y vas por la nueva meta."]},
+          w1e1:{t:"Tu primera semana en esta ciudad: alquilas una habitación pequeña cerca de una parada de autobús, dentro del presupuesto. Bolsas abajo, ofertas abiertas.",c:["Quedártela: primero firmeza; el presupuesto importa","Gastar un poco más por una habitación tranquila: descansar es combustible"],r:["La habitación es pequeña, pero barata de verdad: el presupuesto respira.","Una habitación luminosa. Tu primer buen sueño en mucho tiempo."]},
+          w1e2:{t:"El restaurante de la esquina busca un ayudante de cocina que también sirva: una comida de personal, turnos estables y propinas aparte. El dueño ofrece un turno de prueba.",c:["¡Probarlo! Primero, ingresos","Seguir buscando turnos de día con un ritmo más estable"],r:["El primer día termina con la espalda cansada… y tus primeros ingresos en el bolsillo.","Dos días más de búsqueda casi vacían tus bolsillos. Aceptas el turno de prueba igualmente: primero, a bordo."]},
+          w6e1:{t:"El centro de formación ofrece un curso de certificado de tu oficio: al terminarlo se abren mejores puestos y turnos más estables. No es barato, pero admite pagos a plazos.",c:["¡Inscribirte! Un certificado abre el camino","Ahorrar un año e inscribirte bien preparado"],r:["Sales con un horario de clases y el corazón más firme.","Durante el año de preparación, organizas cada papel y cada dólar a la perfección."]},
+          w6e2:{t:"Tu padre se recupera tras una estancia en el hospital, no muy lejos, al otro lado de la ciudad. Teléfono en mano, calculas cómo mover tus turnos para estar con él.",c:["Llevarle la compra y comer con él cada día","Organizar comida a domicilio y llamar cada día"],r:["Tu padre dice: «Estás ocupado; no te preocupes por nosotros. Haz buen trabajo».","La comida llega, las llamadas son diarias y amontonas tus turnos para estar allí."]},
+          w8e1:{t:"Tu jefe te pide formar a los recién llegados: pasarles todo lo que estos años te enseñaron.",c:["Escribir una guía de inicio simple y clara","Enseñar en el puesto mismo, con las manos"],r:["Los nuevos arrancan rápido. Tu jefe dice: eso es un profesional.","Cada aprendiz que formas sale sólido."]},
+          w8e2:{t:"En tu restaurante favorito, el equipo te organiza una pequeña fiesta de aniversario laboral: de aquella habitación de la primera semana al profesional local de hoy.",c:["Brindar por todos los que caminaron contigo","Videollamar a casa: «Miren: lo logré en esta ciudad»"],r:["Este brindis es por los años y por la gente.","Un silencio largo al teléfono. Luego tu padre dice: «Bien. Bien. Nos llenas de orgullo»."]},
+          i1e1:{t:"Con tus ahorros, recorres locales en esta ciudad. El agente muestra dos: uno en un barrio concurrido — caro, con clientela real — y otro barato en una calle tranquila, sin clientela.",c:["El local concurrido: más caro, pero la clientela es dinero","El de la calle tranquila: el ahorro va a reforma y publicidad"],r:["El día de la firma, el casero sonríe: «El anterior inquilino también era un restaurante; ojalá tengas mejor suerte».","Local asegurado. Ahora empieza el maratón de la reforma."]},
+          i5e1:{t:"Antes de un segundo local, tu contable y tu gerente despliegan el plan: alquiler, personal, impuestos, inventario: tres carpetas gruesas, punto por punto.",c:["Revisar cada punto tú mismo y tapar cada hueco","Confiar en el equipo y centrarte en la comida"],r:["El día en que el plan se cierra, exhalas por primera vez en semanas.","El contable dice que el plan está completo: tus cuentas siempre estuvieron limpias."]},
+          i5e2:{t:"Mientras creces, tu restaurante se convierte en el salón del barrio: cenas de fiestas, comidas nocturnas de estudiantes, pequeñas reuniones.",c:["¡Seguir organizando! Un restaurante es negocio… y el salón del barrio","Centrarse en la operación; organizar solo de vez en cuando"],r:["Tu local entra en la lista local de «diez pequeños restaurantes que valen el viaje».","El boca a boca se extiende tranquilo por la comunidad."]},
+          i7e1:{t:"El periódico local nombra tu tienda Favorita del Barrio: con los años, un negocio, un equipo, una docena de empleados y dos aprendices que ya tienen sus propios locales.",c:["Emocionado: «El mérito es de todo el equipo»","Calma: la vida es larga; paso a paso"],r:["La noche en que llega la noticia, invitas a toda la tienda a una buena cena.","Planchas el delantal de mañana hasta dejarlo perfecto."]},
+          i7e2:{t:"Termina la pequeña ceremonia de premios. Sales a la calle: tu restaurante está a dos cuadras y la fila del almuerzo ya se forma; los de siempre saludan.",c:["Volver al restaurante, delantal puesto: hoy cocina el jefe","Tomarte la tarde libre y salir a ver esta ciudad"],r:["Los clientes no lo saben, pero hoy el chef está extra feliz.","Ahora puedes tomarte tu tiempo con esta ciudad. ¡El final!"]},
+          f1e1:{t:"La familia visita junta una vivienda cerca de la escuela. El alquiler supera un poco el presupuesto, y tus padres te preguntan qué piensas: trayecto, habitaciones y contrato, todo cuenta.",c:["Hablar con una lista: alquiler largo y siempre puntuales: un buen argumento para bajar el precio","Callar y dejar que tus padres decidan"],r:["Tus cuentas son claras, el casero baja el precio y te llama buen chico. Las llaves del nuevo hogar están en mano.","Tus padres lo hablan y firman, a precio completo. Duele un poco."]},
+          f1e2:{t:"Primer fin de semana en el nuevo hogar: toda la familia cocina fideos apretada en la cocina pequeña y desempaca junta. Mamá dice: «Un lugar pequeño está bien, mientras nuestros corazones estén juntos». Fuera: las luces de esta ciudad.",c:["Fijarte una meta en silencio: estudiar mucho y algún día dar más espacio a la familia","Dormir bien primero: mañana empieza la escuela"],r:["Duermes ligero esa noche, con una pequeña meta encendida en el pecho.","Una noche completa de sueño, y despiertas a la primera mañana de escuela."]},
+          f2e1:{t:"Primer día del nuevo trimestre. La maestra te pide que te presentes. Te levantas con el corazón a mil y toda la clase mira.",c:["Respirar hondo y hablar despacio: equivocarse está bien","Susurrar tu nombre, bajar la cabeza y sentarte"],r:["Terminas, y algunos compañeros aplauden. En el recreo, alguien se acerca a saludarte.","En silencio, pero el paso uno está dado. Un día a la vez."]},
+          f2e2:{t:"Tu compañero de banco siempre comparte contigo la mitad del sándwich de su mamá en el almuerzo y charla sin parar; y te invita este fin de semana a su casa a jugar videojuegos.",c:["¡Ir! Y llevar los dumplings caseros de mamá como agradecimiento","Rechazar con cortesía: los fines de semana son para ayudar en casa"],r:["Los dumplings son un éxito. Hiciste tu primer amigo en esta ciudad.","Ayudas a la familia, pero las fotos del chat grupal te dan un poco de nostalgia."]},
+          f6e1:{t:"Tras todos estos años, la familia planea una cena de celebración: de la primera vivienda pequeña a la vida estable de hoy, todos pusieron su parte.",c:["Cocinar con tus padres y armar el álbum de fotos","Que cada uno traiga su plato estrella: nos vemos en la mesa"],r:["En la cena, tus padres responden con soltura y se ríen a carcajadas.","Toda la familia, junta, cada uno cumpliendo sus metas."]},
+          f6e2:{t:"Después de cenar, la familia hojea el álbum: la primera vivienda pequeña, el primer día de escuela, el primer empleo… La mano de mamá, sosteniendo la tuya, tiembla un poco.",c:["Tomar la mano de mamá: «Mamá, estamos bien en esta ciudad»","Brindar con una gran sonrisa: esta familia es la mejor familia de esta ciudad"],r:["Después de cenar, llevas a tus padres a un buen restaurante. Esta vez invitas tú.","El gran final, y sabes que la historia de esta familia apenas comienza."]}
+        },
+        endings: {
+          study:"El Camino de Estudios, completo: de una primera clase a un primer empleo, y de vuelta como mentor: estudiar ensanchó tu vida, tal como prometían.",
+          born:"El Camino de Nacer Aquí, completo: una vivienda pequeña, aulas, un volante, una escritura: en la ciudad donde naciste, convertiste una vida en tu propia historia.",
+          work:"El Camino del Trabajo, completo: una habitación pequeña, grasa de cocina, un volante, una escritura: cada dólar que ganaste lleva tu nombre.",
+          family:"El Camino de Nacer Aquí, completo: una vivienda pequeña, aulas, un volante, una escritura: en la ciudad donde naciste, convertiste una vida en tu propia historia.",
+          invest:"El Camino de Negocios, completo: un restaurante, una familia, una ciudad: convertiste un negocio en una vida, y una vida en un letrero ante el que la gente hace fila."
+        },
+        shareTpl:"🗽 Ruta: {route} | ⏱ Tiempo: {years} años | 💰 Dinero: ${cash} | ⭐ Nota de vida: {grade} ({score} pts)\n{line}\nTu turno: ¿qué ciudad de Estados Unidos y qué vida elegirías?",
+        cityCards: {
+          col:{ flower:"Símbolo de la ciudad: el Capitolio de Ohio", fact:"Columbus es la capital y la ciudad más grande de Ohio, con universidades, salud y logística.", poem:"Las luces suben junto al río y la ciudad empieza a sentirse hogar." }
+        }
+      }
+    });
+    Object.assign(PATCH7, {
+      hi: {
+        ui: {
+          title:"अमेरिकी जीवन", subtitle:"", gameName:"अमेरिकी जीवन",
+          tagline:"पहले एक शहर चुनें, फिर एक ज़िंदगी: पढ़ाई, वहीं बचपन, काम या कारोबार — अमेरिका की असली जगहों में रोज़ की ज़िंदगी।",
+          routeQ:"आप इस शहर में कैसे जीना चाहते हैं?", routeSub:"जीने के चार तरीके, चार रास्ते। एक पूरा करें, फिर लौटकर दूसरा आज़माएँ।",
+          status:"जीवन चरण", statusStages:["नए पड़ोसी","बस रहे हैं","अपना घर","करियर आगे बढ़ रहा है","स्थानीय जानकार"],
+          loginTitle:"अपने सिक्के लें, फिर शहर चुनें", loginSub:"साइन अप / लॉग इन पर {n} बोनस सिक्के मिलते हैं। सिक्के सिर्फ़ साफ़ दाम वाली अतिरिक्त चीज़ों के लिए हैं, जैसे फ़र्नीचर; मुख्य रास्ता नकद आय से चलता है — मज़दूरी, परिवार का सहयोग और छात्रवृत्ति — इसलिए सिक्के कम हों तो भी ज़िंदगी नहीं रुकती।",
+          needLogin:"शहर चुनने से पहले ऊपर साइन अप / लॉग इन करके अपने सिक्के लें।",
+          ticketFree:"शुरुआत का कोई शुल्क नहीं", ticketTag:"शुरुआत का कोई शुल्क नहीं", ticketPaid:"चलो शुरू करें!",
+          shopSub:"सिक्के साफ़ दाम वाली अतिरिक्त चीज़ों के लिए हैं: फ़र्नीचर, दुकान की चीज़ें और छोटी पसंदीदा वस्तुएँ। सिक्के सिर्फ़ खरीदे जा सकते हैं, नकद में नहीं बदले जाते।",
+          settleSupport:"परिवार का सहयोग",
+          shareHead:"मैंने अमेरिकी जीवन में एक ज़िंदगी जी:",
+          disclaimerShort:"सिर्फ़ मनोरंजन के लिए। यह कानूनी, कर या निवेश सलाह नहीं है।",
+          aboutText:"अमेरिकी जीवन एक हल्का जीवन-अनुकरण खेल है, जिसे VelaGrid Technologies प्रकाशित और संचालित करता है। एक राज्य चुनें, फिर एक शहर, और फिर पढ़ाई करें, वहीं बड़े हों, काम करें या कारोबार चलाएँ। सभी पात्र और कहानियाँ काल्पनिक हैं, मनोरंजन के लिए बनी हैं।",
+          disclaimerText:"यह खेल सिर्फ़ मनोरंजन के लिए है और कानूनी, कर या निवेश सलाह नहीं है। खेल में स्कूल, काम, आवास, कर और कारोबार की प्रक्रियाएँ सरल नाटकीय रूप हैं; वे असली नियम या व्यक्तिगत परिणाम नहीं दिखातीं। असली मामलों के लिए किसी योग्य पेशेवर से सलाह लें।",
+          degreeTitle:"एक अध्ययन योजना चुनें", degreeNote:"योजनाओं में ट्यूशन, कैंपस काम और छात्रवृत्ति अलग-अलग होती है। स्नातक के बाद आप करियर रास्ते पर चलते हैं — कोई ड्रॉ या लॉटरी नियम नहीं है।",
+          degreeBachelor:"बैचलर योजना", degreeBachelorDesc:"ट्यूशन ≈ $27,000/साल, कैंपस काम, परिवार के सहयोग और छात्रवृत्ति से मुख्य खर्च पूरे होते हैं।",
+          degreeMaster:"मास्टर योजना", degreeMasterDesc:"ट्यूशन ≈ $34,000/साल, सहायक आय और छात्रवृत्ति अधिक मज़बूत।",
+          degreePhd:"पीएचडी योजना", degreePhdDesc:"आमतौर पर पूरी फंडिंग: ट्यूशन माफ़, ≈ $26,000/साल वजीफा।",
+          lotteryBtn:"चुनौती शुरू करें", lotteryRolling:"चुनौती चल रही है…", lotteryWin:"चुनौती पूरी!", lotteryLose:"इस बार नहीं — बदलकर फिर कोशिश करें।",
+          how1:"पहले एक राज्य चुनें, फिर एक शहर — आप सीधे उस शहर के प्रवेश चौक पर पहुँचते हैं।",
+          how2:"जीने का एक तरीका चुनें — पढ़ाई, यहीं जन्म, काम या कारोबार — और नक्शे पर एक-एक लेवल आगे बढ़ें: फैसले लें, मिनी-गेम खेलें, लेवल पूरा करके अगला खोलें।",
+          how3:"अपने पैसे, सेहत और खुशी पर नज़र रखें — कोई भी शून्य न होने पाए।",
+          how4:"अंतिम लक्ष्य: बस जाना, अपना घर होना, करियर आगे बढ़ना और इस शहर के स्थानीय जानकार बनना।",
+          lotteryPitySure:"", lotteryPityHint:"", lotteryDegreeSure:"",
+          entry:{
+            mapTitle:"पहले एक राज्य चुनें", mapSub:"सभी 50 राज्य बड़े नक्शे पर हैं। एक राज्य छुएँ, फिर उसकी राजधानी या गहराई से खेला जाने वाला शहर चुनें।",
+            capitalTag:"राजधानी · शुरुआत", deepTag:"गहरा खेल", currentTag:"मौजूदा शहर", districtTag:"ज़िला",
+            farmTag:"खेत पायलट", farmTitle:"ओहायो खेत ज़िला", farmSub:"Columbus के पास खेत का प्रवेश द्वार पहले तय है: मक्का के खेत, एक फ़ार्महाउस और देहाती ज़िंदगी अगले दौर में खुलेगी।",
+            chooseCity:"{state} में एक शहर चुनें", chooseCitySub:"राजधानियाँ शुरुआती शहरों के रूप में शुरू होती हैं; «गहरा खेल» वाले शहर चारों ज़िंदगियाँ तुरंत शुरू कर सकते हैं।",
+            chooseLife:"आप {city} में कैसे जीना चाहते हैं?", chooseLifeSub:"आप शहर के प्रवेश चौक पर खड़े हैं। एक ज़िंदगी चुनें — या पहले शहर कार्ड खोलें।",
+            backStates:"← दूसरा राज्य चुनें", backCities:"← दूसरा शहर चुनें", viewCard:"शहर कार्ड",
+            plazaNote:"{city} का प्रवेश चौक: पहचान चिन्ह, सड़कें और शहर की लय सब यहाँ है। एक ज़िंदगी चुनें और बस जाएँ।",
+            construction:"निर्माणाधीन", constructionMsg:"{city} पहले अपना प्रवेश चौक और शहर कार्ड खोलता है; पूरा लेवल रास्ता निर्माणाधीन है। उसी राज्य का खेलने योग्य शहर आज़माएँ, या दूसरा राज्य देखें।",
+            skeletonNote:"शुरुआती शहर: पहले landmark, स्थानीय संस्कृति की एक पंक्ति और प्रवेश चौक; पूरे लेवल बाद में आएँगे।",
+            farmSoon:"खेत का खेल निर्माणाधीन है", farmSoonMsg:"खेत का द्वार तैयार है: मक्का, ट्रैक्टर और किसान की ज़िंदगी अगले दौर में खुलेगी। इस दौर में Columbus से शुरू करें — पढ़ाई, यहीं जन्म, काम या कारोबार।",
+            soonBtn:"अन्य शहर देखें", startBtn:"यहीं से शुरू करें"
+          }
+        },
+        routes: {
+          study:{ name:"पढ़ाई", icon:"🎓", desc:"इस शहर में पढ़ाई करें: कक्षाएँ चुनें, दाख़िला लें, छात्रावास या साझा फ़्लैट में रहें, प्रोजेक्ट बनाएँ और पहली नौकरी पाएँ।", tags:["$5,000 से शुरू","18 की उम्र से शुरू","कैंपस और पहली नौकरी"] },
+          born:{ name:"यहीं जन्म", icon:"👶", desc:"इसी शहर में जन्म लें और बड़े हों: परिवार के साथ रहें, स्कूल जाएँ, दोस्त बनाएँ, कक्षा के बाद काम करें, लाइसेंस लें, फिर कॉलेज, काम और अपने घर तक पहुँचें।", tags:["12 की उम्र से शुरू","एक शहर में परिवार","बचपन से वयस्कता"] },
+          work:{ name:"काम", icon:"💪", desc:"इस शहर में काम करें और जिएँ: पहली नौकरी खोजें, बचत करें, प्रमाणपत्र लें, लंबी यात्राएँ चलाएँ, फिर अनुभव को नए लोगों को सिखाने के आत्मविश्वास में बदलें।", tags:["$5,000 से शुरू","24 की उम्र से शुरू","काम और कौशल"] },
+          family:{ name:"यहीं जन्म", icon:"👶", desc:"इसी शहर में जन्म लें और बड़े हों: परिवार के साथ रहें, स्कूल जाएँ, दोस्त बनाएँ, कक्षा के बाद काम करें, लाइसेंस लें, फिर कॉलेज, काम और अपने घर तक पहुँचें।", tags:["12 की उम्र से शुरू","एक शहर में परिवार","बचपन से वयस्कता"] },
+          invest:{ name:"कारोबार", icon:"🏪", desc:"इस शहर में कारोबार खोलें: जगह चुनें, रेस्तरां चलाएँ, निरीक्षण पास करें, नाम बनाएँ, दूसरी जगह खोलें और वह मालिक बनें जिसे पूरा मोहल्ला जानता है।", tags:["$5,000 से शुरू","35 की उम्र से शुरू","दुकानें और विकास"] }
+        },
+        levels: {
+          s1:{name:"भाषा और स्तर जाँच", sub:"कौशल जाँच, कोर्स और गति", goal:"ऐसी अध्ययन योजना चुनें जो आपके बजट और आपकी गति के अनुकूल हो।"},
+          s2:{name:"आवेदन", sub:"स्कूल, निबंध, निर्णय", goal:"कार्यक्रमों की तुलना करें और सही विकल्प चुनें।"},
+          s3:{name:"नए छात्र का चेक-इन", sub:"छात्र सेवा हॉल", goal:"दाख़िला पूरा करें, छात्र कार्ड लें और कैंपस के मददगार संसाधन खोजें।"},
+          s4:{name:"पहले सत्र का आवास", sub:"छात्रावास, रूममेट, कैंपस नौकरी", goal:"स्कूल के पास बसें और पहला सत्र सुचारु रूप से शुरू करें।"},
+          s5:{name:"पढ़ाई का साल", sub:"कक्षाएँ, प्रोजेक्ट, दोस्त", goal:"मेहनत से पढ़ें — और पोर्टफ़ोलियो भी, दोस्त भी जुटाएँ।"},
+          s6:{name:"पहली नौकरी", sub:"करियर मेला और साक्षात्कार", goal:"जो सीखा है उसे पहली असली पेशकश में बदलें।"},
+          s7:{name:"करियर मील का पत्थर", sub:"एक बड़ा प्रोजेक्ट और ऊपर का रास्ता", goal:"एक असली प्रोजेक्ट पर खुद को साबित करें और एक कदम ऊपर बढ़ें।"},
+          s8:{name:"मोहल्ले में जड़ें", sub:"काम, दोस्त, समुदाय", goal:"काम से आगे की ज़िंदगी बनाएँ: शामिल हों, मदद करें, ज़रूरी बनें।"},
+          s9:{name:"पूर्व-छात्र अध्याय", sub:"बोलें, मार्गदर्शन करें, फिर शुरू करें", goal:"अपना अनुभव नए छात्रों से बाँटें और अपना अगला अध्याय खोलें।"},
+          w1:{name:"शहर में पहला सप्ताह", sub:"एक कमरा, नौकरी बोर्ड, एक बजट", goal:"पहली नौकरी खोजें और साप्ताहिक बजट तय करें।"},
+          w6:{name:"कौशल प्रमाणपत्र", sub:"प्रशिक्षण जो फल देता है", goal:"प्रमाणपत्र लें और बेहतर भूमिकाओं और शिफ़्टों के योग्य बनें।"},
+          w8:{name:"स्थानीय पेशेवर", sub:"अनुभव नेतृत्व बनता है", goal:"नए लोगों का मार्गदर्शन करें और स्थानीय पेशेवर के रूप में समाप्त करें।"},
+          i1:{name:"जगह चुनें", sub:"आवाजाही, किराया और उपयुक्तता", goal:"ऐसी जगह चुनें जिसका खर्च आप उठा सकें और पट्टा साइन करें।"},
+          i5:{name:"दूसरी जगह", sub:"गुणवत्ता खोए बिना विकास", goal:"दूसरी जगह खोलें और भरोसेमंद टीम को प्रशिक्षित करें।"},
+          i7:{name:"मोहल्ले की पसंद", sub:"शहर में बुना हुआ कारोबार", goal:"दुकान, टीम और नियमित ग्राहकों के साथ जश्न मनाएँ।"},
+          f1:{name:"परिवार के लिए घर", sub:"सब मिलकर घर खोजें", goal:"परिवार को ऐसा घर चुनने में मदद करें जो स्कूल, काम और बजट के अनुकूल हो।"},
+          f2:{name:"पहला स्कूल सत्र", sub:"नए सहपाठी, नई दिनचर्या", goal:"स्कूल में जम जाएँ और पहला दोस्त बनाएँ।"},
+          f5:{name:"कॉलेज और पहली नौकरी", sub:"आवेदन, पेशकश, वेतन दिवस", goal:"अपना अगला कदम चुनें और परिवार की प्रगति का जश्न मनाएँ।"},
+          f6:{name:"पारिवारिक जश्न", sub:"पीछे देखें, आगे बढ़ें", goal:"परिवार कितनी दूर आया है, इसका जश्न मनाएँ।"}
+        },
+        ev: {
+          s2e2:{t:"आपके निबंध का विषय: «यह शहर क्यों, और यह कार्यक्रम क्यों?» आप दोपहर भर खाली पन्ने को देखते रहते हैं।",c:["दादी के बारे में लिखें: वे हमेशा कहती थीं कि पढ़ाई आपको आगे ले जाती है","एक टेम्पलेट लें और एक «मानक उत्तर» जोड़ लें"],r:["लिखते हुए आप थोड़ा रोते हैं, फिर सुधार करते हुए मुस्कुराते हैं। यह सच्चा लगता है।","यह पूरा हो गया — लेकिन यह किसी की भी कहानी हो सकती है।"]},
+          s3e1:{t:"चेक-इन का दिन। छात्र सेवा हॉल में लंबी कतार है: दाख़िला, छात्र कार्ड, कक्षा समय-सारणी — कुछ भी छोड़ा नहीं जा सकता। आगे वाला छात्र काग़ज़ों का पूरा फ़ोल्डर गिरा देता है।",c:["गहरी साँस लें; सूची को एक-एक करके, अपनी बारी पर संयम से पूरा करें","आगे वाले छात्र को काग़ज़ उठाने में मदद करें, फिर साथ आगे बढ़ें"],r:["सब कुछ साफ़-सुथरे ढंग से हो गया। छात्र कार्ड हाथ में — कैंपस जीवन आधिकारिक रूप से शुरू।","कतार एक-दूसरे की मदद करती है। चेक-इन में थोड़ा अधिक समय लगता है, और थोड़ी अधिक गर्मजोशी महसूस होती है।"]},
+          s3e2:{t:"आपके सलाहकार पूछते हैं कि इस सत्र में आप कैंपस के कौन से संसाधन सबसे अधिक चाहते हैं — लेखन केंद्र, करियर केंद्र, या क्लब साइन-अप?",c:["लेखन केंद्र + करियर केंद्र: पढ़ाई और काम दोनों की तैयारी","पहले कक्षाओं पर ध्यान दें; संसाधन बाद में"],r:["आपकी सत्र योजना स्पष्ट हो जाती है: पढ़ाई के लिए मदद, काम के लिए दिशा।","कक्षाएँ स्थिर हैं — बस कुछ क्लब साइन-अप छूट जाते हैं।"]},
+          s4e1:{t:"सत्र की पहली सुबह। आप अपने छात्रावास (या साझा फ़्लैट) में जागते हैं, खिड़की के बाहर शहर है। आपका रूममेट झाँकता है: कैंपस और मोहल्ले की सैर करें?",c:["चलें! पहले इलाक़ा जानें — नई ज़िंदगी शुरू होती है","सामान खोलें और अच्छी नींद लें; कल घूमेंगे"],r:["कैंपस, किराना दुकान, बस स्टॉप — सब पता चल गया। आप ज़मीन पर महसूस करते हैं।","पूरी रात की नींद, फिर स्पष्ट दिमाग़ से कक्षा।"]},
+          remit1:{t:"सत्र से एक सप्ताह पहले घर से एक पार्सल आता है: नए मोज़े, चाय और एक हस्तलिखित नोट — «अच्छा खाओ, अच्छी नींद लो, और पैसे की चिंता हम पर छोड़ दो।» वीडियो पर माँ यह सब फिर कहती है। पार्सल मुफ़्त है और किसी का ऋण नहीं है: यह बस पारिवारिक सहयोग है, वस्तुओं के रूप में।",c:["इसे स्वीकार करें, और घर को कैंपस की तस्वीरें भेजकर बताएँ कि आप ठीक हैं","पहले वीडियो-कॉल करें और सप्ताह की बात करें"],r:["तस्वीरें जाती हैं और परिवार का चैट जगमगा उठता है। नया सत्र बहुत अधिक स्थिर लगता है।","आप गर्म मन से फ़ोन रखते हैं: अच्छा खाओ, अच्छी नींद लो, एक-एक कदम।"]},
+          s5e3:{t:"थैंक्सगिविंग। एक स्थानीय सहपाठी आपको अपने परिवार के खाने पर बुलाती है। एक विशाल टर्की है।",c:["जाएँ — और घर के बने डम्पलिंग की एक प्लेट ले जाएँ","विनम्रता से मना करें; छात्रावास में इंस्टेंट नूडल्स और गृहकार्य"],r:["डम्पलिंग मिनटों में ख़त्म हो जाते हैं। आपको क्रिसमस पर फिर बुलाया जाता है। यहाँ की ज़िंदगी में परिचित चेहरे बढ़ रहे हैं।","नूडल्स हो गए, गृहकार्य हो गया — बस थोड़ा अकेलापन है।"]},
+          s7e1:{t:"आपके मैनेजर आपको एक दृश्य, निर्णायक प्रोजेक्ट का नेतृत्व सौंपते हैं: इसे पूरा करें, तो पदोन्नति का रास्ता खुलता है। पूरी टीम देख रही है कि आप कैसे शुरू करते हैं।",c:["स्वीकार करें! पहले योजना, टीम को एकजुट करें, पहले सप्ताह में कुछ करके दिखाएँ","पहले दो सप्ताह का प्रशिक्षण माँगें, फिर पूरी तैयारी से लें"],r:["प्रोजेक्ट साफ़-सुथरा शुरू होता है, और आपके मैनेजर साप्ताहिक बैठक में आपका नाम लेते हैं।","प्रशिक्षण मुख्य कमी को भर देता है। आप इसे अधिक स्थिरता से लेते हैं।"]},
+          s8e1:{t:"सामुदायिक केंद्र आपको मोहल्ले के मेले में मदद करने को कहता है: स्टॉल, संगीत, बच्चों के खेल — सब जगह लोगों की कमी है।",c:["मदद करें! सप्ताहांत में स्टॉल लगाएँ और गतिविधियाँ चलाएँ","अभी काम बहुत है — काम पर ध्यान दें"],r:["मेला जीवंत है, और आप आधी गली से परिचित हो जाते हैं।","काम पटरी पर रहता है — हालाँकि मेले की तस्वीरें थोड़ी ललचाती हैं।"]},
+          s8e2:{t:"दो साल बाद: एक पदोन्नति, एक बेहतर अपार्टमेंट। शहर की रोशनी देखते हुए आपको अपने पहले छात्र दिन याद आते हैं।",c:["घर पर लंबी बात करें — सिर्फ़ अच्छी ख़बरें","दोस्तों को इस पल को मनाने के लिए एक अच्छे खाने पर ले जाएँ"],r:["माँ फ़ोन पर ख़ुशी के आँसुओं के साथ हँसती है: «मेरे बच्चे ने कर दिखाया।»","यह खाना पीछे के हर कठिन साल जैसा स्वाद देता है।"]},
+          s8e3:{t:"स्कूल और मोहल्ला आपको वर्ष के मार्गदर्शक का नाम देते हैं: जिन नए छात्रों का आपने मार्गदर्शन किया, सबको अपनी दिशा मिल गई।",c:["पदक को सावधानी से रखें — और उन सबका धन्यवाद करें जिन्होंने आपकी मदद की","टीम और दोस्तों को खाने पर बुलाएँ"],r:["पदक आपकी मेज़ के पास लटका है — एक याद कि जड़ें लोग हैं जो एक-दूसरे का रास्ता रोशन करते हैं।","इस मेज़ के लोग इस शहर में आपका परिवार हैं।"]},
+          s9e1:{t:"पूर्व-छात्र पैनल में, नए छात्रों को पहला साल बताने की आपकी बारी है: कक्षाएँ चुनना, अंशकालिक काम, और मदद माँगने से न डरना।",c:["आत्मविश्वास से बोलें, और हर कठिनाई का ईमानदारी से नाम लें","घबराहट है — पहले रूपरेखा का पूरा पन्ना भरें"],r:["तालियाँ, और कुछ नए छात्र आपका संपर्क माँगने आपके पीछे आते हैं।","रूपरेखा दिन बचा लेती है। आप स्थिरता से बात पूरी करते हैं।"]},
+          s9e2:{t:"जिस छात्र का आप मार्गदर्शन करते हैं, वह पहली बार कक्षा में प्रवेश करता है, और आप दरवाज़े पर खड़े खुद को याद करते हैं। अगला अध्याय कहाँ जाता है?",c:["मार्गदर्शन जारी रखें — गर्मजोशी आगे बढ़ाएँ","एक नया लक्ष्य तय करें: अगला पड़ाव पहले से रास्ते पर है"],r:["कहानी पूरी है — और आप जानते हैं कि अगला अध्याय और भी बेहतर है।","आप नोटबुक बंद करते हैं और नए लक्ष्य की ओर बढ़ते हैं।"]},
+          w1e1:{t:"इस शहर में आपका पहला सप्ताह: आप बस स्टॉप के पास एक छोटा कमरा किराए पर लेते हैं, बजट के भीतर। बैग नीचे, नौकरी बोर्ड खुला।",c:["इसे लें — पहले स्थिर हों; बजट मायने रखता है","शांत कमरे के लिए थोड़ा अधिक खर्च करें; आराम काम का ईंधन है"],r:["कमरा छोटा है, लेकिन सस्ता सचमुच सस्ता है — बजट साँस लेता है।","एक उज्ज्वल कमरा। लंबे समय बाद आपकी पहली अच्छी नींद।"]},
+          w1e2:{t:"कोने वाला रेस्तरां एक रसोई सहायक खोज रहा है जो परोसे भी: एक कर्मचारी भोजन, स्थिर शिफ़्ट, ऊपर से टिप। मालिक एक परीक्षण शिफ़्ट की पेशकश करता है।",c:["आज़माएँ! पहले आय","अधिक स्थिर लय वाली दिन की शिफ़्ट खोजते रहें"],r:["पहला दिन पीठ दुखाकर ख़त्म होता है — और आपकी पहली कमाई आपकी जेब में।","दो और दिन की खोज आपकी जेब लगभग खाली कर देती है। फिर भी आप परीक्षण शिफ़्ट ले लेते हैं — पहले शुरुआत करें।"]},
+          w6e1:{t:"प्रशिक्षण केंद्र आपके पेशे के लिए एक प्रमाणपत्र कोर्स देता है: इसे पूरा करें तो बेहतर भूमिकाएँ और स्थिर शिफ़्ट खुलती हैं। यह सस्ता नहीं है, लेकिन किस्तें चलती हैं।",c:["दाख़िला लें! प्रमाणपत्र आगे का रास्ता बनाता है","एक साल बचत करें और पूरी तैयारी से दाख़िला लें"],r:["आप कक्षा समय-सारणी लेकर निकलते हैं — और मन अधिक स्थिर है।","तैयारी के साल में, आप हर काग़ज़ और हर डॉलर को पूरी तरह व्यवस्थित करते हैं।"]},
+          w6e2:{t:"आपके पिता अस्पताल में रहने के बाद ठीक हो रहे हैं, शहर के उस पार, ज़्यादा दूर नहीं। फ़ोन हाथ में, आप उनके साथ रहने के लिए अपना समय बदलने का हिसाब लगाते हैं।",c:["किराना सामान ले जाकर हर दिन उनके साथ खाएँ","खाना पहुँचाने की व्यवस्था करें, और हर दिन फ़ोन करें"],r:["आपके पिता कहते हैं: «तुम व्यस्त हो — हमारी चिंता मत करो। अच्छा काम करो।»","खाना पहुँचता है, फ़ोन हर दिन होता है, और आप वहाँ रहने के लिए अपनी शिफ़्टें जोड़ते हैं।"]},
+          w8e1:{t:"आपके बॉस आपको नए लोगों को प्रशिक्षित करने को कहते हैं: इन वर्षों ने जो सिखाया, वह सब आगे बढ़ाएँ।",c:["एक सरल, स्पष्ट शुरुआती गाइड लिखें","फ़्लोर पर ही, हाथों से काम करके सिखाएँ"],r:["नए लोग जल्दी तैयार हो जाते हैं। आपके बॉस कहते हैं: यही पेशेवर है।","आप जिस भी प्रशिक्षु को प्रशिक्षित करते हैं, वह मज़बूत निकलता है।"]},
+          w8e2:{t:"आपके पसंदीदा डाइनर में, टीम आपके लिए एक छोटी कार्य-वार्षिक पार्टी रखती है: उस पहले सप्ताह के कमरे से आज के स्थानीय पेशेवर तक।",c:["उन सबके लिए गिलास उठाएँ जो आपके साथ चले","घर पर वीडियो-कॉल करें: «देखो — मैंने इस शहर में कर दिखाया»"],r:["यह गिलास वर्षों के लिए है, और लोगों के लिए।","फ़ोन पर लंबी खामोशी। फिर आपके पिता कहते हैं: «अच्छा। अच्छा। तुमने हमें गर्व दिया।»"]},
+          i1e1:{t:"अपनी बचत के साथ आप इस शहर में दुकान की जगहें देखते हैं। एजेंट दो दिखाता है: एक भीड़-भाड़ वाले मोहल्ले में — महँगी, असली आवाजाही के साथ — और एक शांत गली में सस्ती, बिना आवाजाही के।",c:["भीड़ वाली जगह: महँगी, लेकिन आवाजाही ही पैसा है","शांत गली वाली जगह: बचत मरम्मत और प्रचार में जाएगी"],r:["साइन करने के दिन, मकान मालिक मुस्कुराता है: «यहाँ का पिछला किराएदार भी एक रेस्तरां था — आशा है आपकी किस्मत बेहतर हो।»","जगह पक्की। अब मरम्मत की लंबी दौड़ शुरू।"]},
+          i5e1:{t:"दूसरी जगह से पहले, आपके अकाउंटेंट और मैनेजर योजना फैलाते हैं: किराया, कर्मचारी, कर, स्टॉक — तीन मोटे बाइंडर, एक-एक करके।",c:["हर मद खुद जाँचें और हर कमी भरें","टीम पर भरोसा करें और खाने पर ध्यान दें"],r:["जिस दिन योजना पक्की होती है, आप हफ़्तों बाद पहली बार साँस छोड़ते हैं।","अकाउंटेंट कहता है कि योजना पूरी है — आपकी किताबें हमेशा साफ़ थीं।"]},
+          i5e2:{t:"जैसे-जैसे आप बढ़ते हैं, आपका रेस्तरां मोहल्ले का बैठक कक्ष बन जाता है: छुट्टियों के खाने, देर रात के छात्र भोजन, छोटी सभाएँ।",c:["आयोजन जारी रखें! एक रेस्तरां कारोबार है — और मोहल्ले का बैठक कक्ष","संचालन पर ध्यान दें; कभी-कभार ही आयोजन करें"],r:["आपकी जगह स्थानीय «यात्रा के लायक़ दस छोटे रेस्तरां» सूची में आ जाती है।","मुँह की बात समुदाय में चुपचाप फैलती है।"]},
+          i7e1:{t:"स्थानीय अख़बार आपकी दुकान को मोहल्ले की पसंद का नाम देता है: वर्षों में — एक कारोबार, एक टीम, एक दर्जन कर्मचारी, और दो प्रशिक्षु जो अब अपनी जगहें चलाते हैं।",c:["भावुक: «श्रेय पूरी टीम को है»","शांत: ज़िंदगी लंबी है; एक-एक कदम"],r:["जिस रात ख़बर आती है, आप पूरी दुकान को एक अच्छा खाना खिलाते हैं।","आप कल के एप्रन को पूरी तरह इस्त्री करते हैं।"]},
+          i7e2:{t:"छोटा पुरस्कार समारोह समाप्त होता है। आप बाहर निकलते हैं — आपका रेस्तरां दो ब्लॉक दूर है, और दोपहर के खाने की कतार पहले से बन रही है, नियमित ग्राहक हाथ हिला रहे हैं।",c:["रेस्तरां वापस, एप्रन पहनकर — आज, मालिक खाना बनाता है","दोपहर की छुट्टी लें और इस शहर को देखें"],r:["मेहमान नहीं जानते, लेकिन आज का शेफ़ अतिरिक्त ख़ुश है।","अब आप इस शहर के साथ अपना समय ले सकते हैं। समापन!"]},
+          f1e1:{t:"परिवार स्कूल के पास एक घर साथ देखता है। किराया बजट से थोड़ा अधिक है, और आपके माता-पिता पूछते हैं कि आप क्या सोचते हैं: यात्रा, कमरे और पट्टा, सब मायने रखता है।",c:["एक सूची के साथ अपनी बात रखें: लंबा पट्टा, हमेशा समय पर — कम दाम के लिए उचित तर्क","चुप रहें और अपने माता-पिता को निर्णय लेने दें"],r:["आपका हिसाब स्पष्ट है, मकान मालिक दाम घटाता है और आपको अच्छा बच्चा कहता है। नए घर की चाबियाँ हाथ में हैं।","आपके माता-पिता बात करके पूरे दाम पर साइन कर देते हैं। यह थोड़ा चुभता है।"]},
+          f1e2:{t:"नए घर में पहला सप्ताहांत: पूरा परिवार छोटी रसोई में सिकुड़कर नूडल्स बनाता है और साथ सामान खोलता है। माँ कहती है: «छोटी जगह ठीक है, जब तक हमारे दिल साथ हैं।» बाहर: इस शहर की रोशनी।",c:["एक शांत लक्ष्य तय करें: मेहनत से पढ़ें, और एक दिन परिवार को अधिक जगह दें","पहले अच्छी नींद लें — कल स्कूल शुरू होता है"],r:["उस रात आप हल्की नींद सोते हैं, छाती में एक छोटा लक्ष्य जला हुआ।","पूरी रात की नींद, और आप पहले स्कूल की सुबह को जागते हैं।"]},
+          f2e1:{t:"नए सत्र का पहला दिन। शिक्षक आपको अपना परिचय देने को कहते हैं। आप खड़े होते हैं, दिल ज़ोर से धड़कता है, और पूरी कक्षा देख रही है।",c:["गहरी साँस लें, धीरे बोलें — ग़लतियाँ ठीक हैं","अपना नाम फुसफुसाएँ, सिर झुकाएँ, और बैठ जाएँ"],r:["आप पूरा करते हैं, और कुछ सहपाठी तालियाँ बजाते हैं। अवकाश में, कोई नमस्ते कहने आता है।","शांत, लेकिन पहला कदम हो गया। एक-एक दिन।"]},
+          f2e2:{t:"आपका डेस्क साथी हमेशा दोपहर के खाने में अपनी माँ के सैंडविच का आधा हिस्सा आपके साथ बाँटता है और ख़ूब बातें करता है — और इस सप्ताहांत आपको वीडियो गेम खेलने अपने घर बुलाता है।",c:["जाएँ! और धन्यवाद के रूप में माँ के घर के बने डम्पलिंग ले जाएँ","विनम्रता से मना करें — सप्ताहांत घर पर मदद के लिए हैं"],r:["डम्पलिंग हिट हैं। आपने इस शहर में अपना पहला दोस्त बना लिया है।","आप परिवार की मदद करते हैं — लेकिन समूह चैट की तस्वीरें आपको थोड़ा भावुक करती हैं।"]},
+          f6e1:{t:"इतने वर्षों बाद, परिवार एक जश्न के खाने की योजना बनाता है: पहले छोटे घर से आज की स्थिर ज़िंदगी तक, हर किसी ने हिस्सा लिया।",c:["अपने माता-पिता के साथ खाना बनाएँ और फ़ोटो एल्बम एक साथ रखें","हर कोई अपना ख़ास पकवान लाए — मेज़ पर मिलते हैं"],r:["खाने पर, आपके माता-पिता साफ़-साफ़ जवाब देते हैं और ज़ोर से हँसते हैं।","पूरा परिवार, साथ, हर कोई अपने लक्ष्य पूरे करता हुआ।"]},
+          f6e2:{t:"खाने के बाद, परिवार एल्बम पलटता है: पहला छोटा घर, पहला स्कूल दिन, पहली नौकरी… माँ का हाथ, आपका हाथ थामे, थोड़ा काँपता है।",c:["माँ का हाथ थामें: «माँ, हम इस शहर में ठीक हैं»","मुस्कुराकर गिलास उठाएँ: यह परिवार इस शहर का सबसे अच्छा परिवार है"],r:["खाने के बाद, आप अपने माता-पिता को एक अच्छे भोजन पर ले जाते हैं। इस बार, खर्च आपका है।","भव्य समापन — और आप जानते हैं कि इस परिवार की कहानी अभी शुरू ही हुई है।"]}
+        },
+        endings: {
+          study:"अध्ययन रास्ता, पूरा: पहली व्याख्यान से पहली नौकरी तक, फिर मार्गदर्शक के रूप में वापस — सीखने ने आपकी ज़िंदगी को चौड़ा किया, जैसा वादा था।",
+          born:"यहीं जन्म रास्ता, पूरा: एक छोटा घर, कक्षाएँ, एक स्टीयरिंग व्हील, एक दस्तावेज़ — जिस शहर में आप जन्मे, वहाँ आपने एक ज़िंदगी को अपनी कहानी में बदल दिया।",
+          work:"कार्य रास्ता, पूरा: एक छोटा कमरा, रसोई की चिकनाई, एक स्टीयरिंग व्हील, एक दस्तावेज़ — आपकी कमाई के हर डॉलर पर आपका नाम है।",
+          family:"यहीं जन्म रास्ता, पूरा: एक छोटा घर, कक्षाएँ, एक स्टीयरिंग व्हील, एक दस्तावेज़ — जिस शहर में आप जन्मे, वहाँ आपने एक ज़िंदगी को अपनी कहानी में बदल दिया।",
+          invest:"कारोबार रास्ता, पूरा: एक रेस्तरां, एक परिवार, एक शहर — आपने एक कारोबार को ज़िंदगी में बदल दिया, और एक ज़िंदगी को एक ऐसे चिह्न में जिसके सामने लोग कतार लगाते हैं।"
+        },
+        shareTpl:"🗽 रास्ता: {route} | ⏱ समय: {years} साल | 💰 नकद: ${cash} | ⭐ जीवन ग्रेड: {grade} ({score} अंक)\n{line}\nआपकी बारी — आप अमेरिका का कौन सा शहर और कौन सी ज़िंदगी चुनेंगे?",
+        cityCards: {
+          col:{ flower:"शहर का प्रतीक: ओहायो स्टेटहाउस", fact:"कोलंबस ओहायो की राजधानी और सबसे बड़ा शहर है; यहाँ विश्वविद्यालय, स्वास्थ्य सेवा और लॉजिस्टिक्स मज़बूत हैं।", poem:"नदी किनारे रोशनी उठती है और शहर घर जैसा लगने लगता है।" }
+        }
+      }
+    });
+    Object.assign(PATCH7, {
+      fr: {
+        ui: {
+          title:"La vie en Amérique", subtitle:"", gameName:"La vie en Amérique",
+          tagline:"Choisissez une ville, puis une façon de vivre : étudier, grandir sur place, travailler ou entreprendre — une vie quotidienne dans de vrais lieux américains.",
+          routeQ:"Comment voulez-vous vivre dans cette ville ?", routeSub:"Quatre façons de vivre, quatre chemins. Terminez-en un, puis revenez en essayer un autre.",
+          status:"Étape de vie", statusStages:["Nouvel arrivant","Bien installé","Chez soi","Carrière lancée","Connaisseur du coin"],
+          loginTitle:"Prenez vos pièces, puis choisissez une ville", loginSub:"L'inscription et la connexion incluent un bonus de {n} pièces. Les pièces ne paient que des extras dont le prix est indiqué, comme le mobilier ; la vie avance avec des revenus en espèces — salaires, aide familiale et bourses — donc peu de pièces ne bloquent jamais l'aventure.",
+          needLogin:"Inscrivez-vous / connectez-vous en haut pour recevoir vos pièces avant de choisir une ville.",
+          ticketFree:"Aucun frais de départ", ticketTag:"Aucun frais de départ", ticketPaid:"C'est parti !",
+          shopSub:"Les pièces paient des extras dont le prix est indiqué : mobilier, articles de boutique et petits extras. Elles s'achètent uniquement avec de l'argent réel et ne s'échangent jamais contre des espèces du jeu.",
+          settleSupport:"Soutien familial",
+          shareHead:"J'ai vécu une vie dans La vie en Amérique :",
+          disclaimerShort:"Pour le plaisir uniquement. Ne remplace pas un avis juridique, fiscal ou d'investissement.",
+          aboutText:"La vie en Amérique est un jeu léger de simulation de vie, publié et exploité par VelaGrid Technologies. Choisissez un État, puis une ville, puis étudiez, grandissez sur place, travaillez ou entreprenez. Tous les personnages et récits sont fictifs et créés pour le divertissement.",
+          disclaimerText:"Ce jeu est une œuvre de divertissement uniquement et ne constitue pas un avis juridique, fiscal ou d'investissement. Les processus de scolarité, d'emploi, de logement, d'impôt et d'entreprise qui y figurent sont des simplifications dramatisées ; ils ne décrivent pas les règles réelles ni aucun résultat personnel. Pour vos situations réelles, consultez un professionnel qualifié.",
+          degreeTitle:"Choisir un plan d'études", degreeNote:"Les plans diffèrent par les frais de scolarité, les emplois sur le campus et les bourses. Après le diplôme, vous passez à la voie carrière — il n'y a aucun tirage ni règle de loterie.",
+          degreeBachelor:"Licence", degreeBachelorDesc:"Frais ≈ 27 000 $/an ; les frais principaux sont couverts par des emplois sur le campus, le soutien familial et les bourses.",
+          degreeMaster:"Master", degreeMasterDesc:"Frais ≈ 34 000 $/an, avec des revenus d'assistant et des bourses plus solides.",
+          degreePhd:"Doctorat", degreePhdDesc:"Généralement entièrement financé : frais annulés, allocation d'environ 26 000 $/an.",
+          lotteryBtn:"Lancer le défi", lotteryRolling:"Le défi tourne…", lotteryWin:"Défi relevé !", lotteryLose:"Pas cette fois — changez d'approche et réessayez.",
+          how1:"Choisissez d'abord un État, puis une ville : vous arrivez directement sur sa place d'entrée.",
+          how2:"Choisissez une façon de vivre — étudier, naître ici, travailler ou entreprendre — et avancez niveau par niveau sur la carte : faites des choix, jouez aux mini-jeux, réussissez un niveau pour débloquer le suivant.",
+          how3:"Surveillez votre argent, votre santé et votre bonheur : aucun des trois ne doit tomber à zéro.",
+          how4:"Objectif final : vous installer, avoir votre propre chez-vous, lancer votre carrière et devenir un connaisseur du coin.",
+          lotteryPitySure:"", lotteryPityHint:"", lotteryDegreeSure:"",
+          entry:{
+            mapTitle:"Choisissez d'abord un État", mapSub:"Les 50 États sont sur la grande carte. Touchez un État, puis choisissez sa capitale ou l'une de ses villes en profondeur.",
+            capitalTag:"Capitale · squelette", deepTag:"Jeu complet", currentTag:"Ville actuelle", districtTag:"District",
+            farmTag:"Ferme pilote", farmTitle:"Zone agricole de l'Ohio", farmSub:"L'entrée agricole près de Columbus est placée : champs de maïs, une ferme et la vie à la campagne ouvriront au prochain tour.",
+            chooseCity:"Choisissez une ville en {state}", chooseCitySub:"Les capitales commencent comme villes squelettes ; les villes « Jeu complet » peuvent lancer les quatre vies immédiatement.",
+            chooseLife:"Comment voulez-vous vivre à {city} ?", chooseLifeSub:"Vous êtes sur la place d'entrée de la ville. Choisissez une façon de vivre — ou ouvrez d'abord la carte de la ville.",
+            backStates:"← Choisir un autre État", backCities:"← Choisir une autre ville", viewCard:"Carte de la ville",
+            plazaNote:"La place d'entrée de {city} : monuments, rues et le rythme de la ville, tout est là. Choisissez une vie et installez-vous.",
+            construction:"En construction", constructionMsg:"{city} ouvre d'abord sa place d'entrée et sa carte de ville ; la pleine voie de niveaux est en construction. Essayez une ville jouable du même État, ou regardez d'autres États.",
+            skeletonNote:"Ville squelette : d'abord des monuments, une phrase sur la culture locale et la place d'entrée ; les niveaux complets suivront.",
+            farmSoon:"Le jeu agricole est en construction", farmSoonMsg:"L'entrée de la ferme est placée : maïs, tracteur et vie de fermier ouvriront au prochain tour. Ce tour-ci, commencez à Columbus — étudier, naître ici, travailler ou entreprendre.",
+            soonBtn:"Voir d'autres villes", startBtn:"Commencer ici"
+          }
+        },
+        routes: {
+          study:{ name:"Étudier", icon:"🎓", desc:"Étudiez dans cette ville : choisissez des cours, inscrivez-vous, vivez en résidence ou en colocation, montez des projets et décrochez votre premier emploi.", tags:["Démarre à 5 000 $","Début à 18 ans","Campus et premier emploi"] },
+          born:{ name:"Né ici", icon:"👶", desc:"Naître et grandir dans cette ville : vivre en famille, aller à l'école, se faire des amis, travailler après les cours, obtenir son permis, puis l'université, le travail et son propre chez-soi.", tags:["Début à 12 ans","Une famille, une ville","De l'enfance à l'âge adulte"] },
+          work:{ name:"Travailler", icon:"💪", desc:"Travailler et vivre dans cette ville : trouvez un premier emploi, économisez, passez une certification, assurez de longues tournées, puis transformez l'expérience en confiance pour former les nouveaux.", tags:["Démarre à 5 000 $","Début à 24 ans","Emplois et compétences"] },
+          family:{ name:"Né ici", icon:"👶", desc:"Naître et grandir dans cette ville : vivre en famille, aller à l'école, se faire des amis, travailler après les cours, obtenir son permis, puis l'université, le travail et son propre chez-soi.", tags:["Début à 12 ans","Une famille, une ville","De l'enfance à l'âge adulte"] },
+          invest:{ name:"Entreprendre", icon:"🏪", desc:"Entreprendre dans cette ville : choisissez un local, tenez un restaurant, passez les inspections, construisez votre réputation, ouvrez un deuxième lieu et devenez le commerçant que tout le quartier connaît.", tags:["Démarre à 5 000 $","Début à 35 ans","Boutiques et croissance"] }
+        },
+        levels: {
+          s1:{name:"Langue et niveau", sub:"Tests de compétences, cours et rythme", goal:"Choisissez un plan d'études adapté à votre budget et à votre rythme."},
+          s2:{name:"Candidatures", sub:"Écoles, essais, décisions", goal:"Comparez les programmes et faites les bons choix."},
+          s3:{name:"Accueil des nouveaux étudiants", sub:"Le hall des services étudiants", goal:"Terminez l'inscription, retirez votre carte d'étudiant et repérez les ressources utiles du campus."},
+          s4:{name:"Premier semestre, premier toit", sub:"Résidence, colocataires, emploi sur le campus", goal:"Installez-vous près de l'école et démarrez le semestre en souplesse."},
+          s5:{name:"L'année d'études", sub:"Cours, projets et amis", goal:"Étudiez sérieusement — et construisez un portfolio et des amitiés."},
+          s6:{name:"Premier emploi", sub:"Forum des carrières et entretiens", goal:"Transformez ce que vous avez appris en première vraie offre."},
+          s7:{name:"Étape de carrière", sub:"Un grand projet et la voie ascendante", goal:"Faites vos preuves sur un vrai projet et montez d'un cran."},
+          s8:{name:"Enraciné dans le quartier", sub:"Travail, amis et communauté", goal:"Construisez une vie au-delà du travail : participez, aidez, devenez indispensable."},
+          s9:{name:"Le chapitre des anciens élèves", sub:"Parler, mentorer, recommencer", goal:"Partagez ce que vous avez vécu avec les nouveaux et ouvrez votre prochain chapitre."},
+          w1:{name:"Première semaine en ville", sub:"Une chambre, un panneau d'emploi, un budget", goal:"Trouvez votre premier emploi et fixez un budget hebdomadaire."},
+          w6:{name:"Certification de compétences", sub:"Une formation qui rapporte", goal:"Obtenez votre certificat et visez de meilleurs postes et horaires."},
+          w8:{name:"Professionnel du coin", sub:"Quand l'expérience devient leadership", goal:"Mentorez les nouveaux et terminez comme professionnel local respecté."},
+          i1:{name:"Choisir le local", sub:"Passage, loyer et adéquation", goal:"Choisissez un lieu que vous pouvez payer et signez le bail."},
+          i5:{name:"Le deuxième lieu", sub:"Grandir sans perdre en qualité", goal:"Ouvrez un deuxième lieu et formez une équipe de confiance."},
+          i7:{name:"L'adresse du quartier", sub:"Un commerce tissé dans la ville", goal:"Célébrez avec la boutique, l'équipe et les habitués."},
+          f1:{name:"Un foyer pour la famille", sub:"Chercher un logement ensemble", goal:"Aidez la famille à choisir un logement proche de l'école, du travail et du budget."},
+          f2:{name:"Premier trimestre", sub:"Nouveaux camarades, nouveau rythme", goal:"Trouvez vos marques à l'école et faites-vous un premier ami."},
+          f5:{name:"Université et premier emploi", sub:"Candidatures, offres, jour de paye", goal:"Choisissez votre prochain pas et célébrez les progrès de la famille."},
+          f6:{name:"La fête de famille", sub:"Regarder en arrière, aller de l'avant", goal:"Célébrez le chemin parcouru par la famille."}
+        },
+        ev: {
+          s2e2:{t:"Sujet de votre essai : « Pourquoi cette ville, et pourquoi cette formation ? » Vous regardez la page blanche tout l'après-midi.",c:["Écrivez sur votre grand-mère : elle disait toujours que les études vous mèneraient loin","Prenez un modèle et ajoutez-y une « réponse standard »"],r:["Vous pleurez un peu en écrivant, puis souriez en relisant. C'est sincère.","C'est fait — mais ça pourrait être l'histoire de n'importe qui."]},
+          s3e1:{t:"Jour d'accueil. La file dans le hall des services étudiants est longue : inscription, carte d'étudiant, emploi du temps — rien ne peut sauter. L'étudiant devant vous laisse tomber un dossier entier de papiers.",c:["Respirez ; cochez la liste une case à la fois, patiemment, à votre tour","Aidez-le à ramasser ses papiers, puis avancez avec la file"],r:["Tout se déroule proprement. La carte d'étudiant est en main — la vie de campus commence officiellement.","La file s'entraide. L'accueil prend un peu plus de temps, et offre un peu plus de chaleur."]},
+          s3e2:{t:"Votre conseiller demande quelles ressources du campus vous voulez le plus ce trimestre : l'atelier d'écriture, le centre de carrière ou les inscriptions aux clubs ?",c:["Atelier d'écriture + centre de carrière : études et travail, les deux","D'abord les cours ; les ressources viendront plus tard"],r:["Votre trimestre devient clair : de l'aide pour les études, une direction pour le travail.","Les cours sont stables — vous manquez simplement quelques inscriptions aux clubs."]},
+          s4e1:{t:"Premier matin du trimestre. Vous vous réveillez dans votre résidence (ou colocation), la ville par la fenêtre. Votre colocataire passe la tête : une balade du campus et du quartier ?",c:["Allons-y ! Apprenez le secteur d'abord — la nouvelle vie commence","Déballez et dormez bien ; la visite sera pour demain"],r:["Campus, épicerie, arrêt de bus — tout est repéré. Vous vous sentez ancré.","Une nuit complète, puis cours avec l'esprit clair."]},
+          remit1:{t:"Une semaine avant le trimestre, un colis arrive de la maison : des chaussettes neuves, du thé et un mot manuscrit — « mange bien, dors bien, et laisse-nous nous inquiéter pour l'argent. » En vidéo, maman répète tout ça. Le colis est gratuit et sans dette : c'est juste le soutien familial, livré en choses concrètes.",c:["Acceptez-le et envoyez des photos du campus pour montrer que vous allez bien","D'abord un appel vidéo pour raconter la semaine"],r:["Les photos partent et la conversation familiale s'illumine. Le nouveau trimestre semble bien plus stable.","Vous raccrochez le cœur au chaud : bien manger, bien dormir, un pas à la fois."]},
+          s5e3:{t:"Thanksgiving. Une camarade du coin vous invite au dîner de sa famille. Il y a une énorme dinde.",c:["Allez-y — et emportez une assiette de raviolis maison","Refusez poliment ; nouilles instantanées et devoirs à la résidence"],r:["Les raviolis disparaissent en quelques minutes. On vous réinvite à Noël. Votre vie ici compte de plus en plus de visages familiers.","Nouilles faites, devoirs faits — juste un peu de solitude."]},
+          s7e1:{t:"Votre manager vous confie un projet visible et décisif : réussissez-le, et la voie vers la promotion s'ouvre. Toute l'équipe regarde comment vous démarrez.",c:["Acceptez ! Planifiez d'abord, ralliez l'équipe, livrez quelque chose dès la première semaine","Demandez d'abord deux semaines de formation, puis lancez-vous bien préparé"],r:["Le projet démarre proprement, et votre manager cite votre nom à la réunion hebdomadaire.","La formation comble la lacune clé. Vous prenez le projet avec plus de stabilité."]},
+          s8e1:{t:"Le centre communautaire vous demande de tenir un stand à la fête de quartier : stands, musique, jeux pour enfants — il manque des bras partout.",c:["Aidez ! Le week-end, tenez un stand et animez les activités","Le travail est chargé — restez concentré dessus"],r:["La fête est animée, et vous connaissez la moitié de la rue.","Le travail reste sur les rails — même si les photos de la fête donnent un peu envie."]},
+          s8e2:{t:"Deux ans plus tard : une promotion, un meilleur appartement. En regardant les lumières de la ville, vous repensez à vos premiers jours d'étudiant.",c:["Appelez longuement la maison — rien que de bonnes nouvelles","Invitez vos amis à un bon dîner pour marquer ce moment"],r:["Maman rit au téléphone, entre deux larmes de joie : « Mon enfant l'a fait. »","Ce dîner a le goût de toutes les années difficiles derrière vous."]},
+          s8e3:{t:"L'école et le quartier vous nomment mentor de l'année : chaque nouvel étudiant que vous avez guidé a trouvé sa voie.",c:["Rangez la médaille avec soin — et remerciez tous ceux qui vous ont aidé","Invitez l'équipe et les amis à dîner"],r:["La médaille est accrochée près de votre bureau — un rappel que les racines sont des gens qui s'éclairent le chemin les uns les autres.","Les gens autour de cette table sont votre famille dans cette ville."]},
+          s9e1:{t:"Au panel des anciens élèves, c'est à vous de raconter la première année aux nouveaux : choisir ses cours, travailler à temps partiel, et ne pas avoir peur de demander de l'aide.",c:["Parlez avec assurance, et nommez chaque épreuve honnêtement","Stressé — d'abord, remplissez une page entière de plan"],r:["Des applaudissements, et quelques nouveaux vous suivent pour demander votre contact.","Le plan sauve la mise. Vous terminez en parlant avec stabilité."]},
+          s9e2:{t:"L'étudiant que vous mentorez franchit la porte de sa première salle de classe, et vous repensez à vous-même à la porte. Où mène le prochain chapitre ?",c:["Continuez le mentorat — transmettez la chaleur","Fixez-vous un nouvel objectif : le prochain arrêt est déjà en route"],r:["L'histoire est bouclée — et vous savez que le prochain chapitre est encore meilleur.","Vous fermez le carnet et avancez vers le nouvel objectif."]},
+          w1e1:{t:"Votre première semaine dans cette ville : vous louez une petite chambre près d'un arrêt de bus, dans le budget. Sacs posés, panneau d'emploi ouvert.",c:["Prenez-la — d'abord la stabilité ; le budget compte","Payez un peu plus pour une chambre plus calme ; le repos nourrit le travail"],r:["La chambre est petite, mais un vrai loyer bas — le budget respire.","Une chambre lumineuse. Votre première bonne nuit de sommeil depuis longtemps."]},
+          w1e2:{t:"Le restaurant du coin cherche un aide de cuisine qui serve aussi : un repas pour le personnel, des horaires stables et des pourboires par-dessus. Le patron propose un service d'essai.",c:["Essayez ! Les revenus d'abord","Continuez à chercher un service de jour au rythme plus stable"],r:["Le premier jour se termine le dos en compote — et votre premier salaire dans la poche.","Deux jours de recherche de plus et votre poche est presque vide. Vous prenez quand même le service d'essai — commencez par le début."]},
+          w6e1:{t:"Le centre de formation propose un certificat pour votre métier : le réussir ouvre de meilleurs postes et des horaires stables. Ce n'est pas donné, mais le paiement échelonné est possible.",c:["Inscrivez-vous ! Le certificat ouvre la voie","Économisez un an et inscrivez-vous bien préparé"],r:["Vous repartez avec l'emploi du temps en main — et l'esprit bien plus calme.","Pendant l'année de préparation, vous mettez chaque papier et chaque dollar parfaitement en ordre."]},
+          w6e2:{t:"Votre père récupère après un séjour à l'hôpital, de l'autre côté de la ville, pas si loin. Téléphone en main, vous comptez comment changer vos horaires pour être avec lui.",c:["Apportez les courses et mangez avec lui chaque jour","Organisez des repas livrés, et appelez chaque jour"],r:["Votre père : « Tu es occupé — ne t'inquiète pas pour nous. Travaille bien. »","Les repas arrivent, les appels sont quotidiens, et vous ajustez vos horaires pour être là."]},
+          w8e1:{t:"Votre patron vous demande de former les nouveaux : transmettez tout ce que ces années vous ont appris.",c:["Écrivez un guide du débutant simple et clair","Formez sur le terrain, à coup de démonstrations pratiques"],r:["Les nouveaux sont vite opérationnels. Votre patron : c'est ça, être professionnel.","Tous les apprentis que vous formez sortent solides."]},
+          w8e2:{t:"Dans votre diner préféré, l'équipe organise une petite fête d'anniversaire de travail : de la chambre de la première semaine au professionnel du coin d'aujourd'hui.",c:["Levez votre verre à tous ceux qui ont cheminé avec vous","Appelez la maison en vidéo : « Regardez — je m'en suis sorti dans cette ville »"],r:["Ce verre, c'est pour les années, et pour les gens.","Un long silence au téléphone. Puis votre père : « Bien. Bien. Tu nous as rendus fiers. »"]},
+          i1e1:{t:"Avec vos économies, vous visitez des locaux dans cette ville. L'agent en montre deux : l'un dans un quartier bondé — cher, avec un vrai passage — et l'autre dans une ruelle calme, bon marché, sans passage.",c:["Le local bondé : cher, mais le passage, c'est de l'argent","Le local de la ruelle : les économies iront aux travaux et à la publicité"],r:["Le jour de la signature, le propriétaire sourit : « Le locataire précédent, ici, tenait aussi un restaurant — j'espère que vous aurez plus de chance. »","Le local est verrouillé. Maintenant commence le long chantier."]},
+          i5e1:{t:"Avant le deuxième lieu, votre comptable et votre manager étalent le plan : loyer, personnel, impôts, stocks — trois gros classeurs, un à la fois.",c:["Vérifiez chaque ligne vous-même et comblez chaque trou","Faites confiance à l'équipe et concentrez-vous sur la cuisine"],r:["Le jour où le plan est bouclé, vous respirez pour la première fois depuis des semaines.","Le comptable dit que le plan est complet — vos livres ont toujours été impeccables."]},
+          i5e2:{t:"Au fil de la croissance, votre restaurant devient le salon du quartier : dîners de fête, repas étudiants tardifs, petites réunions.",c:["Continuez ! Un restaurant, c'est un commerce — et le salon du quartier","Concentrez-vous sur les opérations ; les événements, rarement"],r:["Votre adresse entre dans la liste locale des « dix petits restaurants qui valent le détour ».","Le bouche-à-oreille se propage tranquillement dans la communauté."]},
+          i7e1:{t:"Le journal local nomme votre adresse « préférée du quartier » : des années après — un commerce, une équipe, une douzaine d'employés, et deux apprentis qui tiennent maintenant leurs propres lieux.",c:["Ému : « Le mérite revient à toute l'équipe »","Posé : la vie est longue ; un pas à la fois"],r:["Le soir de la nouvelle, vous offrez un bon repas à toute la boutique.","Vous repassez soigneusement le tablier de demain."]},
+          i7e2:{t:"La petite cérémonie se termine. Vous sortez — votre restaurant est à deux rues, la file du déjeuner se forme déjà, les habitués vous saluent.",c:["Retour au restaurant, tablier enfilé — aujourd'hui, le patron cuisine","Prenez l'après-midi de congé et regardez cette ville"],r:["Les clients ne le savent pas, mais le chef d'aujourd'hui est particulièrement heureux.","Vous pouvez maintenant prendre votre temps avec cette ville. Fin !"]},
+          f1e1:{t:"La famille visite un logement ensemble, près de l'école. Le loyer dépasse un peu le budget, et vos parents veulent votre avis : trajet, pièces et bail, tout compte.",c:["Donnez votre avis avec une liste : un long bail, toujours à l'heure — un bon argument pour baisser le prix","Restez en retrait et laissez vos parents décider"],r:["Votre calcul est clair, le propriétaire baisse le prix et vous dit bon enfant. Les clés du nouveau foyer sont en main.","Vos parents négocient et signent au prix plein. Ça pique un peu."]},
+          f1e2:{t:"Premier week-end dans le nouveau foyer : toute la famille entassée dans la petite cuisine, à faire des nouilles et déballer ensemble. Maman : « Un petit endroit, c'est très bien, tant que nos cœurs sont ensemble. » Dehors : les lumières de cette ville.",c:["Fixez un objectif discret : étudiez dur, et un jour, offrez plus d'espace à la famille","D'abord une bonne nuit — l'école commence demain"],r:["Vous vous endormez léger cette nuit-là, un petit objectif brûlant dans la poitrine.","Une nuit complète, et vous vous réveillez pour le premier matin d'école."]},
+          f2e1:{t:"Premier jour du nouveau trimestre. Le professeur vous demande de vous présenter. Vous vous levez, le cœur battant, et toute la classe regarde.",c:["Respirez profondément, parlez lentement — les erreurs sont permises","Murmurez votre nom, baissez la tête et asseyez-vous"],r:["Vous allez au bout, et quelques camarades applaudissent. À la récréation, quelqu'un vient vous dire bonjour.","Silencieux, mais le premier pas est fait. Un jour à la fois."]},
+          f2e2:{t:"Votre voisin de table partage toujours la moitié du sandwich de sa maman au déjeuner et parle sans arrêt — et ce week-end, il vous invite chez lui pour jouer aux jeux vidéo.",c:["Allez-y ! Et apportez les raviolis maison de maman en remerciement","Refusez poliment — les week-ends sont faits pour aider à la maison"],r:["Les raviolis sont un succès. Vous vous êtes fait votre premier ami dans cette ville.","Vous aidez la famille — mais les photos de la discussion de groupe vous émeuvent un peu."]},
+          f6e1:{t:"Bien des années plus tard, la famille planifie un dîner de fête : de la petite première maison à la vie stable d'aujourd'hui, chacun y a mis du sien.",c:["Cuisinez avec vos parents et composez l'album photo ensemble","Que chacun apporte son plat signature — rendez-vous à table"],r:["Au dîner, vos parents rient à gorge déployée, l'esprit tranquille.","Toute la famille, ensemble, chacun atteignant ses objectifs."]},
+          f6e2:{t:"Après le dîner, la famille feuillette l'album : la première petite maison, le premier jour d'école, le premier emploi… La main de maman, tenant la vôtre, tremble un peu.",c:["Tenez la main de maman : « Maman, on s'en sort bien dans cette ville »","Levez votre verre en souriant : cette famille est la meilleure de la ville"],r:["Après le dîner, vous invitez vos parents à un bon restaurant. Cette fois, c'est vous qui régalez.","Un grand final — et vous savez que l'histoire de cette famille ne fait que commencer."]}
+        },
+        endings: {
+          study:"Voie des études, terminée : du premier cours au premier emploi, puis de retour comme mentor — les études ont élargi votre vie, comme promis.",
+          born:"Voie Né ici, terminée : une petite maison, des salles de classe, un volant, un certificat — dans la ville où vous êtes né, vous avez fait d'une vie votre propre histoire.",
+          work:"Voie du travail, terminée : une petite chambre, la graisse de cuisine, un volant, un certificat — chaque dollar que vous avez gagné porte votre nom.",
+          family:"Voie Né ici, terminée : une petite maison, des salles de classe, un volant, un certificat — dans la ville où vous êtes né, vous avez fait d'une vie votre propre histoire.",
+          invest:"Voie de l'entreprise, terminée : un restaurant, une famille, une ville — vous avez fait d'un commerce une vie, et d'une vie une marque devant laquelle les gens font la queue."
+        },
+        shareTpl:"🗽 Chemin : {route} | ⏱ Temps : {years} ans | 💰 Espèces : ${cash} | ⭐ Note de vie : {grade} ({score} pts)\n{line}\nÀ votre tour — quelle ville américaine, et quelle vie, choisirez-vous ?",
+        cityCards: {
+          col:{ flower:"Emblème de la ville : le Capitole de l'Ohio", fact:"Columbus est la capitale de l'Ohio et sa plus grande ville, portée par son université, sa santé et sa logistique.", poem:"Les lumières montent le long de la rivière, et la ville commence à ressembler à un chez-soi." }
+        }
+      }
+    });
+    /* ================= 州/城市数据（宏观图 + 文化四件套，查证口径） =================
+       文化一句话原文目录：~/workspace/american-life/ 下的城市/州目录文件（50 州骨架表 + 71 项体验目录）。
+       本处只挂"入口骨架"所需字段：州府、地标、特色吃食、音乐、活动、时区。 */
+    const US_STATES = {
+      AL:{zh:"亚拉巴马州",en:"Alabama",es:"Alabama",hi:"अलबामा",fr:"Alabama",cap:"Montgomery",capZh:"蒙哥马利",capHi:"मॉन्टगोमरी",tz:"America/Chicago",lm:{zh:"州议会大厦",en:"Alabama State Capitol",es:"Capitolio estatal de Alabama",hi:"अलबामा स्टेट कैपिटोल",fr:"Capitole de l'État d'Alabama"},food:{zh:"白酱烧烤",en:"white-sauce barbecue",es:"barbacoa con salsa blanca",hi:"सफ़ेद सॉस बार्बेक्यू",fr:"barbecue à la sauce blanche"},music:{zh:"南方灵魂乐",en:"southern soul",es:"soul sureño",hi:"दक्षिणी सोल",fr:"soul sudiste"},act:{zh:"民权之路步行游",en:"Civil Rights Trail walks",es:"rutas del Sendero de Derechos Civiles",hi:"नागरिक अधिकार ट्रेल सैर",fr:"marches du Civil Rights Trail"}},
+      AK:{zh:"阿拉斯加州",en:"Alaska",es:"Alaska",hi:"अलास्का",fr:"Alaska",cap:"Juneau",capZh:"朱诺",capHi:"जूनो",tz:"America/Juneau",lm:{zh:"门登霍尔冰川",en:"Mendenhall Glacier",es:"glaciar Mendenhall",hi:"मेंडेनहॉल ग्लेशियर",fr:"glacier Mendenhall"},food:{zh:"帝王蟹",en:"king crab",es:"cangrejo real",hi:"किंग क्रैब",fr:"crabe royal"},music:{zh:"原住民鼓乐",en:"Native drumming",es:"tambores nativos",hi:"आदिवासी ढोल",fr:"tambours autochtones"},act:{zh:"冰川观鲸游船",en:"glacier and whale watching cruises",es:"cruceros de glaciares y ballenas",hi:"ग्लेशियर और व्हेल क्रूज़",fr:"croisières glaciers et baleines"}},
+      AZ:{zh:"亚利桑那州",en:"Arizona",es:"Arizona",hi:"एरिज़ोना",fr:"Arizona",cap:"Phoenix",capZh:"菲尼克斯",capHi:"फ़ीनिक्स",tz:"America/Phoenix",lm:{zh:"大峡谷南缘",en:"Grand Canyon South Rim",es:"borde sur del Gran Cañón",hi:"ग्रैंड कैन्यन साउथ रिम",fr:"rive sud du Grand Canyon"},food:{zh:"索诺拉热狗",en:"Sonoran hot dog",es:"hot dog sonorense",hi:"सोनोरन हॉट डॉग",fr:"hot-dog sonoran"},music:{zh:"玛利亚奇乐队",en:"mariachi",es:"mariachi",hi:"मारियाची",fr:"mariachi"},act:{zh:"沙漠日落骑行",en:"desert sunset rides",es:"paseos al atardecer en el desierto",hi:"रेगिस्तान सूर्यास्त सवारी",fr:"balades au coucher du soleil dans le désert"}},
+      AR:{zh:"阿肯色州",en:"Arkansas",es:"Arkansas",hi:"अर्कांसस",fr:"Arkansas",cap:"Little Rock",capZh:"小石城",capHi:"लिटिल रॉक",tz:"America/Chicago",lm:{zh:"中央高中纪念地",en:"Little Rock Central High historic site",es:"sitio histórico de Central High",hi:"लिटिल रॉक सेंट्रल हाई ऐतिहासिक स्थल",fr:"site historique de Central High"},food:{zh:"炸鲶鱼",en:"fried catfish",es:"bagre frito",hi:"तली कैटफ़िश",fr:"poisson-chat frit"},music:{zh:"三角洲蓝调",en:"Delta blues",es:"blues del Delta",hi:"डेल्टा ब्लूज़",fr:"blues du Delta"},act:{zh:"温泉国家公园泡汤",en:"Hot Springs National Park soaks",es:"baños en el Parque Nacional Hot Springs",hi:"हॉट स्प्रिंग्स स्नान",fr:"bains du parc national de Hot Springs"}},
+      CA:{zh:"加利福尼亚州",en:"California",es:"California",hi:"कैलिफ़ोर्निया",fr:"Californie",cap:"Sacramento",capZh:"萨克拉门托",capHi:"सैक्रामेंटो",tz:"America/Los_Angeles",lm:{zh:"州议会大厦",en:"California State Capitol",es:"Capitolio estatal de California",hi:"कैलिफ़ोर्निया स्टेट कैपिटोल",fr:"Capitole de l'État de Californie"},food:{zh:"鲜蔬塔可",en:"farm-fresh tacos",es:"tacos frescos de granja",hi:"ताज़ा टैको",fr:"tacos frais de la ferme"},music:{zh:"西海岸爵士",en:"West Coast jazz",es:"jazz de la costa oeste",hi:"वेस्ट कोस्ट जैज़",fr:"jazz de la côte Ouest"},act:{zh:"老城淘金镇漫步",en:"Old Town gold-rush walks",es:"paseos por el pueblo de la fiebre del oro",hi:"ओल्ड टाउन गोल्ड-रश सैर",fr:"balades dans la vieille ville de la ruée vers l'or"}},
+      CO:{zh:"科罗拉多州",en:"Colorado",es:"Colorado",hi:"कोलोराडो",fr:"Colorado",cap:"Denver",capZh:"丹佛",capHi:"डेनवर",tz:"America/Denver",lm:{zh:"红石露天剧场",en:"Red Rocks Amphitheatre",es:"Anfiteatro Red Rocks",hi:"रेड रॉक्स एम्फ़ीथिएटर",fr:"amphithéâtre Red Rocks"},food:{zh:"绿辣椒炖肉",en:"green chile stew",es:"guiso de chile verde",hi:"ग्रीन चिली स्टू",fr:"ragoût au piment vert"},music:{zh:"蓝草音乐",en:"bluegrass",es:"bluegrass",hi:"ब्लूग्रास",fr:"bluegrass"},act:{zh:"落基山徒步",en:"Rocky Mountain hikes",es:"senderismo en las Montañas Rocosas",hi:"रॉकी माउंटेन हाइक",fr:"randonnées dans les Rocheuses"}},
+      CT:{zh:"康涅狄格州",en:"Connecticut",es:"Connecticut",hi:"कनेक्टिकट",fr:"Connecticut",cap:"Hartford",capZh:"哈特福德",capHi:"हार्टफ़ोर्ड",tz:"America/New_York",lm:{zh:"马克·吐温故居",en:"Mark Twain House",es:"Casa de Mark Twain",hi:"मार्क ट्वेन हाउस",fr:"maison de Mark Twain"},food:{zh:"蛤蜊浓汤",en:"clam chowder",es:"sopa de almejas",hi:"क्लैम चाउडर",fr:"chaudrée de palourdes"},music:{zh:"古典室内乐",en:"classical chamber music",es:"música de cámara clásica",hi:"शास्त्रीय चैंबर संगीत",fr:"musique de chambre classique"},act:{zh:"康涅狄格河游船",en:"Connecticut River cruises",es:"cruceros por el río Connecticut",hi:"कनेक्टिकट रिवर क्रूज़",fr:"croisières sur la rivière Connecticut"}},
+      DE:{zh:"特拉华州",en:"Delaware",es:"Delaware",hi:"डेलावेयर",fr:"Delaware",cap:"Dover",capZh:"多佛",capHi:"डोवर",tz:"America/New_York",lm:{zh:"老州议会大厦",en:"Old State House",es:"Antigua Casa Estatal",hi:"ओल्ड स्टेट हाउस",fr:"ancienne Maison d'État"},food:{zh:"蓝蟹",en:"blue crabs",es:"cangrejos azules",hi:"नीले केकड़े",fr:"crabes bleus"},music:{zh:"海滩乐队现场",en:"beach-town live bands",es:"bandas en vivo de playa",hi:"बीच-टाउन लाइव बैंड",fr:"groupes live de station balnéaire"},act:{zh:"木板路海滩日",en:"boardwalk beach days",es:"días de playa en el malecón",hi:"बोर्डवॉक बीच दिन",fr:"journées plage sur la promenade"}},
+      FL:{zh:"佛罗里达州",en:"Florida",es:"Florida",hi:"फ़्लोरिडा",fr:"Floride",cap:"Tallahassee",capZh:"塔拉哈西",capHi:"टैलाहासी",tz:"America/New_York",lm:{zh:"州议会大厦",en:"Florida State Capitol",es:"Capitolio estatal de Florida",hi:"फ़्लोरिडा स्टेट कैपिटोल",fr:"Capitole de l'État de Floride"},food:{zh:"青柠派",en:"Key lime pie",es:"pastel de lima de los Cayos",hi:"की लाइम पाई",fr:"tarte au citron vert des Keys"},music:{zh:"热带拉丁节奏",en:"tropical Latin rhythms",es:"ritmos latinos tropicales",hi:"उष्णकटिबंधीय लैटिन धुनें",fr:"rythmes latins tropicaux"},act:{zh:"沼泽地观鳄鱼",en:"Everglades alligator watching",es:"observación de caimanes en los Everglades",hi:"एवरग्लेड्स में मगरमच्छ देखना",fr:"observation des alligators dans les Everglades"}},
+      GA:{zh:"佐治亚州",en:"Georgia",es:"Georgia",hi:"जॉर्जिया",fr:"Géorgie",cap:"Atlanta",capZh:"亚特兰大",capHi:"अटलांटा",tz:"America/New_York",lm:{zh:"佐治亚水族馆",en:"Georgia Aquarium",es:"Acuario de Georgia",hi:"जॉर्जिया एक्वेरियम",fr:"aquarium de Géorgie"},food:{zh:"桃子派",en:"peach cobbler",es:"pastel de durazno",hi:"पीच कॉब्लर",fr:"cobbler aux pêches"},music:{zh:"南方嘻哈",en:"Southern hip-hop",es:"hip-hop sureño",hi:"दक्षिणी हिप-हॉप",fr:"hip-hop du Sud"},act:{zh:"石山公园远足",en:"Stone Mountain Park outings",es:"excursiones al Parque Stone Mountain",hi:"स्टोन माउंटेन सैर",fr:"sorties au parc de Stone Mountain"}},
+      HI:{zh:"夏威夷州",en:"Hawaii",es:"Hawái",hi:"हवाई",fr:"Hawaï",cap:"Honolulu",capZh:"檀香山",capHi:"होनोलूलू",tz:"Pacific/Honolulu",lm:{zh:"伊奥拉尼王宫",en:"Iolani Palace",es:"Palacio Iolani",hi:"इओलानी पैलेस",fr:"palais Iolani"},food:{zh:"波奇碗",en:"poke bowls",es:"bowls de poke",hi:"पोके बाउल",fr:"poke bowls"},music:{zh:"夏威夷草裙舞乐",en:"hula music",es:"música hula",hi:"हुला संगीत",fr:"musique hula"},act:{zh:"威基基冲浪课",en:"Waikiki surf lessons",es:"clases de surf en Waikiki",hi:"वाइकीकी सर्फ़ पाठ",fr:"cours de surf à Waikiki"}},
+      ID:{zh:"爱达荷州",en:"Idaho",es:"Idaho",hi:"आइडाहो",fr:"Idaho",cap:"Boise",capZh:"博伊西",capHi:"बोइसी",tz:"America/Boise",lm:{zh:"州议会大厦",en:"Idaho State Capitol",es:"Capitolio estatal de Idaho",hi:"आइडाहो स्टेट कैपिटोल",fr:"Capitole de l'État d'Idaho"},food:{zh:"手指牛排",en:"finger steaks",es:"tiras de carne fritas",hi:"फ़िंगर स्टेक",fr:"finger steaks"},music:{zh:"乡村摇滚",en:"country rock",es:"country rock",hi:"कंट्री रॉक",fr:"country rock"},act:{zh:"博伊西河漂流",en:"Boise River floats",es:"flotadas por el río Boise",hi:"बोइसी रिवर फ़्लोट",fr:"descentes de la rivière Boise"}},
+      IL:{zh:"伊利诺伊州",en:"Illinois",es:"Illinois",hi:"इलिनॉय",fr:"Illinois",cap:"Springfield",capZh:"斯普林菲尔德",capHi:"स्प्रिंगफ़ील्ड",tz:"America/Chicago",lm:{zh:"林肯故居",en:"Lincoln Home",es:"Casa de Lincoln",hi:"लिंकन होम",fr:"maison de Lincoln"},food:{zh:"马蹄三明治",en:"horseshoe sandwich",es:"sándwich horseshoe",hi:"हॉर्सशू सैंडविच",fr:"sandwich horseshoe"},music:{zh:"福音合唱",en:"gospel choirs",es:"coros góspel",hi:"गॉस्पेल गायक-मंडली",fr:"chœurs gospel"},act:{zh:"林肯故居参观",en:"Lincoln Home tours",es:"visitas a la Casa de Lincoln",hi:"लिंकन होम टूर",fr:"visites de la maison de Lincoln"}},
+      IN:{zh:"印第安纳州",en:"Indiana",es:"Indiana",hi:"इंडियाना",fr:"Indiana",cap:"Indianapolis",capZh:"印第安纳波利斯",capHi:"इंडियानापोलिस",tz:"America/Indiana/Indianapolis",lm:{zh:"印第安纳波利斯赛道",en:"Indianapolis Motor Speedway",es:"Circuito de Indianápolis",hi:"इंडियानापोलिस मोटर स्पीडवे",fr:"circuit d'Indianapolis"},food:{zh:"炸猪排三明治",en:"pork tenderloin sandwich",es:"sándwich de lomo de cerdo frito",hi:"फ़्राइड पोर्क टेंडरलॉइन सैंडविच",fr:"sandwich au filet de porc frit"},music:{zh:"赛车日现场乐队",en:"race-day live bands",es:"bandas en vivo el día de carrera",hi:"रेस-डे लाइव बैंड",fr:"groupes live les jours de course"},act:{zh:"印第500赛车日",en:"Indy 500 race days",es:"días de carrera Indy 500",hi:"इंडी 500 रेस दिन",fr:"jours de course Indy 500"}},
+      IA:{zh:"艾奥瓦州",en:"Iowa",es:"Iowa",hi:"आयोवा",fr:"Iowa",cap:"Des Moines",capZh:"得梅因",capHi:"डेस मोइनेस",tz:"America/Chicago",lm:{zh:"州议会大厦金顶",en:"gold-domed State Capitol",es:"Capitolio estatal de cúpula dorada",hi:"स्वर्ण-गुंबद स्टेट कैपिटोल",fr:"Capitole à dôme doré"},food:{zh:"甜玉米",en:"sweet corn",es:"maíz dulce",hi:"मीठा मक्का",fr:"maïs doux"},music:{zh:"州集市乡村乐",en:"state-fair country",es:"country de feria estatal",hi:"स्टेट-फ़ेयर कंट्री",fr:"country de foire d'État"},act:{zh:"州集市嘉年华",en:"State Fair days",es:"días de feria estatal",hi:"स्टेट फ़ेयर दिन",fr:"jours de foire d'État"}},
+      KS:{zh:"堪萨斯州",en:"Kansas",es:"Kansas",hi:"कैनसस",fr:"Kansas",cap:"Topeka",capZh:"托皮卡",capHi:"टोपेका",tz:"America/Chicago",lm:{zh:"州议会大厦",en:"Kansas State Capitol",es:"Capitolio estatal de Kansas",hi:"कैनसस स्टेट कैपिटोल",fr:"Capitole de l'État du Kansas"},food:{zh:"堪萨斯城风味烧烤",en:"Kansas City–style barbecue",es:"barbacoa estilo Kansas City",hi:"कैनसस सिटी-स्टाइल बार्बेक्यू",fr:"barbecue façon Kansas City"},music:{zh:"大草原民谣",en:"prairie folk",es:"folk de pradera",hi:"प्रेयरी फ़ोक",fr:"folk des prairies"},act:{zh:"高草草原徒步",en:"Tallgrass Prairie hikes",es:"senderismo en la pradera de pastos altos",hi:"टॉलग्रास प्रेयरी हाइक",fr:"randonnées dans la prairie d'herbes hautes"}},
+      KY:{zh:"肯塔基州",en:"Kentucky",es:"Kentucky",hi:"केंटकी",fr:"Kentucky",cap:"Frankfort",capZh:"法兰克福",capHi:"फ़्रैंकफ़ोर्ट",tz:"America/New_York",lm:{zh:"州议会大厦",en:"Kentucky State Capitol",es:"Capitolio estatal de Kentucky",hi:"केंटकी स्टेट कैपिटोल",fr:"Capitole de l'État du Kentucky"},food:{zh:"热棕三明治",en:"Hot Brown sandwich",es:"sándwich Hot Brown",hi:"हॉट ब्राउन सैंडविच",fr:"sandwich Hot Brown"},music:{zh:"蓝草音乐",en:"bluegrass",es:"bluegrass",hi:"ब्लूग्रास",fr:"bluegrass"},act:{zh:"赛马场晨练参观",en:"horse-farm morning tours",es:"visitas matutinas a granjas de caballos",hi:"हॉर्स-फ़ार्म सुबह के टूर",fr:"visites matinales des haras"}},
+      LA:{zh:"路易斯安那州",en:"Louisiana",es:"Luisiana",hi:"लुइज़ियाना",fr:"Louisiane",cap:"Baton Rouge",capZh:"巴吞鲁日",capHi:"बैटन रूज",tz:"America/Chicago",lm:{zh:"州议会大厦塔楼",en:"State Capitol tower",es:"torre del Capitolio estatal",hi:"स्टेट कैपिटोल टावर",fr:"tour du Capitole"},food:{zh:"秋葵浓汤",en:"gumbo",es:"gumbo",hi:"गंबो",fr:"gumbo"},music:{zh:"路易斯安那爵士",en:"Louisiana jazz",es:"jazz de Luisiana",hi:"लुइज़ियाना जैज़",fr:"jazz de Louisiane"},act:{zh:"密西西比河畔漫步",en:"Mississippi riverfront walks",es:"paseos junto al Misisipi",hi:"मिसिसिपी नदी किनारे सैर",fr:"balades au bord du Mississippi"}},
+      ME:{zh:"缅因州",en:"Maine",es:"Maine",hi:"मेन",fr:"Maine",cap:"Augusta",capZh:"奥古斯塔",capHi:"ऑगस्टा",tz:"America/New_York",lm:{zh:"州议会大厦",en:"Maine State House",es:"Casa Estatal de Maine",hi:"मेन स्टेट हाउस",fr:"Maison d'État du Maine"},food:{zh:"龙虾卷",en:"lobster roll",es:"rollo de langosta",hi:"लॉबस्टर रोल",fr:"guédille de homard"},music:{zh:"海员民谣",en:"sea shanties",es:"canciones marineras",hi:"समुद्री लोकगीत",fr:"chants de marins"},act:{zh:"阿卡迪亚海岸徒步",en:"Acadia coast hikes",es:"senderismo en la costa de Acadia",hi:"अकाडिया तट हाइक",fr:"randonnées sur la côte d'Acadia"}},
+      MD:{zh:"马里兰州",en:"Maryland",es:"Maryland",hi:"मैरीलैंड",fr:"Maryland",cap:"Annapolis",capZh:"安纳波利斯",capHi:"एनापोलिस",tz:"America/New_York",lm:{zh:"美国海军学院",en:"U.S. Naval Academy",es:"Academia Naval de EE. UU.",hi:"यू.एस. नेवल अकादमी",fr:"Académie navale"},food:{zh:"蓝蟹大餐",en:"blue crab feast",es:"festín de cangrejo azul",hi:"ब्लू क्रैब दावत",fr:"festin de crabe bleu"},music:{zh:"港湾民谣",en:"harbor folk",es:"folk portuario",hi:"बंदरगाह फ़ोक",fr:"folk du port"},act:{zh:"切萨皮克湾帆船",en:"Chesapeake Bay sailing",es:"vela en la bahía de Chesapeake",hi:"चेसापीक बे नौकायन",fr:"voile dans la baie de Chesapeake"}},
+      MA:{zh:"马萨诸塞州",en:"Massachusetts",es:"Massachusetts",hi:"मैसाचुसेट्स",fr:"Massachusetts",cap:"Boston",capZh:"波士顿",capHi:"बोस्टन",tz:"America/New_York",lm:{zh:"自由之路",en:"Freedom Trail",es:"Sendero de la Libertad",hi:"फ़्रीडम ट्रेल",fr:"Freedom Trail"},food:{zh:"蛤蜊浓汤",en:"clam chowder",es:"sopa de almejas",hi:"क्लैम चाउडर",fr:"chaudrée de palourdes"},music:{zh:"古典交响乐",en:"classical symphony",es:"sinfonía clásica",hi:"शास्त्रीय सिम्फ़नी",fr:"symphonie classique"},act:{zh:"自由之路徒步",en:"Freedom Trail walks",es:"caminatas por el Sendero de la Libertad",hi:"फ़्रीडम ट्रेल सैर",fr:"marches du Freedom Trail"}},
+      MI:{zh:"密歇根州",en:"Michigan",es:"Míchigan",hi:"मिशिगन",fr:"Michigan",cap:"Lansing",capZh:"兰辛",capHi:"लैंसिंग",tz:"America/Detroit",lm:{zh:"州议会大厦",en:"Michigan State Capitol",es:"Capitolio estatal de Míchigan",hi:"मिशिगन स्टेट कैपिटोल",fr:"Capitole de l'État du Michigan"},food:{zh:"底特律风味披萨",en:"Detroit-style pizza",es:"pizza estilo Detroit",hi:"डेट्रॉइट-स्टाइल पिज़्ज़ा",fr:"pizza façon Détroit"},music:{zh:"摩城灵魂乐",en:"Motown soul",es:"soul de Motown",hi:"मोटाउन सोल",fr:"soul Motown"},act:{zh:"五大湖湖畔日",en:"Great Lakes shore days",es:"días en la costa de los Grandes Lagos",hi:"ग्रेट लेक्स किनारे के दिन",fr:"journées au bord des Grands Lacs"}},
+      MN:{zh:"明尼苏达州",en:"Minnesota",es:"Minnesota",hi:"मिनेसोटा",fr:"Minnesota",cap:"Saint Paul",capZh:"圣保罗",capHi:"सेंट पॉल",tz:"America/Chicago",lm:{zh:"州议会大厦",en:"Minnesota State Capitol",es:"Capitolio estatal de Minnesota",hi:"मिनेसोटा स्टेट कैपिटोल",fr:"Capitole de l'État du Minnesota"},food:{zh:"多汁露西汉堡",en:"Juicy Lucy burger",es:"hamburguesa Juicy Lucy",hi:"जूसी लूसी बर्गर",fr:"burger Juicy Lucy"},music:{zh:"北方民谣摇滚",en:"northern folk rock",es:"folk rock del norte",hi:"उत्तरी फ़ोक रॉक",fr:"folk rock du Nord"},act:{zh:"万湖皮划艇",en:"Land of 10,000 Lakes paddling",es:"remo en la Tierra de los 10.000 Lagos",hi:"10,000 झीलों की भूमि में नौकायन",fr:"canotage au Pays des 10 000 lacs"}},
+      MS:{zh:"密西西比州",en:"Mississippi",es:"Misisipi",hi:"मिसिसिपी",fr:"Mississippi",cap:"Jackson",capZh:"杰克逊",capHi:"जैक्सन",tz:"America/Chicago",lm:{zh:"州议会大厦",en:"Mississippi State Capitol",es:"Capitolio estatal de Misisipi",hi:"मिसिसिपी स्टेट कैपिटोल",fr:"Capitole de l'État du Mississippi"},food:{zh:"炸鲶鱼",en:"fried catfish",es:"bagre frito",hi:"तली कैटफ़िश",fr:"poisson-chat frit"},music:{zh:"蓝调发源地",en:"birthplace-of-blues sounds",es:"sonidos de la cuna del blues",hi:"ब्लूज़ की जन्मभूमि की ध्वनियाँ",fr:"sons du berceau du blues"},act:{zh:"蓝调之路自驾",en:"Blues Trail drives",es:"rutas por el Blues Trail",hi:"ब्लूज़ ट्रेल ड्राइव",fr:"routes du Blues Trail"}},
+      MO:{zh:"密苏里州",en:"Missouri",es:"Misuri",hi:"मिज़ूरी",fr:"Missouri",cap:"Jefferson City",capZh:"杰斐逊城",capHi:"जेफ़रसन सिटी",tz:"America/Chicago",lm:{zh:"州议会大厦",en:"Missouri State Capitol",es:"Capitolio estatal de Misuri",hi:"मिज़ूरी स्टेट कैपिटोल",fr:"Capitole de l'État du Missouri"},food:{zh:"圣路易斯烧烤排骨",en:"St. Louis–style ribs",es:"costillas estilo San Luis",hi:"सेंट लुइस-स्टाइल रिब्स",fr:"travers de porc façon Saint-Louis"},music:{zh:"堪萨斯城爵士",en:"Kansas City jazz",es:"jazz de Kansas City",hi:"कैनसस सिटी जैज़",fr:"jazz de Kansas City"},act:{zh:"密苏里河游船",en:"Missouri River cruises",es:"cruceros por el río Misuri",hi:"मिज़ूरी रिवर क्रूज़",fr:"croisières sur le Missouri"}},
+      MT:{zh:"蒙大拿州",en:"Montana",es:"Montana",hi:"मोंटाना",fr:"Montana",cap:"Helena",capZh:"海伦娜",capHi:"हेलेना",tz:"America/Denver",lm:{zh:"州议会大厦",en:"Montana State Capitol",es:"Capitolio estatal de Montana",hi:"मोंटाना स्टेट कैपिटोल",fr:"Capitole de l'État du Montana"},food:{zh:"越橘派",en:"huckleberry pie",es:"pastel de arándanos silvestres",hi:"हकलबेरी पाई",fr:"tarte aux myrtilles sauvages"},music:{zh:"西部乡村乐",en:"western country",es:"country occidental",hi:"पश्चिमी कंट्री",fr:"country western"},act:{zh:"冰川国家公园之旅",en:"Glacier National Park trips",es:"excursiones al Parque Nacional Glacier",hi:"ग्लेशियर नेशनल पार्क यात्राएँ",fr:"excursions au parc national de Glacier"}},
+      NE:{zh:"内布拉斯加州",en:"Nebraska",es:"Nebraska",hi:"नेब्रास्का",fr:"Nebraska",cap:"Lincoln",capZh:"林肯",capHi:"लिंकन",tz:"America/Chicago",lm:{zh:"州议会大厦塔楼",en:"State Capitol tower",es:"torre del Capitolio estatal",hi:"स्टेट कैपिटोल टावर",fr:"tour du Capitole"},food:{zh:"伦扎三明治",en:"Runza sandwich",es:"sándwich Runza",hi:"रुन्ज़ा सैंडविच",fr:"sandwich Runza"},music:{zh:"草原民谣",en:"plains folk",es:"folk de las llanuras",hi:"मैदानी फ़ोक",fr:"folk des plaines"},act:{zh:"沙丘鹤迁徙观赏",en:"sandhill crane migration viewing",es:"observación de la migración de grullas",hi:"सैंडहिल क्रेन प्रवास दर्शन",fr:"observation de la migration des grues"}},
+      NV:{zh:"内华达州",en:"Nevada",es:"Nevada",hi:"नेवाडा",fr:"Nevada",cap:"Carson City",capZh:"卡森城",capHi:"कार्सन सिटी",tz:"America/Los_Angeles",lm:{zh:"内华达州立博物馆",en:"Nevada State Museum",es:"Museo Estatal de Nevada",hi:"नेवाडा स्टेट म्यूज़ियम",fr:"musée d'État du Nevada"},food:{zh:"巴斯克家庭餐",en:"Basque family dinners",es:"cenas familiares vascas",hi:"बास्क पारिवारिक भोजन",fr:"dîners familiaux basques"},music:{zh:"沙漠摇滚",en:"desert rock",es:"rock del desierto",hi:"रेगिस्तानी रॉक",fr:"rock du désert"},act:{zh:"太浩湖一日游",en:"Lake Tahoe day trips",es:"excursiones al lago Tahoe",hi:"लेक टाहो दिन-यात्राएँ",fr:"excursions au lac Tahoe"}},
+      NH:{zh:"新罕布什尔州",en:"New Hampshire",es:"Nuevo Hampshire",hi:"न्यू हैम्पशायर",fr:"New Hampshire",cap:"Concord",capZh:"康科德",capHi:"कॉनकॉर्ड",tz:"America/New_York",lm:{zh:"州议会大厦",en:"New Hampshire State House",es:"Casa Estatal de Nuevo Hampshire",hi:"न्यू हैम्पशायर स्टेट हाउस",fr:"Maison d'État du New Hampshire"},food:{zh:"枫糖点心",en:"maple treats",es:"dulces de arce",hi:"मेपल मिठाइयाँ",fr:"douceurs à l'érable"},music:{zh:"新英格兰民谣",en:"New England folk",es:"folk de Nueva Inglaterra",hi:"न्यू इंग्लैंड फ़ोक",fr:"folk de Nouvelle-Angleterre"},act:{zh:"白山徒步",en:"White Mountains hikes",es:"senderismo en las Montañas Blancas",hi:"व्हाइट माउंटेन हाइक",fr:"randonnées dans les Montagnes Blanches"}},
+      NJ:{zh:"新泽西州",en:"New Jersey",es:"Nueva Jersey",hi:"न्यू जर्सी",fr:"New Jersey",cap:"Trenton",capZh:"特伦顿",capHi:"ट्रेंटन",tz:"America/New_York",lm:{zh:"州议会大厦",en:"New Jersey State House",es:"Casa Estatal de Nueva Jersey",hi:"न्यू जर्सी स्टेट हाउस",fr:"Maison d'État du New Jersey"},food:{zh:"猪肉卷鸡蛋奶酪三明治",en:"pork roll, egg and cheese",es:"sándwich de cerdo, huevo y queso",hi:"पोर्क रोल, अंडा और चीज़",fr:"sandwich porc, œuf et fromage"},music:{zh:"泽西海岸摇滚",en:"Jersey Shore rock",es:"rock de la costa de Jersey",hi:"जर्सी शोर रॉक",fr:"rock de la Jersey Shore"},act:{zh:"木板路海滩日",en:"boardwalk beach days",es:"días de playa en el malecón",hi:"बोर्डवॉक बीच दिन",fr:"journées plage sur la promenade"}},
+      NM:{zh:"新墨西哥州",en:"New Mexico",es:"Nuevo México",hi:"न्यू मेक्सिको",fr:"Nouveau-Mexique",cap:"Santa Fe",capZh:"圣菲",capHi:"सांता फ़े",tz:"America/Denver",lm:{zh:"总督宫",en:"Palace of the Governors",es:"Palacio de los Gobernadores",hi:"पैलेस ऑफ़ द गवर्नर्स",fr:"Palais des Gouverneurs"},food:{zh:"绿辣椒炖肉",en:"green chile stew",es:"guiso de chile verde",hi:"ग्रीन चिली स्टू",fr:"ragoût au piment vert"},music:{zh:"西班牙民谣吉他",en:"Spanish folk guitar",es:"guitarra folclórica española",hi:"स्पेनिश फ़ोक गिटार",fr:"guitare folk espagnole"},act:{zh:"土坯老城艺术漫步",en:"adobe old-town art walks",es:"paseos de arte por el casco antiguo de adobe",hi:"एडोब ओल्ड-टाउन कला सैर",fr:"balades artistiques dans la vieille ville en adobe"}},
+      NY:{zh:"纽约州",en:"New York",es:"Nueva York",hi:"न्यूयॉर्क",fr:"New York",cap:"Albany",capZh:"奥尔巴尼",capHi:"ऑल्बनी",tz:"America/New_York",lm:{zh:"州议会大厦",en:"New York State Capitol",es:"Capitolio estatal de Nueva York",hi:"न्यूयॉर्क स्टेट कैपिटोल",fr:"Capitole de l'État de New York"},food:{zh:"水牛城辣鸡翅",en:"Buffalo wings",es:"alitas búfalo",hi:"बफ़ेलो विंग्स",fr:"ailes Buffalo"},music:{zh:"百老汇音乐剧",en:"Broadway musicals",es:"musicales de Broadway",hi:"ब्रॉडवे म्यूज़िकल",fr:"comédies musicales de Broadway"},act:{zh:"哈德逊河谷一日游",en:"Hudson Valley day trips",es:"excursiones al valle del Hudson",hi:"हडसन वैली दिन-यात्राएँ",fr:"excursions dans la vallée de l'Hudson"}},
+      NC:{zh:"北卡罗来纳州",en:"North Carolina",es:"Carolina del Norte",hi:"उत्तरी कैरोलिना",fr:"Caroline du Nord",cap:"Raleigh",capZh:"罗利",capHi:"रैली",tz:"America/New_York",lm:{zh:"州议会大厦",en:"North Carolina State Capitol",es:"Capitolio estatal de Carolina del Norte",hi:"उत्तरी कैरोलिना स्टेट कैपिटोल",fr:"Capitole de l'État de Caroline du Nord"},food:{zh:"卡罗来纳烧烤",en:"Carolina barbecue",es:"barbacoa de Carolina",hi:"कैरोलिना बार्बेक्यू",fr:"barbecue de Caroline"},music:{zh:"海滩音乐",en:"beach music",es:"música de playa",hi:"बीच संगीत",fr:"musique de plage"},act:{zh:"蓝岭公路自驾",en:"Blue Ridge Parkway drives",es:"rutas por la Blue Ridge Parkway",hi:"ब्लू रिज पार्कवे ड्राइव",fr:"routes de la Blue Ridge Parkway"}},
+      ND:{zh:"北达科他州",en:"North Dakota",es:"Dakota del Norte",hi:"उत्तरी डकोटा",fr:"Dakota du Nord",cap:"Bismarck",capZh:"俾斯麦",capHi:"बिस्मार्क",tz:"America/Chicago",lm:{zh:"州议会大厦塔楼",en:"State Capitol tower",es:"torre del Capitolio estatal",hi:"स्टेट कैपिटोल टावर",fr:"tour du Capitole"},food:{zh:"挪威肉丸",en:"Norwegian meatballs",es:"albóndigas noruegas",hi:"नॉर्वेजियन मीटबॉल",fr:"boulettes norvégiennes"},music:{zh:"草原波尔卡",en:"prairie polka",es:"polca de pradera",hi:"प्रेयरी पोल्का",fr:"polka des prairies"},act:{zh:"西奥多·罗斯福国家公园之旅",en:"Theodore Roosevelt National Park trips",es:"excursiones al Parque Nacional Theodore Roosevelt",hi:"थियोडोर रूज़वेल्ट नेशनल पार्क यात्राएँ",fr:"excursions au parc national Theodore Roosevelt"}},
+      OH:{zh:"俄亥俄州",en:"Ohio",es:"Ohio",hi:"ओहायो",fr:"Ohio",cap:"Columbus",capZh:"哥伦布",capHi:"कोलंबस",tz:"America/New_York",lm:{zh:"俄亥俄州议会大厦",en:"Ohio Statehouse",es:"Capitolio de Ohio",hi:"ओहायो स्टेटहाउस",fr:"Capitole de l'Ohio"},food:{zh:"七叶树糖果",en:"buckeye candy",es:"dulces buckeye",hi:"बकआई कैंडी",fr:"bonbons buckeye"},music:{zh:"俄亥俄放克",en:"Ohio funk",es:"funk de Ohio",hi:"ओहायो फ़ंक",fr:"funk de l'Ohio"},act:{zh:"阿米什乡村手作市集",en:"Amish country craft markets",es:"mercados artesanales amish",hi:"अमिश देहाती हस्तशिल्प बाज़ार",fr:"marchés artisanaux amish"}},
+      OK:{zh:"俄克拉荷马州",en:"Oklahoma",es:"Oklahoma",hi:"ओक्लाहोमा",fr:"Oklahoma",cap:"Oklahoma City",capZh:"俄克拉荷马城",capHi:"ओक्लाहोमा सिटी",tz:"America/Chicago",lm:{zh:"州议会大厦",en:"Oklahoma State Capitol",es:"Capitolio estatal de Oklahoma",hi:"ओक्लाहोमा स्टेट कैपिटोल",fr:"Capitole de l'État d'Oklahoma"},food:{zh:"鸡排配肉汁",en:"chicken-fried steak",es:"filete de pollo frito con salsa",hi:"चिकन-फ़्राइड स्टेक",fr:"steak frit à la poule"},music:{zh:"红土乡村乐",en:"red dirt country",es:"country red dirt",hi:"रेड डर्ट कंट्री",fr:"country red dirt"},act:{zh:"66号公路自驾",en:"Route 66 drives",es:"rutas por la Ruta 66",hi:"रूट 66 ड्राइव",fr:"routes de la Route 66"}},
+      OR:{zh:"俄勒冈州",en:"Oregon",es:"Oregón",hi:"ओरेगन",fr:"Oregon",cap:"Salem",capZh:"塞勒姆",capHi:"सेलम",tz:"America/Los_Angeles",lm:{zh:"州议会大厦",en:"Oregon State Capitol",es:"Capitolio estatal de Oregón",hi:"ओरेगन स्टेट कैपिटोल",fr:"Capitole de l'État de l'Oregon"},food:{zh:"马里恩莓派",en:"marionberry pie",es:"pastel de marionberry",hi:"मैरियनबेरी पाई",fr:"tarte aux marionberries"},music:{zh:"独立摇滚",en:"indie rock",es:"rock indie",hi:"इंडी रॉक",fr:"rock indépendant"},act:{zh:"哥伦比亚河峡谷徒步",en:"Columbia River Gorge hikes",es:"senderismo en la garganta del Columbia",hi:"कोलंबिया रिवर गॉर्ज हाइक",fr:"randonnées dans les gorges du Columbia"}},
+      PA:{zh:"宾夕法尼亚州",en:"Pennsylvania",es:"Pensilvania",hi:"पेंसिल्वेनिया",fr:"Pennsylvanie",cap:"Harrisburg",capZh:"哈里斯堡",capHi:"हैरिसबर्ग",tz:"America/New_York",lm:{zh:"州议会大厦",en:"Pennsylvania State Capitol",es:"Capitolio estatal de Pensilvania",hi:"पेंसिल्वेनिया स्टेट कैपिटोल",fr:"Capitole de l'État de Pennsylvanie"},food:{zh:"费城奶酪牛排",en:"Philly cheesesteak",es:"cheesesteak de Filadelfia",hi:"फ़िली चीज़स्टेक",fr:"cheesesteak de Philadelphie"},music:{zh:"费城灵魂乐",en:"Philly soul",es:"soul de Filadelfia",hi:"फ़िली सोल",fr:"soul de Philadelphie"},act:{zh:"阿米什乡村之旅",en:"Amish country tours",es:"recorridos por el país amish",hi:"अमिश देहाती टूर",fr:"circuits en pays amish"}},
+      RI:{zh:"罗得岛州",en:"Rhode Island",es:"Rhode Island",hi:"रोड आइलैंड",fr:"Rhode Island",cap:"Providence",capZh:"普罗维登斯",capHi:"प्रोविडेंस",tz:"America/New_York",lm:{zh:"州议会大厦",en:"Rhode Island State House",es:"Casa Estatal de Rhode Island",hi:"रोड आइलैंड स्टेट हाउस",fr:"Maison d'État de Rhode Island"},food:{zh:"咖啡牛奶",en:"coffee milk",es:"leche de café",hi:"कॉफ़ी मिल्क",fr:"lait au café"},music:{zh:"港口爵士",en:"harbor jazz",es:"jazz portuario",hi:"बंदरगाह जैज़",fr:"jazz du port"},act:{zh:"水火节夜游",en:"WaterFire nights",es:"noches WaterFire",hi:"वॉटरफ़ायर रातें",fr:"soirées WaterFire"}},
+      SC:{zh:"南卡罗来纳州",en:"South Carolina",es:"Carolina del Sur",hi:"दक्षिण कैरोलिना",fr:"Caroline du Sud",cap:"Columbia",capZh:"哥伦比亚",capHi:"कोलंबिया",tz:"America/New_York",lm:{zh:"州议会大厦",en:"South Carolina State House",es:"Casa Estatal de Carolina del Sur",hi:"साउथ कैरोलिना स्टेट हाउस",fr:"Maison d'État de Caroline du Sud"},food:{zh:"虾仁玉米粥",en:"shrimp and grits",es:"camarones con sémola",hi:"श्रिम्प और ग्रिट्स",fr:"crevettes et gruau"},music:{zh:"卡罗来纳沙滩乐",en:"Carolina beach music",es:"música de playa de Carolina",hi:"कैरोलिना बीच संगीत",fr:"musique de plage des Carolines"},act:{zh:"查尔斯顿老城漫步",en:"Charleston old-town walks",es:"paseos por el casco antiguo de Charleston",hi:"चार्ल्सटन ओल्ड-टाउन सैर",fr:"balades dans la vieille ville de Charleston"}},
+      SD:{zh:"南达科他州",en:"South Dakota",es:"Dakota del Sur",hi:"दक्षिण डकोटा",fr:"Dakota du Sud",cap:"Pierre",capZh:"皮尔",capHi:"पियरे",tz:"America/Chicago",lm:{zh:"州议会大厦",en:"South Dakota State Capitol",es:"Capitolio estatal de Dakota del Sur",hi:"साउथ डकोटा स्टेट कैपिटोल",fr:"Capitole de l'État du Dakota du Sud"},food:{zh:"野牛肉饼",en:"bison burgers",es:"hamburguesas de bisonte",hi:"बाइसन बर्गर",fr:"burgers de bison"},music:{zh:"草原乡村乐",en:"prairie country",es:"country de pradera",hi:"प्रेयरी कंट्री",fr:"country des prairies"},act:{zh:"拉什莫尔山之旅",en:"Mount Rushmore trips",es:"excursiones al Monte Rushmore",hi:"माउंट रशमोर यात्राएँ",fr:"excursions au Mont Rushmore"}},
+      TN:{zh:"田纳西州",en:"Tennessee",es:"Tennessee",hi:"टेनेसी",fr:"Tennessee",cap:"Nashville",capZh:"纳什维尔",capHi:"नैशविल",tz:"America/Chicago",lm:{zh:"乡村音乐名人堂",en:"Country Music Hall of Fame",es:"Salón de la Fama de la Música Country",hi:"कंट्री म्यूज़िक हॉल ऑफ़ फ़ेम",fr:"Country Music Hall of Fame"},food:{zh:"纳什维尔辣鸡",en:"Nashville hot chicken",es:"pollo picante de Nashville",hi:"नैशविल हॉट चिकन",fr:"poulet épicé de Nashville"},music:{zh:"乡村音乐",en:"country music",es:"música country",hi:"कंट्री संगीत",fr:"musique country"},act:{zh:"音乐街现场之夜",en:"Music Row live nights",es:"noches en vivo en Music Row",hi:"म्यूज़िक रो लाइव रातें",fr:"soirées live sur Music Row"}},
+      TX:{zh:"得克萨斯州",en:"Texas",es:"Texas",hi:"टेक्सास",fr:"Texas",cap:"Austin",capZh:"奥斯汀",capHi:"ऑस्टिन",tz:"America/Chicago",lm:{zh:"州议会大厦",en:"Texas State Capitol",es:"Capitolio estatal de Texas",hi:"टेक्सास स्टेट कैपिटोल",fr:"Capitole de l'État du Texas"},food:{zh:"慢烤牛胸肉",en:"slow-smoked brisket",es:"pecho ahumado a fuego lento",hi:"धीमी आँच पर स्मोक्ड ब्रिस्केट",fr:"poitrine fumée à feu doux"},music:{zh:"得州蓝调",en:"Texas blues",es:"blues de Texas",hi:"टेक्सास ब्लूज़",fr:"blues texan"},act:{zh:"牛仔竞技表演",en:"rodeo nights",es:"noches de rodeo",hi:"रोडियो रातें",fr:"soirées rodéo"}},
+      UT:{zh:"犹他州",en:"Utah",es:"Utah",hi:"यूटा",fr:"Utah",cap:"Salt Lake City",capZh:"盐湖城",capHi:"सॉल्ट लेक सिटी",tz:"America/Denver",lm:{zh:"州议会大厦",en:"Utah State Capitol",es:"Capitolio estatal de Utah",hi:"यूटा स्टेट कैपिटोल",fr:"Capitole de l'État de l'Utah"},food:{zh:"炸酱油条面包",en:"fry sauce scones",es:"scones con salsa frita",hi:"फ़्राई सॉस स्कोन",fr:"scones à la fry sauce"},music:{zh:"山地民谣",en:"mountain folk",es:"folk de montaña",hi:"पहाड़ी फ़ोक",fr:"folk de montagne"},act:{zh:"五大国家公园之旅",en:"Mighty Five national park trips",es:"excursiones a los cinco parques nacionales",hi:"पाँच राष्ट्रीय उद्यान यात्राएँ",fr:"excursions dans les cinq parcs nationaux"}},
+      VT:{zh:"佛蒙特州",en:"Vermont",es:"Vermont",hi:"वर्मोंट",fr:"Vermont",cap:"Montpelier",capZh:"蒙彼利埃",capHi:"मॉन्टपेलियर",tz:"America/New_York",lm:{zh:"州议会大厦金顶",en:"gold-domed State House",es:"Casa Estatal de cúpula dorada",hi:"स्वर्ण-गुंबद स्टेट हाउस",fr:"Maison d'État au dôme doré"},food:{zh:"枫糖软冰淇淋",en:"maple creemee",es:"helado suave de arce",hi:"मेपल क्रीमी",fr:"glace molle à l'érable"},music:{zh:"新英格兰民谣",en:"New England folk",es:"folk de Nueva Inglaterra",hi:"न्यू इंग्लैंड फ़ोक",fr:"folk de Nouvelle-Angleterre"},act:{zh:"绿山徒步",en:"Green Mountains hikes",es:"senderismo en las Montañas Verdes",hi:"ग्रीन माउंटेन हाइक",fr:"randonnées dans les Montagnes Vertes"}},
+      VA:{zh:"弗吉尼亚州",en:"Virginia",es:"Virginia",hi:"वर्जीनिया",fr:"Virginie",cap:"Richmond",capZh:"里士满",capHi:"रिचमंड",tz:"America/New_York",lm:{zh:"州议会大厦",en:"Virginia State Capitol",es:"Capitolio estatal de Virginia",hi:"वर्जीनिया स्टेट कैपिटोल",fr:"Capitole de l'État de Virginie"},food:{zh:"弗吉尼亚火腿",en:"Virginia ham",es:"jamón de Virginia",hi:"वर्जीनिया हैम",fr:"jambon de Virginie"},music:{zh:"老时光弦乐",en:"old-time string bands",es:"bandas de cuerdas tradicionales",hi:"ओल्ड-टाइम स्ट्रिंग बैंड",fr:"orchestres à cordes traditionnels"},act:{zh:"殖民地威廉斯堡参观",en:"Colonial Williamsburg visits",es:"visitas a Colonial Williamsburg",hi:"कोलोनियल विलियम्सबर्ग भ्रमण",fr:"visites de Colonial Williamsburg"}},
+      WA:{zh:"华盛顿州",en:"Washington",es:"Washington",hi:"वाशिंगटन",fr:"Washington",cap:"Olympia",capZh:"奥林匹亚",capHi:"ओलंपिया",tz:"America/Los_Angeles",lm:{zh:"州议会大厦圆顶",en:"State Capitol dome",es:"cúpula del Capitolio estatal",hi:"स्टेट कैपिटोल गुंबद",fr:"dôme du Capitole"},food:{zh:"太平洋鲑鱼",en:"Pacific salmon",es:"salmón del Pacífico",hi:"पैसिफ़िक सैल्मन",fr:"saumon du Pacifique"},music:{zh:"西北独立摇滚",en:"Northwest indie rock",es:"rock indie del Noroeste",hi:"नॉर्थवेस्ट इंडी रॉक",fr:"rock indépendant du Nord-Ouest"},act:{zh:"雷尼尔山一日游",en:"Mount Rainier day trips",es:"excursiones al Monte Rainier",hi:"माउंट रेनियर दिन-यात्राएँ",fr:"excursions au mont Rainier"}},
+      WV:{zh:"西弗吉尼亚州",en:"West Virginia",es:"Virginia Occidental",hi:"पश्चिम वर्जीनिया",fr:"Virginie-Occidentale",cap:"Charleston",capZh:"查尔斯顿",capHi:"चार्ल्सटन",tz:"America/New_York",lm:{zh:"州议会大厦金顶",en:"gold-domed State Capitol",es:"Capitolio estatal de cúpula dorada",hi:"स्वर्ण-गुंबद स्टेट कैपिटोल",fr:"Capitole au dôme doré"},food:{zh:"意式香肠卷",en:"pepperoni rolls",es:"rollos de pepperoni",hi:"पेपरोनी रोल",fr:"roulés au pepperoni"},music:{zh:"乡村音乐",en:"country music",es:"música country",hi:"कंट्री संगीत",fr:"musique country"},act:{zh:"新河峡谷漂流",en:"New River Gorge rafting",es:"rafting en el cañón del New River",hi:"न्यू रिवर गॉर्ज राफ़्टिंग",fr:"rafting dans les gorges de la New River"}},
+      WI:{zh:"威斯康星州",en:"Wisconsin",es:"Wisconsin",hi:"विस्कॉन्सिन",fr:"Wisconsin",cap:"Madison",capZh:"麦迪逊",capHi:"मैडिसन",tz:"America/Chicago",lm:{zh:"州议会大厦",en:"Wisconsin State Capitol",es:"Capitolio estatal de Wisconsin",hi:"विस्कॉन्सिन स्टेट कैपिटोल",fr:"Capitole de l'État du Wisconsin"},food:{zh:"炸奶酪凝块",en:"fried cheese curds",es:"cuajada de queso frita",hi:"तले चीज़ कर्ड",fr:"fromage en grains frit"},music:{zh:"波尔卡舞曲",en:"polka",es:"polca",hi:"पोल्का",fr:"polka"},act:{zh:"湖畔大学城散步",en:"lakefront campus walks",es:"paseos por el campus junto al lago",hi:"झील किनारे कैंपस सैर",fr:"balades au bord du lac sur le campus"}},
+      WY:{zh:"怀俄明州",en:"Wyoming",es:"Wyoming",hi:"वायोमिंग",fr:"Wyoming",cap:"Cheyenne",capZh:"夏延",capHi:"शेयेन",tz:"America/Denver",lm:{zh:"州议会大厦",en:"Wyoming State Capitol",es:"Capitolio estatal de Wyoming",hi:"वायोमिंग स्टेट कैपिटोल",fr:"Capitole de l'État du Wyoming"},food:{zh:"野牛排",en:"bison steak",es:"filete de bisonte",hi:"बाइसन स्टेक",fr:"steak de bison"},music:{zh:"西部摇摆乐",en:"western swing",es:"western swing",hi:"वेस्टर्न स्विंग",fr:"western swing"},act:{zh:"边疆日牛仔节",en:"Cheyenne Frontier Days",es:"Cheyenne Frontier Days",hi:"शेयेन फ़्रंटियर डेज़",fr:"Cheyenne Frontier Days"}},
+      DC:{zh:"华盛顿特区",en:"Washington, D.C.",es:"Washington D. C.",hi:"वाशिंगटन डी.सी.",fr:"Washington D.C.",cap:"Washington",capZh:"华盛顿",capHi:"वाशिंगटन",tz:"America/New_York",lm:{zh:"国家广场",en:"National Mall",es:"National Mall",hi:"नेशनल मॉल",fr:"National Mall"},food:{zh:"半烟香肠",en:"half-smoke sausage",es:"salchicha half-smoke",hi:"हाफ़-स्मोक सॉसेज",fr:"saucisse half-smoke"},music:{zh:"戈戈放克",en:"go-go funk",es:"funk go-go",hi:"गो-गो फ़ंक",fr:"funk go-go"},act:{zh:"纪念碑夜游",en:"monument night tours",es:"visitas nocturnas a monumentos",hi:"स्मारक रात्रि टूर",fr:"visites nocturnes des monuments"}}
+    };
+    const DEEP_BY_STATE = { NY:["nyc"], CA:["la","sf","sjc"], FL:["mia"], IL:["chi"], TX:["hou","dal"], DC:["dc"], MA:["bos"], GA:["atl"], WA:["sea"], AZ:["phx"], OH:["col"] };
+    const DEEP_SET = {}; Object.keys(DEEP_BY_STATE).forEach(k=>DEEP_BY_STATE[k].forEach(c=>DEEP_SET[c]=k));
+    function stateName(code){ const s=US_STATES[code]; if(!s) return code; if(LANG==="zh") return s.zh; return s[LANG]||s.en; }
+    function capitalName(code){ const s=US_STATES[code]; if(!s) return ""; if(LANG==="zh") return s.capZh; if(LANG==="hi") return s.capHi; return s.cap; }
+    function capitalKey(code){ const s=US_STATES[code]; if(!s) return null; if(code==="DC") return "dc"; if(code==="OH") return "col"; if(code==="AZ") return "phx"; if(code==="GA") return "atl"; if(code==="WA") return "sea"; return "cap_"+code.toLowerCase(); }
+    function stateCulture(code){ const s=US_STATES[code]; if(!s) return ""; const pick=o=>o[LANG]||o.en; if(LANG==="zh") return "地标是"+pick(s.lm)+"，特色吃食是"+pick(s.food)+"，耳边是"+pick(s.music)+"，还能体验"+pick(s.act)+"。"; if(LANG==="es") return "Su hito es "+pick(s.lm)+"; su sabor, "+pick(s.food)+"; suena "+pick(s.music)+", y puedes probar "+pick(s.act)+"."; if(LANG==="hi") return "यहाँ का निशान है "+pick(s.lm)+"; स्वाद है "+pick(s.food)+"; सुनाई देता है "+pick(s.music)+", और अनुभव मिलता है "+pick(s.act)+" का।"; if(LANG==="fr") return "Son monument : "+pick(s.lm)+" ; son goût : "+pick(s.food)+" ; on y entend "+pick(s.music)+", et on peut vivre "+pick(s.act)+"."; return "Landmark: "+pick(s.lm)+". Taste: "+pick(s.food)+". Sound: "+pick(s.music)+". Try: "+pick(s.act)+"."; }
+    function isSkeletonCity(key){ return !!(CITIES[key] && CITIES[key].skeleton); }
+    /* PATCH7 收尾修正：degreeNote 去抽签词、i4e2/i6e1 事件去移民口径、读研支线死键中性化 */
+    Object.assign(PATCH7.zh.ui, { degreeNote:"不同计划的学费、校内工作和奖学金不同；毕业后直接走职业线。", branchTitle:"", branchNote:"", branchRetryBtn:"", branchGradBtn:"", gradTitle:"硕士两年", gradYear1:"你回到校园，成了硕士一年级：白天上课、做助教，暑假去公司实习。", gradYear2:"硕士第二年：论文、答辩、找工作一条龙。毕业那天，学位证上写着 Master。", gradDone:"🎓 硕士毕业！回到关卡地图，继续你的职业里程碑。", gradBtn:"继续" });
+    Object.assign(PATCH7.zh.ev, {
+      s2e1:{t:"选校时间到。名校学费贵得吓人，普通学校又怕不够「出息」。中介说：申得好不如申得巧。",c:["冲名校！人生难得几回搏","稳妥搭配：两所冲刺、两所稳妥"],r:["申请费刷出去一截，但梦校的海报你贴在了墙上。","搭配很合理，中介都夸你清醒。"]},
+      i4e2:{t:"本地报纸来采访你：「街区创业故事」专题。记者问你成功的秘诀。",c:["实话实说：没什么秘诀，就是把每一盘菜做好","谦虚笑笑：运气好，赶上好时候"],r:["报道登出来，周末的队伍排到了街口。","低调是你的保护色，生意照样红火。"]},
+      i6e1:{t:"店里的生意稳了，存款也够了。你做的第一件事，是去看房：学区好点的社区，推窗能看见山。",c:["买！事业稳了，是时候安家了","再观望观望房价"],r:["签约、过户、拿钥匙——你给爸妈打视频：过年，都来家里过。","又看了半年，你买到了更心仪的一栋。"]}
+    });
+    Object.assign(PATCH7.en.ui, { degreeNote:"Plans differ in tuition, campus work, and scholarships. After graduation you follow the career path.", branchTitle:"", branchNote:"", branchRetryBtn:"", branchGradBtn:"", gradTitle:"The Master's Years", gradYear1:"Back on campus as a first-year master's student: classes and assistant work by day, a company internship in the summer.", gradYear2:"Year two: thesis, defense, job hunting. On graduation day your diploma reads Master's.", gradDone:"🎓 Master's degree in hand! Back to the level map — on to your career milestone.", gradBtn:"Continue" });
+    Object.assign(PATCH7.en.ev, {
+      i4e2:{t:"The local paper interviews you for a \"neighborhood business stories\" feature. The reporter asks your secret.",c:["The truth: no secret — just make every single plate right","Smile modestly: good luck, good timing"],r:["After the story runs, the weekend line reaches the corner.","Low profile is your armor. Business booms anyway."]},
+      i6e1:{t:"Business is steady and the savings are there. First thing you do: house hunting in a good school district, windows facing the hills.",c:["Buy! Business is steady — time to settle","Watch prices a while longer"],r:["Signing, closing, keys — you video-call your parents: \"New Year at our place, everyone!\"","Six more months of looking land you an even better house."]}
+    });
+    Object.assign(PATCH7.es.ui, { degreeNote:"Los planes difieren en matrícula, trabajo en el campus y becas. Tras graduarte sigues la vía de la carrera.", branchTitle:"", branchNote:"", branchRetryBtn:"", branchGradBtn:"", gradTitle:"Los dos años del máster", gradYear1:"De vuelta en el campus como estudiante de máster de primer año: clases y ayudantías de día, prácticas en una empresa en verano.", gradYear2:"Segundo año: tesis, defensa y búsqueda de empleo. El día de la graduación, tu diploma dice Máster.", gradDone:"🎓 ¡Máster en mano! De vuelta al mapa de niveles: sigue tu hito profesional.", gradBtn:"Continuar" });
+    Object.assign(PATCH7.es.ev, {
+      i4e2:{t:"El periódico local te entrevista para un reportaje sobre «historias de negocios del barrio». La reportera pregunta tu secreto.",c:["La verdad: no hay secreto, solo hacer bien cada plato, uno por uno","Sonreír con modestia: buena suerte, buen momento"],r:["Después de que sale la historia, la fila del fin de semana llega a la esquina.","El perfil bajo es tu armadura. El negocio florece de todos modos."]},
+      i6e1:{t:"El negocio está estable y los ahorros alcanzan. Lo primero que haces: buscar casa en un buen distrito escolar, con ventanas hacia las colinas.",c:["¡Comprar! El negocio está estable: es hora de asentarse","Vigilar los precios un tiempo más"],r:["Firma, cierre, llaves: haces videollamada a tus padres: «Año Nuevo en nuestra casa, ¡todos!»","Seis meses más buscando te consiguen una casa aún mejor."]}
+    });
+    Object.assign(PATCH7.hi.ui, { degreeNote:"योजनाओं में ट्यूशन, कैंपस काम और छात्रवृत्ति अलग-अलग होती है। स्नातक के बाद आप करियर रास्ते पर चलते हैं।", branchTitle:"", branchNote:"", branchRetryBtn:"", branchGradBtn:"", gradTitle:"मास्टर के दो साल", gradYear1:"कैंपस में वापसी, मास्टर के पहले साल में: दिन में कक्षाएँ और सहायक कार्य, गर्मियों में कंपनी में इंटर्नशिप।", gradYear2:"दूसरा साल: थीसिस, डिफेंस, नौकरी की तलाश। ग्रेजुएशन के दिन आपके डिप्लोमा पर 'Master' लिखा है।", gradDone:"🎓 मास्टर की डिग्री हाथ में! लेवल नक्शे पर वापस — अपने करियर मील के पत्थर की ओर बढ़ें।", gradBtn:"आगे बढ़ें" });
+    Object.assign(PATCH7.hi.ev, {
+      i4e2:{t:"स्थानीय अख़बार «मोहल्ले के कारोबार की कहानियों» वाली विशेष रिपोर्ट के लिए तुम्हारा साक्षात्कार लेता है। रिपोर्टर तुम्हारा रहस्य पूछती है।",c:["सच्चाई: कोई रहस्य नहीं — बस हर एक प्लेट को सही बनाना है","विनम्रता से मुस्कुराओ: अच्छी किस्मत, अच्छा समय"],r:["कहानी छपने के बाद, वीकेंड की लाइन नुक्कड़ तक पहुँच जाती है।","कम प्रोफ़ाइल रखना तुम्हारा कवच है। कारोबार फिर भी फलता-फूलता है।"]},
+      i6e1:{t:"कारोबार स्थिर है और बचत भी पूरी है। तुम सबसे पहले यह करते हो: एक अच्छे स्कूल ज़िले में घर की तलाश, खिड़कियाँ पहाड़ियों की ओर।",c:["ख़रीदो! कारोबार स्थिर है — बसने का समय है","कुछ और समय क़ीमतों पर नज़र रखो"],r:["दस्तख़त, समापन, चाबियाँ — तुम अपने माता-पिता को वीडियो-कॉल करते हो: «नया साल हमारे घर, सब आओ!»","छह महीने और देखने से तुम्हें और भी बेहतर घर मिलता है।"]}
+    });
+    Object.assign(PATCH7.fr.ui, { degreeNote:"Les plans diffèrent par les frais de scolarité, les emplois sur le campus et les bourses. Après le diplôme, vous suivez la voie carrière.", branchTitle:"", branchNote:"", branchRetryBtn:"", branchGradBtn:"", gradTitle:"Les deux années de master", gradYear1:"Retour sur le campus en première année de master : cours et assistanat le jour, stage en entreprise l'été.", gradYear2:"Deuxième année : mémoire, soutenance, recherche d'emploi. Le jour du diplôme, il indique Master.", gradDone:"🎓 Master en poche ! Retour à la carte des niveaux : en route vers votre étape de carrière.", gradBtn:"Continuer" });
+    Object.assign(PATCH7.fr.ev, {
+      i4e2:{t:"Le journal local t'interroge pour un dossier sur les « histoires d'entreprises du quartier ». La journaliste demande ton secret.",c:["La vérité : pas de secret — juste faire chaque assiette comme il faut","Sourire modestement : bonne chance, bon timing"],r:["Après la parution de l'article, la file du week-end atteint le coin de la rue.","Le profil bas est ton armure. L'affaire prospère quand même."]},
+      i6e1:{t:"L'affaire est stable et l'épargne est là. La première chose que tu fais : chercher une maison dans un bon secteur scolaire, fenêtres vers les collines.",c:["Acheter ! L'affaire est stable — il est temps de s'installer","Surveiller les prix encore un moment"],r:["Signature, clôture, clés — tu appelles tes parents en visio : « Nouvel An chez nous, tout le monde ! »","Six mois de recherche de plus te trouvent une maison encore meilleure."]}
+    });
+    /* PATCH7_LANGS */
+    for (const code in PATCH7){ if (LANGS[code]) deepMerge(LANGS[code], PATCH7[code]); }
+
 
     /* t(): 取当前语言文案，缺项回退英文，再回退中文（保证永不空白） */
     let LANG = "en";
@@ -4899,12 +5578,18 @@
     /* steps: {ev:'事件id'} | {mg:'serve'|'drive'|'timing', ...} | {lottery:true}
        fx: 每个事件两个选项的效果 [现金, 健康, 快乐]；part: 闯关收入/支出结算 */
     const ROUTES = {
-      born:{ startCash:5000, startAge:18, baseCost:-1200, ticket:0, citizen:true, levels:[
+      /* 出生线（改造轮合并 Born+Family）：一家人住在这座城，从童年开局。
+         关卡序：全家安家 → 上学 → 校园 → 课后打工 → 考驾照 → 大学与第一份工作 → 职场 → 租房 → 买车 → 买房 → 成家。 */
+      born:{ startCash:5000, startAge:12, baseCost:-1200, levels:[
+        {id:"f1", icon:"🏠", part:0,    steps:[{ev:"f1e1"},{ev:"f1e2"}]},
+        {id:"f2", icon:"🏫", part:900,  steps:[{ev:"f2e1"},{ev:"f2e2"}]},
         {id:"b1", icon:"🎒", part:600,  steps:[{ev:"b1e1"},{ev:"b1e2"},{mg:"timing", need:2, tries:3}]},
-        {id:"b2", icon:"🍔", part:1800, steps:[{ev:"b2e1"},{mg:"serve", need:6}]},
+        {id:"f3", icon:"🍽️", part:2400, steps:[{ev:"f3e1"},{mg:"serve", need:6}]},
+        {id:"f4", icon:"🚗", part:2800, steps:[{ev:"f4e1"},{mg:"drive", dist:450}]},
+        {id:"f5", icon:"🎓", part:7000, steps:[{ev:"f5e1"},{ev:"f5e2"}]},
+        {id:"b3", icon:"💼", part:9000, steps:[{ev:"b3e1"},{ev:"b3e2"}]},
         {id:"rent", icon:"🔑", part:1500, steps:[{ev:"rent1"},{ev:"rent2"}]},
         {id:"car", icon:"🚗", part:6000, steps:[{ev:"car1"},{ev:"car2"}]},
-        {id:"b3", icon:"💼", part:9000, steps:[{ev:"b3e1"},{ev:"b3e2"}]},
         {id:"home", icon:"🏡", part:26000, steps:[{ev:"home1"},{ev:"home2"}]},
         {id:"love", icon:"💍", part:10000,steps:[{ev:"love1"},{ev:"love2"}]}
       ]},
@@ -4919,16 +5604,16 @@
       study:{ startCash:5000, startAge:18, baseCost:-16000, ticket:150, levels:[
         {id:"s1", icon:"🗣️", part:1500, cost:-2200, steps:[{ev:"s1e1"},{ev:"s1e2"},{ev:"s1e3"}]},
         {id:"s2", icon:"✉️", part:1200, cost:-2200, steps:[{ev:"s2e1"},{ev:"s2e2"},{ev:"s2e3"}]},
-        {id:"s3", icon:"🛂", part:2600, cost:-2200, steps:[{ev:"s3e1"},{ev:"s3e2"}]},
+        {id:"s3", icon:"🏫", part:2600, cost:-2200, steps:[{ev:"s3e1"},{ev:"s3e2"}]},
         {id:"s4", icon:"🏠", part:0,    enrolled:true, steps:[{ev:"s4e1"},{ev:"s4e2"},{ev:"remit1"},{ev:"s4e3"},{mg:"serve", need:6}]},
         {id:"s5", icon:"📚", part:0,    enrolled:true, steps:[{ev:"s5e1"},{ev:"remit1"},{ev:"s5e2"},{ev:"s5e3"}]},
         {id:"s6", icon:"💼", part:42000, steps:[{ev:"s6e1"},{ev:"s6e2"},{ev:"s6e3"},{mg:"timing", need:2, tries:3}]},
         {id:"car", icon:"🚗", part:44000, steps:[{ev:"car1"},{ev:"car2"}]},
-        {id:"s7", icon:"🎰", part:46000,steps:[{ev:"s7e1"},{lottery:true, chance:0.45}]},
-        {id:"s8", icon:"💚", part:48000,steps:[{ev:"s8e1"},{ev:"s8e2"},{ev:"s8e3"}]},
+        {id:"s7", icon:"💼", part:46000,steps:[{ev:"s7e1"},{mg:"timing", need:2, tries:3}]},
+        {id:"s8", icon:"🏘️", part:48000,steps:[{ev:"s8e1"},{ev:"s8e2"},{ev:"s8e3"}]},
         {id:"home", icon:"🏡", part:48000,steps:[{ev:"home1"},{ev:"home2"}]},
         {id:"love", icon:"💍", part:50000,steps:[{ev:"love1"},{ev:"love2"}]},
-        {id:"s9", icon:"🦅", part:52000,steps:[{ev:"s9e1"},{ev:"s9e2"}]}
+        {id:"s9", icon:"🎤", part:52000,steps:[{ev:"s9e1"},{ev:"s9e2"}]}
       ]},
       work:{ startCash:5000, startAge:24, baseCost:-2600, ticket:120, cityF:0.35, levels:[
         {id:"w1", icon:"🧳", part:3600, cost:-6900, steps:[{ev:"w1e1"},{ev:"w1e2"},{ev:"w1e3"}]},
@@ -4937,10 +5622,10 @@
         {id:"w4", icon:"🚛", part:6500, steps:[{ev:"w4e1"},{ev:"w4e2"},{ev:"w4e3"},{mg:"drive", dist:500}]},
         {id:"w5", icon:"🛣️", part:15000,steps:[{ev:"w5e1"},{mg:"drive", dist:750},{ev:"w5e2"}]},
         {id:"car", icon:"🚙", part:9000, steps:[{ev:"car1"},{ev:"car2"}]},
-        {id:"w6", icon:"⚖️", part:9000, steps:[{ev:"w6e1"},{ev:"w6e2"}]},
+        {id:"w6", icon:"📜", part:9000, steps:[{ev:"w6e1"},{ev:"w6e2"}]},
         {id:"w7", icon:"🏡", part:6000, steps:[{ev:"w7e1"},{ev:"w7e2"}]},
         {id:"love", icon:"💍", part:10000,steps:[{ev:"love1"},{ev:"love2"}]},
-        {id:"w8", icon:"🦅", part:11000,steps:[{ev:"w8e1"},{ev:"w8e2"}]}
+        {id:"w8", icon:"🏅", part:11000,steps:[{ev:"w8e1"},{ev:"w8e2"}]}
       ]},
       family:{ startCash:5000, startAge:12, baseCost:-2600, ticket:140, levels:[
         {id:"f1", icon:"🧳", part:0,    steps:[{ev:"f1e1"},{ev:"f1e2"}]},
@@ -4949,7 +5634,7 @@
         {id:"f4", icon:"🚗", part:2800, steps:[{ev:"f4e1"},{mg:"drive", dist:450}]},
         {id:"car", icon:"🚙", part:2600, steps:[{ev:"car1"},{ev:"car2"}]},
         {id:"f5", icon:"🎓", part:7000, steps:[{ev:"f5e1"},{ev:"f5e2"}]},
-        {id:"f6", icon:"🦅", part:9000, steps:[{ev:"f6e1"},{ev:"f6e2"}]}
+        {id:"f6", icon:"🎉", part:9000, steps:[{ev:"f6e1"},{ev:"f6e2"}]}
       ]},
       invest:{ startCash:5000, startAge:35, baseCost:-2000, ticket:190, cityF:0.6, levels:[
         {id:"i1", icon:"📍", part:1500, cost:-3200, steps:[{ev:"i1e1"},{ev:"i1e2"}]},
@@ -4957,10 +5642,10 @@
         {id:"i3", icon:"🔍", part:8000, steps:[{ev:"i3e1"},{ev:"i3e2"}]},
         {id:"i4", icon:"📈", part:14000,steps:[{ev:"i4e1"},{ev:"i4e2"}]},
         {id:"car", icon:"🚗", part:10000,steps:[{ev:"car1"},{ev:"car2"}]},
-        {id:"i5", icon:"💚", part:13000,steps:[{ev:"i5e1"},{ev:"i5e2"}]},
+        {id:"i5", icon:"🏪", part:13000,steps:[{ev:"i5e1"},{ev:"i5e2"}]},
         {id:"i6", icon:"🏡", part:-12000,steps:[{ev:"i6e1"},{ev:"i6e2"}]},
         {id:"love", icon:"💍", part:10000,steps:[{ev:"love1"},{ev:"love2"}]},
-        {id:"i7", icon:"🦅", part:16000,steps:[{ev:"i7e1"},{ev:"i7e2"}]}
+        {id:"i7", icon:"🏆", part:16000,steps:[{ev:"i7e1"},{ev:"i7e2"}]}
       ]}
     };
     /* 学历经济学（留学路在读年份 enrolled 关卡适用，按真实量级，每关≈一年）：
@@ -5092,23 +5777,23 @@
     /* ---------------- 角色造型：每关一套服装 + 小道具 ---------------- */
     const OUTFITS = {
       s1:{a:"🧑‍🎓",p:"📚",zh:"学生装",en:"Student outfit"}, s2:{a:"🧑‍🎓",p:"📝",zh:"申请季学生装",en:"Applicant outfit"},
-      s3:{a:"🧑‍💼",p:"🛂",zh:"面试正装",en:"Interview suit"}, s4:{a:"🧑",p:"🍽️",zh:"餐吧打工装",en:"Café work outfit"},
+      s3:{a:"🧑‍💼",p:"🗂️",zh:"报到正装",en:"Check-in suit"}, s4:{a:"🧑",p:"🍽️",zh:"餐吧打工装",en:"Café work outfit"},
       s5:{a:"🧑‍💻",p:"💻",zh:"熬夜赶课装",en:"All-nighter outfit"}, s6:{a:"🧑‍💼",p:"💼",zh:"工程师正装",en:"Engineer outfit"},
-      s7:{a:"🧑‍💼",p:"🎰",zh:"西装配锦鲤",en:"Suit + lucky charm"}, s8:{a:"🧑‍💼",p:"💚",zh:"绿卡在手装",en:"Green-card outfit"},
-      s9:{a:"🧑",p:"🦅",zh:"宣誓礼服",en:"Oath-day outfit"},
+      s7:{a:"🧑‍💼",p:"📈",zh:"项目负责人装",en:"Project-lead outfit"}, s8:{a:"🧑‍💼",p:"🏅",zh:"街区熟人装",en:"Neighborhood regular outfit"},
+      s9:{a:"🧑",p:"🎤",zh:"校友分享装",en:"Alumni outfit"},
       w1:{a:"🧑",p:"🧳",zh:"闯荡装",en:"New-arrival outfit"}, w2:{a:"🧑",p:"🍽️",zh:"服务员装",en:"Waiter outfit"},
       w3:{a:"🧑",p:"🐖",zh:"攒钱装",en:"Saver outfit"}, w4:{a:"🧑‍🎓",p:"🚛",zh:"驾校学员装",en:"Truck-school outfit"},
-      w5:{a:"🧑",p:"🚛",zh:"卡车司机装",en:"Trucker outfit"}, w6:{a:"🧑‍💼",p:"⚖️",zh:"办身份正装",en:"Paperwork suit"},
-      w7:{a:"🧑",p:"🔑",zh:"新房主装",en:"New-homeowner outfit"}, w8:{a:"🧑",p:"🦅",zh:"宣誓礼服",en:"Oath-day outfit"},
+      w5:{a:"🧑",p:"🚛",zh:"卡车司机装",en:"Trucker outfit"}, w6:{a:"🧑‍💼",p:"📜",zh:"证书在手装",en:"Certified outfit"},
+      w7:{a:"🧑",p:"🔑",zh:"新房主装",en:"New-homeowner outfit"}, w8:{a:"🧑",p:"🏅",zh:"本地熟手装",en:"Local pro outfit"},
       i1:{a:"🧑‍💼",p:"📍",zh:"老板考察装",en:"Boss scouting outfit"}, i2:{a:"👨‍🍳",p:"🍳",zh:"厨师装",en:"Chef outfit"},
       i3:{a:"🧑‍💼",p:"🔍",zh:"迎检老板装",en:"Inspection-ready outfit"}, i4:{a:"🧑‍💼",p:"📈",zh:"扩张期老板装",en:"Expansion outfit"},
-      i5:{a:"🧑‍💼",p:"💚",zh:"绿卡在手装",en:"Green-card outfit"}, i6:{a:"🧑",p:"🔑",zh:"新房主装",en:"New-homeowner outfit"},
-      i7:{a:"🧑",p:"🦅",zh:"宣誓礼服",en:"Oath-day outfit"},
+      i5:{a:"🧑‍💼",p:"🏪",zh:"连锁店主装",en:"Second-shop outfit"}, i6:{a:"🧑",p:"🔑",zh:"新房主装",en:"New-homeowner outfit"},
+      i7:{a:"🧑",p:"🏆",zh:"人气店主装",en:"Neighborhood-favorite outfit"},
       b1:{a:"🧑",p:"🎒",zh:"高中生装",en:"High-school outfit"}, b2:{a:"🧑",p:"🍔",zh:"快餐店兼职装",en:"Fast-food uniform"},
       b3:{a:"🧑‍💼",p:"💼",zh:"职场新人装",en:"First-job outfit"},
-      f1:{a:"🧒",p:"🎒",zh:"小小移民装",en:"Young newcomer outfit"}, f2:{a:"🧒",p:"📚",zh:"转学生装",en:"New-student outfit"},
+      f1:{a:"🧒",p:"🎒",zh:"小小搬家装",en:"Young mover outfit"}, f2:{a:"🧒",p:"📚",zh:"新同学装",en:"New-student outfit"},
       f3:{a:"🧑",p:"🍽️",zh:"课后兼职装",en:"After-school job outfit"}, f4:{a:"🧑",p:"🚗",zh:"学车装",en:"New-driver outfit"},
-      f5:{a:"🧑‍🎓",p:"🎓",zh:"毕业生装",en:"Graduate outfit"}, f6:{a:"🧑",p:"🦅",zh:"全家宣誓装",en:"Family oath outfit"},
+      f5:{a:"🧑‍🎓",p:"🎓",zh:"毕业生装",en:"Graduate outfit"}, f6:{a:"🧑",p:"🎉",zh:"全家庆祝装",en:"Family celebration outfit"},
       car:{a:"🧑",p:"🔑",zh:"新车主装",en:"New-car-owner outfit"}, rent:{a:"🧑",p:"📦",zh:"搬家租房装",en:"Moving-in outfit"},
       home:{a:"🧑",p:"🏠",zh:"新房主装",en:"New-homeowner outfit"}, love:{a:"🧑‍🤝‍🧑",p:"💍",zh:"成家装",en:"Newlywed outfit"}
     };
@@ -5356,17 +6041,13 @@
       $("#bkRetry").addEventListener("click", runStep);
       $("#bkMap").addEventListener("click", ()=>{ restoreLevelStart(); showMap(); });
     }
-    /* 开始一局：先买入局交通票（出生路免票） */
+    /* 开始一局（改造轮：无机票、无到达叙事——你本来就站在这座城的广场上） */
     function startRun(routeKey){
-      const r = ROUTES[routeKey];
       if (!W.name){ toast(t("ui.needLogin")); window.scrollTo({top:0, behavior:"smooth"}); return; }
-      const label = fmt(t("ui.ledgerTicket"), { route: t("routes."+routeKey+".name") });
-      const paid = softCharge(r.ticket || 0, label);   /* 机票也是主线：金币不够就少扣/不扣，绝不拦人出发 */
-      if (paid > 0) toast(fmt(t("ui.ticketPaid"), {n: paid}));
       newGame(routeKey);
-      sfxArrive();   /* 到达城市：迎宾小旋律 */
-      if (routeKey === "study") return showDegreePick();   /* 留学路先选学历（决定学费/打工/抽签规则） */
-      pendingWalk = { from: -1, route: routeKey };   // 开局：小人从入境口走进城市
+      sfxArrive();   /* 开局迎宾小旋律 */
+      if (routeKey === "study") return showDegreePick();   /* 上学线先选学习计划（只影响学费/校内打工/奖学金口径） */
+      pendingWalk = { from: -1, route: routeKey };   // 开局：小人走进这座城
       showMap();
     }
 
@@ -5411,16 +6092,18 @@
       G.health = Math.max(0, Math.min(100, G.health));
       G.happy  = Math.max(0, Math.min(100, G.happy));
     }
+    /* 生活阶段（改造轮：纯进度五档，与任何身份概念无关）：
+       新住户 → 安顿下来 → 有自己的家 → 事业起步 → 本地通 */
     function statusStage(){
-      if (ROUTES[G.route].citizen) return 4;   // 出生在美国：天生公民
       const total = ROUTES[G.route].levels.length;
       const done = G.unlocked;
       if (done >= total) return 4;
-      if (done >= total - 1) return 3;           // 绿卡关通过 ≈ 永久居民
-      if (done >= Math.ceil(total/2)) return 2;
+      if (done >= Math.ceil(total * 0.75)) return 3;
+      if (done >= Math.ceil(total / 2)) return 2;
       if (done >= 1) return 1;
       return 0;
     }
+
 
     /* ---------------- 渲染 ---------------- */
     const app = document.getElementById("app");
@@ -5974,6 +6657,17 @@
       bos:{ founded:1630 }, atl:{ founded:1837 }, sea:{ founded:1851 }, sjc:{ founded:1777 },
       phx:{ founded:1868 }, sd:{ founded:1769 }, phi:{ founded:1682 }
     };
+    /* Columbus 正式落地（第 16 个深度城市） */
+    CITIES.col = { icon:"🏛️", lm:"🏛️", names:{ zh:"哥伦布", en:"Columbus", es:"Columbus", hi:"कोलंबस", fr:"Columbus" } };
+    CITY_INFO.col = { founded:1812 };
+    CITY_TZ.col = "America/New_York";
+    /* 骨架州府注册（轻场景城市：地标 + 文化一句话 + 广场，关卡线建设中） */
+    Object.keys(US_STATES).forEach(code=>{
+      const key = capitalKey(code); if(!key || CITIES[key]) return;
+      const s = US_STATES[code];
+      CITIES[key] = { icon:"🏛️", lm:"🏛️", names:{ zh:s.capZh, en:s.cap, es:s.cap, hi:s.capHi, fr:s.cap }, skeleton:true, state:code };
+      CITY_TZ[key] = s.tz;
+    });
     let CITY = "nyc";
     function cityName(k){ const c = CITIES[k || CITY] || CITIES.nyc; return c.names[LANG] || c.names.en; }
     function skylineSVG(baseY, color, op, scale){
@@ -6101,11 +6795,11 @@
 
     /* ---------------- 关卡场景图 ---------------- */
     const SCENE_KIND = {
-      s1:"school", s2:"campus", s3:"office", s4:"airport", s5:"campus", s6:"office", s7:"office", s8:"govt", s9:"court",
-      w1:"airport", w2:"restaurant", w3:"street", w4:"truck", w5:"highway", w6:"govt", w7:"homein", w8:"court",
-      i1:"street", i2:"restaurant", i3:"restaurant", i4:"street", i5:"govt", i6:"homein", i7:"court",
+      s1:"school", s2:"campus", s3:"office", s4:"airport", s5:"campus", s6:"office", s7:"office", s8:"street", s9:"campus",
+      w1:"airport", w2:"restaurant", w3:"street", w4:"truck", w5:"highway", w6:"school", w7:"homein", w8:"restaurant",
+      i1:"street", i2:"restaurant", i3:"restaurant", i4:"street", i5:"restaurant", i6:"homein", i7:"restaurant",
       b1:"school", b2:"restaurant", b3:"office",
-      f1:"homein", f2:"school", f3:"restaurant", f4:"road", f5:"campus", f6:"court",
+      f1:"homein", f2:"school", f3:"restaurant", f4:"road", f5:"campus", f6:"homein",
       car:"dealer", rent:"homein", home:"homein", love:"homein"
     };
     const REST_ICON = { w2:"🍔", i2:"🍜", f3:"🍽️", b2:"🍟" };
@@ -7173,11 +7867,11 @@
       closeCityPicker();
       const bd = document.createElement("div");
       bd.className = "modal-backdrop"; bd.id = "cityModal";
-      const rows = Object.keys(CITIES).map(k=>`
+      const rows = Object.keys(CITIES).filter(k=> !CITIES[k].skeleton).map(k=>`
         <button type="button" class="cityrow ${k===CITY?"sel":""}" data-pick="${k}">
           <span class="cicon">${CITIES[k].icon}</span>
           <span class="ctext2"><h4>${cityName(k)}</h4><p>${t("cityCards."+k+".fact")}</p></span>
-          <span class="cyear">${CITY_INFO[k].founded}</span>
+          <span class="cyear">${(CITY_INFO[k] || {}).founded || ""}</span>
         </button>`).join("");
       bd.innerHTML = `<div class="modal-card" role="dialog" aria-modal="true" aria-label="${t("ui.cityQ")}">
         <button class="modal-close" type="button" aria-label="${t("ui.closeBtn")}">✕</button>
@@ -7768,13 +8462,17 @@
       closeCityCard();
       const bd = document.createElement("div");
       bd.className = "modal-backdrop"; bd.id = "cityCardModal";
+      const info = CITY_INFO[k] || {};
+      const ccFlower = t("cityCards."+k+".flower"), ccPoem = t("cityCards."+k+".poem"), ccFact = t("cityCards."+k+".fact");
+      const ccCulture = isSkeletonCity(k) ? stateCulture(CITIES[k].state) : "";
       bd.innerHTML = `<div class="modal-card citycard" role="dialog" aria-modal="true" aria-label="${cityName(k)}">
         <button class="modal-close" type="button" aria-label="${t("ui.closeBtn")}">✕</button>
         <div class="cc-head"><span class="cc-icon">${CITIES[k].icon}</span><h3>${cityName(k)}</h3></div>
-        <p class="cc-line">🌸 ${t("cityCards."+k+".flower")}</p>
-        <p class="cc-line">📅 ${t("ui.foundedLabel")} · ${CITY_INFO[k].founded}</p>
-        <p class="cc-poem">「${t("cityCards."+k+".poem")}」</p>
-        <p class="cc-line">💡 ${t("cityCards."+k+".fact")}</p>
+        ${ccFlower ? `<p class="cc-line">🌸 ${ccFlower}</p>` : ""}
+        ${info.founded ? `<p class="cc-line">📅 ${t("ui.foundedLabel")} · ${info.founded}</p>` : ""}
+        ${ccPoem ? `<p class="cc-poem">「${ccPoem}」</p>` : ""}
+        ${ccFact ? `<p class="cc-line">💡 ${ccFact}</p>` : ""}
+        ${ccCulture ? `<p class="cc-line">💡 ${ccCulture}</p>` : ""}
         <div style="height:14px"></div>
         <button class="btn ghost" type="button" id="ccClose">${t("ui.closeBtn")}</button>
       </div>`;
@@ -7930,8 +8628,180 @@
         </div>
       </div>`;
     }
-    /* ---------- 屏幕 1：到达方式选择（游戏门面） ---------- */
+    /* ---------- 新入口（改造轮）：选州 → 选城 → 落广场 → 选活法 ---------- */
+    const LIFE_ROUTES = ["study","born","work","invest"];
+    let entryState = null;
+    function setCity(key){
+      CITY = key;
+      try { localStorage.setItem("usa-life-city", key); } catch(e){}
+    }
+    function bindStartChrome(){
+      const lb = $("#loginBtn");
+      if (lb){
+        lb.addEventListener("click", doLogin);
+        const ln = $("#loginName");
+        if (ln) ln.addEventListener("keydown", e=>{ if (e.key === "Enter") doLogin(); });
+      }
+      const lo = $("#logoutBtn");
+      if (lo) lo.addEventListener("click", doLogout);
+      const ab = $("#avaBtn");
+      if (ab) ab.addEventListener("click", ()=> showAvaPick(true));
+    }
+    /* 屏 A：美国大地图（平面）——50 州 + DC 全部可点 */
+    function showStateMap(){
+      G = null;
+      setMusic("street", clockTod());
+      const curCode = DEEP_SET[CITY] || (CITIES[CITY] && CITIES[CITY].state) || null;
+      const btns = Object.keys(US_STATES).map(code=>{
+        const deep = (DEEP_BY_STATE[code] || []).length;
+        const mark = deep ? `<span class="openmark">${t("ui.entry.deepTag")} ×${deep}</span>` : "";
+        return `<button type="button" class="statebtn ${code===curCode?"sel":""}" data-state="${code}"><strong>${stateName(code)}</strong><span>${capitalName(code)}</span>${mark}</button>`;
+      }).join("");
+      mount(`${topbarHTML()}
+        <div class="scene fadein">${sceneSVG()}
+          <div class="cap"><h1>${gameName()}</h1><p>${t("ui.tagline")}</p></div>
+        </div>
+        <h2 class="q-title">🗺️ ${t("ui.entry.mapTitle")}</h2>
+        <p class="q-sub">${t("ui.entry.mapSub")}</p>
+        ${walletCardHTML()}
+        <div class="stategrid">${btns}</div>
+        ${footerHTML()}`);
+      bindStartChrome();
+      bindLandmarkHit($(".scene"), "7.7%", "17%");
+      app.querySelectorAll("[data-state]").forEach(b=> b.addEventListener("click", ()=>{ entryState = b.dataset.state; showStateCities(entryState); }));
+    }
+    /* 屏 B：选城——州府（骨架或深城）+ 该州深度城市 + Ohio 农场占位 */
+    function showStateCities(code){
+      G = null;
+      const s = US_STATES[code]; if (!s) return showStateMap();
+      const capKey = capitalKey(code);
+      const items = [];
+      if (capKey) items.push(capKey);
+      (DEEP_BY_STATE[code] || []).forEach(k=>{ if (k !== capKey) items.push(k); });
+      const capWord = String(t("ui.entry.capitalTag")).split("·")[0].trim();
+      const rows = items.map(key=>{
+        const deep = !!DEEP_SET[key];
+        const isCap = key === capKey;
+        const tags = `${isCap ? `<span class="tag">🏛️ ${capWord}</span>` : ""}<span class="tag">${deep ? "▶ " + t("ui.entry.deepTag") : "🏗️ " + t("ui.entry.construction")}</span>`;
+        return `<button type="button" class="citychoice" data-city="${key}">
+          <span class="cic">${CITIES[key].icon}</span>
+          <span><h3>${cityName(key)}</h3><p>${deep ? (t("cityCards."+key+".fact") || stateCulture(code)) : t("ui.entry.skeletonNote")}</p><span class="ctags">${tags}</span></span>
+        </button>`;
+      }).join("");
+      const farm = code === "OH" ? `<button type="button" class="citychoice" id="farmBtn">
+          <span class="cic">🌽</span>
+          <span><h3>${t("ui.entry.farmTitle")}</h3><p>${t("ui.entry.farmSub")}</p><span class="ctags"><span class="tag">🏗️ ${t("ui.entry.farmTag")}</span></span></span>
+        </button>` : "";
+      mount(`${topbarHTML()}
+        <h2 class="q-title">${fmt(t("ui.entry.chooseCity"), {state: stateName(code)})}</h2>
+        <p class="q-sub">${t("ui.entry.chooseCitySub")}</p>
+        <p class="landing-note">${stateCulture(code)}</p>
+        ${rows}${farm}
+        <button class="btn ghost" id="backStates">${t("ui.entry.backStates")}</button>
+        ${footerHTML()}`);
+      $("#backStates").addEventListener("click", showStateMap);
+      app.querySelectorAll("[data-city]").forEach(b=> b.addEventListener("click", ()=>{ setCity(b.dataset.city); sfxArrive(); showCityLanding(b.dataset.city); }));
+      const fb = $("#farmBtn");
+      if (fb) fb.addEventListener("click", showFarmSoon);
+    }
+    /* 屏 C：落在该城入口广场——深城选四种活法；骨架州府是轻场景（地标 + 文化一句话 + 广场，关卡线建设中，点击必有响应） */
+    function showCityLanding(key){
+      G = null;
+      CITY = key;
+      setMusic("street", clockTod());
+      const code = (CITIES[key] && CITIES[key].state) || DEEP_SET[key] || null;
+      const culture = code ? stateCulture(code) : (t("cityCards."+key+".fact") || "");
+      if (isSkeletonCity(key)){
+        mount(`${topbarHTML()}
+          <div class="scene fadein">${sceneSVG()}
+            <div class="cap"><h1>${CITIES[key].icon} ${cityName(key)}</h1><p>${culture}</p></div>
+          </div>
+          <p class="landing-note">${fmt(t("ui.entry.plazaNote"), {city: cityName(key)})}</p>
+          <p class="construction-note">🏗️ ${t("ui.entry.construction")} · ${fmt(t("ui.entry.constructionMsg"), {city: cityName(key)})}</p>
+          <div class="entry-actions">
+            <button class="btn" id="skelCard">${t("ui.entry.viewCard")}</button>
+            <button class="btn gold" id="skelGo">${t("ui.entry.soonBtn")}</button>
+            <button class="btn ghost" id="skelBack">${t("ui.entry.backCities")}</button>
+          </div>
+          ${footerHTML()}`);
+        bindLandmarkHit($(".scene"), "7.7%", "17%");
+        $("#skelCard").addEventListener("click", ()=> showCityCard(key));
+        $("#skelBack").addEventListener("click", ()=> code ? showStateCities(code) : showStateMap());
+        $("#skelGo").addEventListener("click", ()=>{
+          const alt = code && (DEEP_BY_STATE[code] || [])[0];
+          if (alt){ setCity(alt); sfxArrive(); showCityLanding(alt); }
+          else if (code) showStateCities(code);
+          else showStateMap();
+        });
+        return;
+      }
+      const cards = LIFE_ROUTES.map(k=>{
+        const d = t("routes."+k);
+        return `<button class="route life-route" data-route="${k}">
+          <span class="ric">${d.icon}</span>
+          <span><h3>${d.name}</h3><p>${d.desc}</p>
+          <span class="tags">${d.tags.map(x=>`<span class="tag">${x}</span>`).join("")}</span></span>
+        </button>`;
+      }).join("");
+      mount(`${topbarHTML()}
+        <div class="scene fadein">${sceneSVG()}
+          <div class="cap"><h1>${CITIES[key].icon} ${cityName(key)}</h1><p>${culture}</p></div>
+        </div>
+        <h2 class="q-title">${fmt(t("ui.entry.chooseLife"), {city: cityName(key)})}</h2>
+        <p class="q-sub">${fmt(t("ui.entry.chooseLifeSub"), {city: cityName(key)})}</p>
+        ${walletCardHTML()}
+        ${cards}
+        <div class="entry-actions">
+          <button class="btn ghost" id="landCard">${t("ui.entry.viewCard")}</button>
+          <button class="btn ghost" id="landBack">${t("ui.entry.backCities")}</button>
+        </div>
+        ${footerHTML()}`);
+      bindStartChrome();
+      bindLandmarkHit($(".scene"), "7.7%", "17%");
+      if (cityBubbleFlash){ cityBubbleFlash = false; flashStartBubble(); }
+      app.querySelectorAll("[data-route]").forEach(b=> b.addEventListener("click", ()=> startRun(b.dataset.route)));
+      $("#landCard").addEventListener("click", ()=> showCityCard(key));
+      $("#landBack").addEventListener("click", ()=> code ? showStateCities(code) : showStateMap());
+    }
+    /* Ohio 农场区占位（农场玩法下一轮）：入口可点、必有响应、可跳 Columbus 开局 */
+    function showFarmSoon(){
+      G = null;
+      mount(`${topbarHTML()}
+        <div class="card fadein center">
+          <div style="font-size:52px;">🌽</div>
+          <h2 style="margin:6px 0;">${t("ui.entry.farmTitle")}</h2>
+          <p class="small">${t("ui.entry.farmSub")}</p>
+          <p class="construction-note">🏗️ ${t("ui.entry.farmSoon")} · ${t("ui.entry.farmSoonMsg")}</p>
+          <button class="btn gold" id="farmCol">${t("ui.entry.startBtn")}</button>
+          <div style="height:10px"></div>
+          <button class="btn ghost" id="farmBack">${t("ui.entry.backCities")}</button>
+        </div>
+        ${footerHTML()}`);
+      $("#farmCol").addEventListener("click", ()=>{ setCity("col"); sfxArrive(); showCityLanding("col"); });
+      $("#farmBack").addEventListener("click", ()=> showStateCities("OH"));
+    }
+
+    /* ---------- 屏幕 1：门面（改造轮：未注册先注册；已注册直接进选州图） ---------- */
     function showStart(){
+      G = null;
+      if (typeof W !== "undefined" && W && W.name){ showStateMap(); return; }
+      setMusic("street", clockTod());
+      mount(`${topbarHTML()}
+        <div class="scene fadein">${sceneSVG()}
+          <div class="cap"><h1>${gameName()}</h1><p>${t("ui.tagline")}</p></div>
+        </div>
+        ${walletCardHTML()}
+        <div class="card howto"><strong>${t("ui.howTitle")}</strong>
+          <ul style="margin:8px 0 0;padding-left:20px;">
+            <li>${t("ui.how1")}</li><li>${t("ui.how2")}</li><li>${t("ui.how3")}</li><li>${t("ui.how4")}</li>
+          </ul>
+        </div>
+        ${footerHTML()}`);
+      bindStartChrome();
+      bindLandmarkHit($(".scene"), "7.7%", "17%");
+    }
+    /* （以下为旧版 showStart 残体，已由上方新 showStart 取代，保留函数名占位防旧引用） */
+    function showStartLegacy(){
       G = null;
       setMusic("street", clockTod());
       const cards = Object.keys(ROUTES).map(k=>{
@@ -8129,118 +8999,13 @@
         }));
       });
     }
-    /* 抽签保底：同一局内连续未中 LOTTERY_PITY 次后，下一次必中。
-       计数存在 G.lotFails：重打本关（restoreLevelStart）不清零，换路线开新局才归零。 */
-    const LOTTERY_PITY = 2;
-    /* 学历规则（定版）：硕士 / 博士名额优先，第一次抽签即中，不走概率、也不需要保底；
-       保底只对本科学历兜底。本科连败满 LOTTERY_PITY 次后，另有「去读硕士」支线可选。 */
-    function degreeSure(){ return !!G && (G.degree === "master" || G.degree === "phd"); }
-    function lotteryPityHTML(){
-      if (degreeSure()) return `<div class="result-note" style="margin-top:10px;">${t("ui.lotteryDegreeSure")}</div>`;
-      const f = (G && G.lotFails) || 0;
-      if (f >= LOTTERY_PITY) return `<div class="result-note" style="margin-top:10px;">${fmt(t("ui.lotteryPitySure"), {n:f})}</div>`;
-      if (f > 0) return `<div class="small" style="margin-top:8px;opacity:.85;">${fmt(t("ui.lotteryPityHint"), {n:f, m:LOTTERY_PITY})}</div>`;
-      return "";
-    }
-    function showLottery(step){
-      const lv = ROUTES[G.route].levels[cur.li];
-      const d = t("levels."+lv.id);
-      const of = outfitOf(lv.id);
-      const withCity = !cur.entered;
-      mount(`${topbarHTML()}${hudHTML()}
-        <div class="venuecard fadein">
-          ${venueHeadHTML(cur.li, d, of)}
-          ${stageHTML(lv.id, withCity)}
-          <div class="menuboard">
-            <div class="sbubble">🎰 🎯 ${t("ui.goalLabel")}：${d.goal}</div>
-            <div class="dock" id="dock"><button class="btn gold" id="lotBtn" disabled>${t("ui.lotteryBtn")}</button></div>
-            <div id="lotPity">${lotteryPityHTML()}</div>
-            <div id="lotBranch"></div>
-            <div id="lotResult"></div>
-          </div>
-        </div>`);
-      $("#mapBtn").addEventListener("click", ()=>{ restoreLevelStart(); showMap(); });
-      setMusicForLevel(lv.id);
-      const box = $("#stageBox");
-      wireStageCam(box, lv.id);
-      if (withCity) bindLandmarkHit(box, "91%", "9%");
-      playVenueEntry(box, lv.id, ()=>{ cur.entered = true; const lb = $("#lotBtn"); if (lb) lb.disabled = false; dockReady(); });
-      /* 本科且保底已攒满：抽签屏上常驻「去读硕士」支线入口（中途回地图再进来也还在） */
-      if (!degreeSure() && (G.lotFails || 0) >= LOTTERY_PITY){
-        $("#lotBranch").innerHTML = `<div style="height:10px"></div>
-          <button class="btn gold" id="lotGrad0">${t("ui.branchGradBtn")}</button>
-          <p class="small" style="margin-top:8px;">${t("ui.branchNote")}</p>`;
-        $("#lotGrad0").addEventListener("click", startGradBranch);
-      }
-      $("#lotBtn").addEventListener("click", ()=>{
-        /* 抽签不扣金币（同剧情选择口径：未标价不扣费） */
-        const btn = $("#lotBtn"); btn.disabled = true; btn.textContent = t("ui.lotteryRolling");
-        setTimeout(()=>{
-          const pityArmed = (G.lotFails || 0) >= LOTTERY_PITY;   /* 保底：连败满 LOTTERY_PITY 次，本次必中（仅本科） */
-          const win = degreeSure() || pityArmed || Math.random() < step.chance;   /* 硕士以上：第一次即中 */
-          if (win) G.lotFails = 0; else G.lotFails = (G.lotFails || 0) + 1;
-          if (win) sfxGain();   /* 抽奖中奖：叮当庆祝（未中奖走 failLevel 的温和下行音） */
-          /* 本科第 2 次未中：不只是重打——给出分岔选择（保底再抽 vs 去读硕士），两条路的区别写在按钮下 */
-          const branchChoice = !win && !degreeSure() && G.lotFails >= LOTTERY_PITY;
-          $("#lotResult").innerHTML = `<div class="result-note" style="margin-top:10px;">${win ? t("ui.lotteryWin") : t("ui.lotteryLose")}</div>${win ? "" : lotteryPityHTML()}
-            <div style="height:10px"></div>
-            ${branchChoice
-              ? `<h3 style="margin:4px 0;">${t("ui.branchTitle")}</h3>
-                 <button class="btn" id="lotRetry2">${t("ui.branchRetryBtn")}</button>
-                 <div style="height:10px"></div>
-                 <button class="btn gold" id="lotGrad">${t("ui.branchGradBtn")}</button>
-                 <p class="small" style="margin-top:8px;">${t("ui.branchNote")}</p>`
-              : `<button class="btn" id="lotCont">${win ? t("ui.continueBtn")+" ▶" : t("ui.retryBtn")}</button>`}`;
-          const lc = $("#lotCont");
-          if (lc) lc.addEventListener("click", ()=>{ if (win) afterStep(); else retryLevel(); });
-          const lr = $("#lotRetry2");
-          if (lr) lr.addEventListener("click", retryLevel);   /* 走保底：重打本关再等一年，第 3 次必中 */
-          const lg = $("#lotGrad");
-          if (lg) lg.addEventListener("click", startGradBranch);
-        }, 1100);
-      });
-    }
-
-    /* ---------- 读研支线：本科抽签连败 2 次后的分岔 ----------
-       花 2 年读硕士：逐年结算，金额按硕士量级（学费 $34k、助教 $14.4k、汇款 $10k、
-       生活成本同路线 baseCost，另加暑期实习收入 part $10k）。毕业后 G.degree 变 master，
-       回到抽签关——按学历规则第一次即中；保底计数清零（硕士不再需要保底）。 */
-    function gradYearSettle(){
-      const de = DEGREE_ECON.master, base = ROUTES.study.baseCost;
-      const st = { part: 10000, tuition: de.tuition, job: de.job, support: de.support, scholar: de.scholar || 0, cost: base,
-                   total: 10000 + de.tuition + de.job + de.support + (de.scholar || 0) + base };
-      return st;
-    }
-    function startGradBranch(){ showGradYear(1); }
-    function showGradYear(yr){
-      const st = gradYearSettle();
-      mount(`${topbarHTML()}${hudHTML()}
-        <div class="card fadein center">
-          ${stageStripHTML("s5")}
-          <h2 style="margin:6px 0;">🎓 ${t("ui.gradTitle")} · ${yr} / 2</h2>
-          <p class="small">${t(yr === 1 ? "ui.gradYear1" : "ui.gradYear2")}</p>
-          <div class="fxline" style="justify-content:center;">${settleChips(st)}</div>
-          <div style="height:12px"></div>
-          <button class="btn" id="gradNext">${t("ui.continueBtn")} ▶</button>
-        </div>`);
-      setMusicForLevel("s5");
-      $("#gradNext").addEventListener("click", ()=>{
-        G.cash += st.total; G.year++; G.age++; clampStats();
-        if (statDied()) return failLevel();
-        if (yr === 1) return showGradYear(2);
-        G.degree = "master"; G.lotFails = 0;
-        mount(`${topbarHTML()}${hudHTML()}
-          <div class="card fadein center">
-            <div style="font-size:52px;">🎓</div>
-            <h2 style="margin:6px 0;">${t("ui.gradTitle")}</h2>
-            <p class="small">${t("ui.gradDone")}</p>
-            <div style="height:10px"></div>
-            <button class="btn gold" id="gradGo">${t("ui.gradBtn")}</button>
-          </div>`);
-        setMusicForLevel("s5");
-        $("#gradGo").addEventListener("click", ()=> startLevel(cur.li));   /* 回到抽签关：硕士规则，第一次即中 */
-      });
-    }
+    /* ---------- 改造轮失效化（声明在原函数之后，同名后声明者胜出） ----------
+       抽签机制已下线：任何残留 lottery 步骤一律转时机小游戏；
+       保底 / 学历必中 / 读研支线全部失效，永不渲染旧文案。 */
+    function showLottery(step){ return showTiming({ mg:"timing", need: (step && step.need) || 2, tries: (step && step.tries) || 3 }); }
+    function degreeSure(){ return false; }
+    function lotteryPityHTML(){ return ""; }
+    function startGradBranch(){ showMap(); }
 
     /* ---------- 小游戏公共 ---------- */
     function stopMG(){ if (mgCleanup){ try{ mgCleanup(); }catch(e){} mgCleanup = null; } }
@@ -8460,9 +9225,10 @@
       if (mOff > 0){ st.cost += mOff; st.total += mOff; }
       G.cash += st.total;
       const hBefore = G.health;
-      G.health += (Math.random()*6 - 3);
+      G.health += Math.round(Math.random()*6 - 3);   /* 健康漂移取整到整数点（设计区间仍为 −3..+3）：旧版加小数漂移、面板却 round(差值) 显示，与 HUD 的 round(读数) 前后差能错位 1 点（面板 −3、HUD 只跳 −2） */
       clampStats();
-      const hDelta = Math.round(G.health - hBefore);   /* 结算时的健康漂移量：要在结算明细里亮出来源（有变化才显示） */
+      G.health = Math.round(G.health);   /* 健康恒为整数：清掉旧存档可能残留的小数尾巴，保证面板行 = HUD 实际跳动 */
+      const hDelta = G.health - Math.round(hBefore);   /* 结算健康行 = HUD 上真正跳动的点数（含触顶/触底截断后的实际值），面板照此显示 */
       G.lastSettleH = hDelta;   /* 结算后失败（现金见底）走 failLevel 时，那一屏也要能亮出这行 */
       if (statDied()) return failLevel();
       /* 星级：基础 1 星 + 属性健康 1 星 + 小游戏表现 1 星 */
@@ -8567,7 +9333,7 @@
       return "en";
     }
     function updateDocTitle(){
-      document.title = LANG === "zh" ? "移民美国 · 在美国生活 | American Life" : (gameName() === "American Life" ? "American Life" : gameName() + " | American Life");
+      document.title = gameName() === "American Life" ? "American Life" : gameName() + " | American Life";
     }
     function setLang(code){
       if (!LANGS[code]) return;
