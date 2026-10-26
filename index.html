@@ -6622,9 +6622,9 @@
        同场预留）。金币 / 关卡顺序 / 解锁 / 存档引擎完全不动。 */
     const VENUE = {
       restaurant:{ arch:"tables",  point:{x:296,y:290}, sit:true,  slots:[{x:122,y:300,m:"stand"},{x:196,y:310,m:"stand"},{x:408,y:308,m:"stand"},{x:250,y:322,m:"stand"},{x:168,y:319,m:"wander",w:[330,319]}] },
-      school:{ arch:"desks",    point:{x:260,y:294}, sit:true,  slots:[{x:150,y:294,m:"sit"},{x:370,y:294,m:"sit"},{x:94,y:300,m:"stand"},{x:458,y:300,m:"stand"},{x:206,y:308,m:"wander",w:[330,308]}] },
+      school:{ arch:"desks",    point:{x:201,y:298}, sit:true,  slots:[{x:150,y:294,m:"sit"},{x:370,y:294,m:"sit"},{x:94,y:300,m:"stand"},{x:458,y:300,m:"stand"},{x:206,y:308,m:"wander",w:[330,308]}] },
       campus:{ arch:"bench",    point:{x:300,y:296}, sit:true,  slots:[{x:240,y:296,m:"sit"},{x:120,y:300,m:"stand"},{x:452,y:300,m:"stand"},{x:368,y:302,m:"stand"},{x:160,y:308,m:"wander",w:[420,308]}] },
-      office:{ arch:"desks",    point:{x:260,y:296}, sit:false, slots:[{x:150,y:294,m:"sit"},{x:370,y:294,m:"sit"},{x:102,y:302,m:"stand"},{x:458,y:300,m:"stand"},{x:200,y:308,m:"wander",w:[340,308]}] },
+      office:{ arch:"desks",    point:{x:260,y:296}, sit:false, slots:[{x:150,y:294,m:"sit"},{x:370,y:294,m:"sit"},{x:458,y:300,m:"stand"}] },
       govt:{ arch:"counter",  point:{x:312,y:300}, sit:false, slots:[{x:238,y:304,m:"stand"},{x:178,y:308,m:"stand"},{x:420,y:300,m:"stand"},{x:458,y:304,m:"stand"},{x:120,y:306,m:"stand"}] },
       court:{ arch:"stand",   point:{x:300,y:298}, sit:false, slots:[{x:140,y:296,m:"sit"},{x:388,y:296,m:"sit"},{x:96,y:304,m:"stand"},{x:452,y:302,m:"stand"},{x:180,y:308,m:"wander",w:[400,308]}] },
       airport:{ arch:"counter", point:{x:330,y:300}, sit:false, slots:[{x:252,y:295,m:"stand"},{x:192,y:309,m:"stand"},{x:428,y:293,m:"stand"},{x:120,y:303,m:"stand"},{x:150,y:313,m:"wander",w:[440,313]}] },
@@ -6998,9 +6998,8 @@
         el.className = "npc idle" + (s.m === "sit" ? " seated" : "");
         el.setAttribute("aria-hidden", "true");
         const face = NPC_FACES[(seed + i * 3) % NPC_FACES.length];
-        const name = NPC_NAMES[(seed + i * 5) % NPC_NAMES.length];
         const color = NPC_COLORS[(seed + i * 2) % NPC_COLORS.length];
-        el.innerHTML = `<div class="w2bob"><span class="npctag"><i></i>${name}</span><span class="npcbub"></span><div class="w2flip"><span class="w2face">${face}</span><span class="w2torso" style="background:${color}"></span></div></div>`;
+        el.innerHTML = `<div class="w2bob"><span class="npcbub"></span><div class="w2flip"><span class="w2face">${face}</span><span class="w2torso" style="background:${color}"></span></div></div>`;
         el._quiet = true;
         box.appendChild(el);
         placeWalker(el, s.x, s.y);
@@ -7074,7 +7073,7 @@
       const depthOf = y=> `bottom:${Math.max(2, Math.round((340 - y) * 0.92) - 4)}px;scale:${(0.8 + Math.max(0, y - 282) * 0.007).toFixed(2)}`;
       let chars = `<span class="schar" style="left:${(V.point.x / 520 * 100).toFixed(1)}%;${depthOf(V.point.y)}"><span class="sface">${of.a}</span><span class="storso" style="background:var(--accent)"></span></span>`;
       V.slots.slice(0, 5).forEach((s, i)=>{
-        chars += `<span class="schar" style="left:${(s.x / 520 * 100).toFixed(1)}%;${depthOf(s.y)}"><span class="npctag"><i></i>${NPC_NAMES[(seed + i * 5) % NPC_NAMES.length]}</span><span class="sface">${NPC_FACES[(seed + i * 3) % NPC_FACES.length]}</span><span class="storso" style="background:${NPC_COLORS[(seed + i * 2) % NPC_COLORS.length]}"></span></span>`;
+        chars += `<span class="schar" style="left:${(s.x / 520 * 100).toFixed(1)}%;${depthOf(s.y)}"><span class="sface">${NPC_FACES[(seed + i * 3) % NPC_FACES.length]}</span><span class="storso" style="background:${NPC_COLORS[(seed + i * 2) % NPC_COLORS.length]}"></span></span>`;
       });
       return `<div class="stagestrip"><div class="stripinner">${venueSceneSVG(lvId)}</div><div class="stripchars">${chars}</div></div>`;
     }
@@ -7723,7 +7722,7 @@
         <div class="tp-row"><div class="tp-ic">🧭</div>${prog}</div>
         <div class="tp-row"><div class="tp-ic">🔥</div><div class="tp-main">${fmt(t("ui.panel.streak"), { n: (W.streak && W.streak.days) || 1 })}<small>${t("ui.panel.streakSub")}</small></div></div>
         <div class="tp-row"><div class="tp-ic">💬</div><div class="tp-main">${needs}</div></div>
-        <div class="tp-row"><div class="tp-ic">👛</div><div class="tp-main">${t("ui.panel.wallet")}<small>${(typeof G !== "undefined" && G) ? "💵 " + money(G.cash) + " · " : ""}🪙 ${(W.coins || 0).toLocaleString("en-US")}</small></div><button class="btn gold" data-shop type="button" style="width:auto;padding:8px 16px;">${t("ui.panel.topup")}</button></div>
+        <div class="tp-row"><div class="tp-ic">👛</div><div class="tp-main">${t("ui.panel.wallet")}<small>${(typeof G !== "undefined" && G) ? "💵 " + money(G.cash) + " · " : ""}🪙 <span class="coinval">${(W.coins || 0).toLocaleString("en-US")}</span></small></div><button class="btn gold" data-shop type="button" style="width:auto;padding:8px 16px;">${t("ui.panel.topup")}</button></div>
         <div class="tp-row"><div class="tp-ic">🎵</div><div class="tp-main">${t("ui.panel.music")}<small>${t("ui.panel.musicSub")}</small></div><button class="tp-toggle ${SND_ON ? "on" : ""}" id="tpMusic" type="button" aria-label="${t("ui.panel.music")}"></button></div>
         <div class="tp-row"><div class="tp-ic">🌓</div><div class="tp-main">${t("ui.panel.appear")}<small>${t("ui.panel.appearSub")}</small></div><div class="tp-seg"><button type="button" data-theme-set="light" class="${theme === "light" ? "sel" : ""}">${t("ui.panel.day")}</button><button type="button" data-theme-set="dark" class="${theme === "dark" ? "sel" : ""}">${t("ui.panel.night")}</button></div></div>`;
       const tm = $("#tpMusic");
@@ -9325,6 +9324,20 @@
           speed: big ? 1.18 : 1.02, waitMin: big ? 0.6 : 2.0, waitMax: big ? 1.4 : 5.0 };
       }
     });
+    /* 更多行人（无名牌、待机微动）：城市牌旁交谈的两人、看手机的人、右侧长椅上坐着的两人 + 两只花箱 */
+    crowdPerson(ctx, "👩🏻", 0x7a6396, 2.75, 3.55, 0.91, false);
+    crowdPerson(ctx, "👨🏽", 0x2456a6, 3.18, 3.9, -2.23, false);
+    crowdPerson(ctx, "🧑🏿", 0xb8562f, 6.9, 6.35, Math.PI, false);
+    bx(0.5, 0.09, 1.9, 0x2e7d4f, 8.7, 0.46, 4.35, sc);
+    bx(0.07, 0.52, 1.9, 0x256b41, 8.94, 0.76, 4.35, sc);
+    bx(0.44, 0.46, 0.09, 0x256b41, 8.7, 0.23, 3.55, sc);
+    bx(0.44, 0.46, 0.09, 0x256b41, 8.7, 0.23, 5.15, sc);
+    crowdPerson(ctx, "👱‍♀️", 0x5aa7d6, 8.7, 4.0, -Math.PI / 2, true);
+    crowdPerson(ctx, "🧑🏻", 0xe9a13b, 8.7, 4.7, -Math.PI / 2, true);
+    bx(1.0, 0.48, 0.55, 0x8a5a3c, 0.95, 0.24, 1.5, sc);
+    mesh(icoGeo(0.42), M(0x5f9e4e), 0.95, 0.76, 1.5, sc);
+    bx(1.0, 0.48, 0.55, 0x8a5a3c, 9.3, 0.24, 3.35, sc);
+    mesh(icoGeo(0.42), M(0x549245), 9.3, 0.76, 3.35, sc);
     /* 广场后方路面有车缓缓驶过；偶尔有人从餐车旁走进广场 */
     addTraffic(ctx, -1.7, -0.37);
     /* 广场前沿街面：Overview 构图里完整可见、无任何楼体遮挡的一段路（沥青面 + 车道虚线）。
@@ -9410,6 +9423,16 @@
       mesh(sphGeo(0.075, 8), ME(0xffd98a, night ? 0xffc873 : 0x332200, 1), gx, 2.2, 0.5, sc).castShadow = false;
       if (night && li === 1){ var pl2 = new T.PointLight(0xffd9a0, 0.8, 9); pl2.position.set(gx, 2.15, 0.6); sc.add(pl2); }
     });
+    /* 餐区两盏吊灯 + 后墙瓶架（高度层与墙面填充） */
+    [[3.1, 4.9], [5.7, 4.4]].forEach(function(lp){
+      cyl(0.016, 0.016, 1.0, 0x5a4232, lp[0], 3.05, lp[1], sc).castShadow = false;
+      mesh(cylGeo(0.07, 0.3, 0.26, 14), M(0x7a3b2e), lp[0], 2.42, lp[1], sc);
+      mesh(sphGeo(0.075, 8), ME(0xffd98a, night ? 0xffc873 : 0x332200, 1), lp[0], 2.26, lp[1], sc).castShadow = false;
+    });
+    bx(1.9, 0.07, 0.3, 0x8a5a30, 7.9, 2.06, 0.16, sc);
+    [7.25, 7.6, 7.95, 8.3, 8.6].forEach(function(bxp, bi){
+      cyl(0.05, 0.05, 0.34 + (bi % 3) * 0.07, [0x7fb069, 0xe9a13b, 0xc86b9d, 0x5aa7d6, 0xe2603f][bi], bxp, 2.28, 0.16, sc).castShadow = false;
+    });
     /* 沿左墙长凳柜 + 盘子 */
     bx(1.1, 0.6, 3.0, 0xa8703f, 0.75, 0.3, 3.5, sc);
     bx(1.2, 0.06, 3.1, 0xcd9250, 0.75, 0.63, 3.5, sc);
@@ -9434,6 +9457,7 @@
       return g;
     }
     rTable(2.8, 3.2); rTable(4.8, 2.2);
+    rTable(6.9, 3.6); rTable(7.6, 5.5); rTable(5.4, 6.0); rTable(3.3, 6.15);
     /* 绿植 ×2 */
     [[0.75, 0.75], [7.15, 2.45]].forEach(function(pp){
       cyl(0.2, 0.27, 0.44, 0xb3543f, pp[0], 0.22, pp[1], sc);
@@ -9447,8 +9471,10 @@
     var ring = new T.Mesh(new T.RingGeometry(0.3, 0.44, 28), new T.MeshBasicMaterial({ color: 0xe9a13b, transparent: true, opacity: 0.55, side: T.DoubleSide, depthWrite: false }));
     ring.rotation.x = -Math.PI / 2; ring.position.set(pg.x, 0.085, pg.z); sc.add(ring);
     ctx.updates.push(function(c){ ring.material.opacity = 0.4 + 0.25 * (0.5 + 0.5 * Math.sin(c.time * 2.4)); });
-    /* 本场人物接口（进场编排调用）：与全部场馆共用 venuePeople（NPC 种子 / 站位 / 名牌 / 闲逛） */
+    /* 本场人物接口（进场编排调用）：与全部场馆共用 venuePeople（同场占位玩家），其后补无名牌的坐客与店员 */
     venuePeople(ctx, lvId);
+    var _rsp = ctx.spawnPeople;
+    ctx.spawnPeople = function(){ _rsp(); restaurantCrowd(ctx); };
   }
 
   /* ================= 样板 ③ 我的家 ================= */
@@ -9617,6 +9643,12 @@
       hHand.rotation.z = -((now.getHours() % 12) + now.getMinutes() / 60) / 12 * Math.PI * 2;
       mHand.rotation.z = -(now.getMinutes() + now.getSeconds() / 60) / 60 * Math.PI * 2;
     });
+    /* 照片墙（后墙右侧，三枚小相框）：生活气息，不动玩家家具 */
+    [[5.7, 2.42, "👨‍👩‍👧"], [6.34, 2.56, "🐱"], [6.98, 2.42, "🏖️"]].forEach(function(fr){
+      bx(0.54, 0.66, 0.04, parseInt(st.wood.slice(1), 16), fr[0], fr[1], -0.02, sc);
+      var fp = new T.Mesh(new T.PlaneGeometry(0.46, 0.58), new T.MeshBasicMaterial({ map: emojiTex(fr[2]), transparent: true }));
+      fp.position.set(fr[0], fr[1], 0.03); sc.add(fp); ctx.textures.push(fp.material.map);
+    });
     /* 家具：按玩家布局（槽位 → 网格）摆放，本地网格原点 = 地面接触中心 */
     ctx.furnRoot = new T.Group(); sc.add(ctx.furnRoot);
     var bySlot = {};
@@ -9638,6 +9670,7 @@
     var P = person({ face: "🧑", torso: accent });
     P.group.position.set(4.7, 0, 4.7);
     P.group.rotation.y = Math.PI / 4;
+    if (typeof W !== "undefined" && W.name) ctx.textures.push(nameTag(W.name, P.group));   /* 家里也只有玩家本人挂名牌 */
     sc.add(P.group); ctx.people.push(P);
     /* 夜里沙发区补一盏暖光（有台灯时已在家具里发光，这里保证夜景可读） */
     if (night){
@@ -9646,7 +9679,18 @@
   }
 
   /* ================= 推广轮：全部小场景共用件 ================= */
-  /* 场馆人物接口（原餐馆样板逻辑抽出共用）：NPC 按种子 / VENUE 站位生成，带名牌与闲逛；主角带金色光环 */
+  /* 大厅（govt / airport 共用模板）柜台前队伍线：自柜台前向门口方向延伸 7 人，
+     (0.28, 0.96) 为队伍方向（队首 → 队尾，单位向量）；成员面朝柜台（方向取反） */
+  var HALL_Q_DX = 0.28, HALL_Q_DZ = 0.96;
+  var HALL_Q_RY = Math.atan2(-HALL_Q_DX, -HALL_Q_DZ);
+  var HALL_QUEUE = [[4.35, 2.95], [4.51, 3.51], [4.68, 4.06], [4.84, 4.62], [5.0, 5.18], [5.17, 5.73], [5.33, 6.29]];
+  /* 办公室（签证面试等 office 关）右侧办公桌前等候线：队首在桌前、向右后方延伸 6 人，
+     (0.285, -0.958) 为队伍方向（队首 → 队尾，单位向量）；成员面朝办公桌（方向取反） */
+  var OFFICE_Q_DX = 0.285, OFFICE_Q_DZ = -0.958;
+  var OFFICE_Q_RY = Math.atan2(-OFFICE_Q_DX, -OFFICE_Q_DZ);
+  var OFFICE_QUEUE = [[6.55, 4.85], [6.72, 4.28], [6.89, 3.71], [7.06, 3.14], [7.23, 2.57]];
+  /* 场馆人物接口（原餐馆样板逻辑抽出共用）：NPC 按种子 / VENUE 站位生成与闲逛，一律无名牌
+     （名牌只留玩家本人；带名牌的模拟同场玩家只出现在到访场馆 / 入口广场等共享空间）；主角带金色光环 */
   function venuePeople(ctx, lvId){
     var sc = ctx.scene;
     ctx.spawnPeople = function(){
@@ -9657,13 +9701,11 @@
       var standers = [];
       VV.slots.forEach(function(s, i){
         var face = NPC_FACES[(seed + i * 3) % NPC_FACES.length];
-        var name = NPC_NAMES[(seed + i * 5) % NPC_NAMES.length];
         var color = NPC_COLORS[(seed + i * 2) % NPC_COLORS.length];
         var P = person({ face: face, torso: parseInt(color.slice(1), 16) });
         var gp = stageToGridR(s.x, s.y);
         P.group.position.copy(gp);
         P.group.rotation.y = Math.PI / 4;
-        ctx.textures.push(nameTag(name, P.group));
         if (s.m === "sit") P.setSeated(true);
         sc.add(P.group); ctx.people.push(P); npcs.push(P);
         if (s.m === "wander" && s.w) P.wander = { pts: [gp.clone(), stageToGridR(s.w[0], s.w[1])], i: 0, wait: Math.random() * 2, speed: 1.0, waitMin: 1.8, waitMax: 4.6 };
@@ -9672,14 +9714,16 @@
       if (kind === "restaurant" && standers.length){
         /* 服务员动线：柜台前 → 二号桌旁 → 一号桌旁 → 回到候位点，端着节奏慢慢走、每站停一停 */
         var w0 = standers.shift();
-        w0.P.wander = { pts: [new T.Vector3(5.0, 0, 1.8), new T.Vector3(5.7, 0, 3.0), new T.Vector3(3.6, 0, 4.0), w0.gp.clone()], i: 3, wait: 1 + Math.random() * 1.5, speed: 1.12, waitMin: 1.0, waitMax: 2.6 };
+        w0.P.wander = { pts: [new T.Vector3(5.0, 0, 1.8), new T.Vector3(5.55, 0, 2.75), new T.Vector3(3.6, 0, 4.0), w0.gp.clone()], i: 3, wait: 1 + Math.random() * 1.5, speed: 1.12, waitMin: 1.0, waitMax: 2.6 };
       }
       if ((kind === "govt" || kind === "airport") && standers.length){
-        /* 柜台前排队：朝柜台方向隔一阵向前挪一小步，挪满一轮再慢慢退回队尾 */
-        var ct = stageToGridR(312, 256);
-        standers.forEach(function(o){
-          var dx = ct.x - o.gp.x, dz = ct.z - o.gp.z, len = Math.hypot(dx, dz) || 1;
-          o.P.queue = { anchor: o.gp.clone(), dx: dx / len, dz: dz / len, off: 0, step: 0.24, max: 0.55, t: 3 + Math.random() * 6 };
+        /* 大厅排队：站位者改站到柜台前的队伍线（HALL_QUEUE）上，朝柜台方向隔一阵向前挪一小步，
+           挪满一轮再慢慢退回队尾；队伍后半段由 venueCrowd 的 hallQueueTail 沿同一条线补齐 */
+        standers.forEach(function(o, qi){
+          var qp = HALL_QUEUE[Math.min(qi, HALL_QUEUE.length - 1)];
+          o.P.group.position.set(qp[0], 0, qp[1]);
+          o.P.group.rotation.y = HALL_Q_RY;
+          o.P.queue = { anchor: new T.Vector3(qp[0], 0, qp[1]), dx: -HALL_Q_DX, dz: -HALL_Q_DZ, off: 0, step: 0.24, max: 0.55, t: 3 + Math.random() * 6 };
         });
         standers = [];
       }
@@ -9693,7 +9737,6 @@
       if (kind === "restaurant"){
         /* 偶尔有一位客人推门进来、走到桌边停留一会儿，再出门离开 */
         var dp = person({ face: NPC_FACES[(seed + 7) % NPC_FACES.length], torso: parseInt(NPC_COLORS[(seed + 4) % NPC_COLORS.length].slice(1), 16) });
-        ctx.textures.push(nameTag(NPC_NAMES[(seed + 11) % NPC_NAMES.length], dp.group));
         sc.add(dp.group); ctx.people.push(dp);
         doorCycle(ctx, dp, new T.Vector3(0.35, 0, 6.15), [new T.Vector3(2.1, 0, 5.3), new T.Vector3(3.4, 0, 4.55)]);
       }
@@ -9701,6 +9744,7 @@
     ctx.addHero = function(of){
       var P = person({ face: of.a, torso: 0xc8402a });
       P.ring = heroRing(P.group);
+      if (typeof W !== "undefined" && W.name) ctx.textures.push(nameTag(W.name, P.group));   /* 名牌只留玩家本人；关卡内 NPC 一律无牌 */
       sc.add(P.group); ctx.people.push(P);
       return P;
     };
@@ -9803,6 +9847,386 @@
     });
     return g;
   }
+  /* ================= 密度轮：真实场所的密度与空间感 =================
+     原则（学 Lagos 的手法、不抄陈设）：地面铺到六七成、墙边一圈道具、桌椅之间留走道；
+     人群成团分布（有的桌满、有的桌空一两张、柜台前两三人、门口有人进出），不均匀撒人。
+     背景人物一律无名牌（名牌只留玩家本人与 venuePeople 的同场占位玩家），只做待机微动，
+     不占行走名额（MAX_MOVERS 不变）；几何 / 材质全部走共享缓存，单场总人数 ≤24。 */
+  function crowdPerson(ctx, face, color, x, z, ry, seated){
+    var P = person({ face: face, torso: color });
+    P.group.position.set(x, 0, z);
+    P.group.rotation.y = ry;
+    if (seated) P.setSeated(true);
+    ctx.scene.add(P.group); ctx.people.push(P);
+    return P;
+  }
+  function crowdFace(seed, i){ return NPC_FACES[(seed + i * 3 + 1) % NPC_FACES.length]; }
+  function crowdColor(seed, i){ return parseInt(NPC_COLORS[(seed + i * 2 + 1) % NPC_COLORS.length].slice(1), 16); }
+  /* 举手待机：每 ~17 秒举一次手、停两三秒再放下（教室里的小动作，不走位） */
+  function armRaise(ctx, P, off){
+    ctx.updates.push(function(c){
+      var ph = (c.time + off) % 17;
+      var a = 0;
+      if (ph > 2 && ph < 5.4){ var u = Math.min((ph - 2) / 0.8, (5.4 - ph) / 0.8, 1); a = -2.25 * Math.max(0, u); }
+      P.armR.rotation.x = a;
+    });
+  }
+  /* 简易椅（椅背在坐者身后：与坐者同 ry） */
+  function simpleChair(sc, x, z, ry, color){
+    var g = new T.Group(); g.position.set(x, 0, z); g.rotation.y = ry; sc.add(g);
+    bx(0.44, 0.05, 0.42, color, 0, 0.45, 0, g);
+    bx(0.44, 0.52, 0.05, color, 0, 0.72, -0.21, g);
+    bx(0.05, 0.45, 0.05, shadeNum(color, -25), -0.18, 0.22, 0.16, g);
+    bx(0.05, 0.45, 0.05, shadeNum(color, -25), 0.18, 0.22, 0.16, g);
+    return g;
+  }
+  /* 长椅（坐者面向局部 +z，椅背在 -z） */
+  function benchAt(sc, x, z, ry, color){
+    var g = new T.Group(); g.position.set(x, 0, z); g.rotation.y = ry; sc.add(g);
+    bx(2.3, 0.09, 0.52, color, 0, 0.46, 0, g);
+    bx(2.3, 0.5, 0.07, shadeNum(color, 12), 0, 0.78, -0.26, g);
+    bx(0.09, 0.46, 0.44, shadeNum(color, -30), -1.0, 0.23, 0, g);
+    bx(0.09, 0.46, 0.44, shadeNum(color, -30), 1.0, 0.23, 0, g);
+    return g;
+  }
+  /* ---------- 学校教室：4 列 × 4 排课桌椅 + 讲台 + 墙面系统 + 阅读角 ---------- */
+  var CLASS_COLS = [2.5, 3.95, 5.5, 7.05], CLASS_ROWS = [2.1, 3.5, 4.9, 6.3];
+  function buildClassroom(ctx, night){
+    var sc = ctx.scene;
+    var bookCols = [0xc8402a, 0x2456a6, 0x2e7d4f, 0xe9a13b, 0x7a6396, 0x5aa7d6];
+    CLASS_ROWS.forEach(function(rz, r){
+      CLASS_COLS.forEach(function(cx, c){
+        var g = new T.Group(); g.position.set(cx, 0, rz); sc.add(g);
+        bx(1.15, 0.06, 0.62, 0x9a7a52, 0, 0.72, 0, g);
+        bx(1.05, 0.66, 0.05, 0x86643f, 0, 0.37, -0.27, g);
+        bx(0.06, 0.7, 0.55, 0x7d5f3a, -0.52, 0.36, 0, g);
+        bx(0.06, 0.7, 0.55, 0x7d5f3a, 0.52, 0.36, 0, g);
+        bx(0.44, 0.05, 0.42, 0x5a76a0, 0, 0.45, 0.55, g);
+        bx(0.44, 0.52, 0.05, 0x5a76a0, 0, 0.72, 0.78, g);
+        bx(0.05, 0.45, 0.05, 0x49688f, -0.18, 0.22, 0.4, g);
+        bx(0.05, 0.45, 0.05, 0x49688f, 0.18, 0.22, 0.4, g);
+        var v = (r * 4 + c) % 5;
+        if (v === 0){
+          bx(0.3, 0.05, 0.22, bookCols[(r + c) % 6], -0.32, 0.78, 0, g);
+          bx(0.26, 0.05, 0.2, bookCols[(r + c + 2) % 6], -0.32, 0.83, 0, g);
+          cyl(0.05, 0.045, 0.11, 0xe9a13b, 0.38, 0.81, 0.08, g);
+        } else if (v === 1){
+          var ob1 = bx(0.26, 0.02, 0.34, 0xfffdf6, -0.14, 0.76, 0, g); ob1.rotation.y = 0.28;
+          var ob2 = bx(0.26, 0.02, 0.34, 0xf4ecd8, 0.14, 0.76, 0, g); ob2.rotation.y = -0.28;
+        } else if (v === 2){
+          bx(0.44, 0.03, 0.3, 0x31405e, 0.1, 0.77, -0.05, g);
+          var lsc = bx(0.44, 0.3, 0.03, 0x22304a, 0.1, 0.93, -0.19, g); lsc.rotation.x = -0.28;
+          bx(0.3, 0.05, 0.22, bookCols[(r * 2 + c) % 6], -0.36, 0.78, 0.05, g);
+        } else if (v === 3){
+          bx(0.3, 0.05, 0.22, bookCols[(c + 3) % 6], -0.3, 0.78, -0.02, g);
+          cyl(0.045, 0.045, 0.17, 0x5aa7d6, 0.4, 0.84, -0.08, g);
+        } else {
+          bx(0.34, 0.04, 0.24, 0xfff3d0, 0, 0.77, 0, g);
+          bx(0.2, 0.16, 0.14, 0xc86b9d, 0.42, 0.83, 0.1, g);
+        }
+      });
+    });
+    /* 教师桌（讲台区） */
+    var td = new T.Group(); td.position.set(5.95, 0, 1.05); sc.add(td);
+    bx(1.7, 0.07, 0.72, 0x8a6a48, 0, 0.74, 0, td);
+    bx(0.08, 0.72, 0.62, 0x6e5233, -0.78, 0.37, 0, td);
+    bx(0.08, 0.72, 0.62, 0x6e5233, 0.78, 0.37, 0, td);
+    bx(0.5, 0.02, 0.36, 0xffffff, -0.4, 0.79, 0, td).castShadow = false;
+    bx(0.34, 0.05, 0.24, 0xc8402a, 0.35, 0.8, 0.05, td);
+    mesh(sphGeo(0.07, 8), M(0xd23b2e), 0.62, 0.84, -0.12, td).castShadow = false;
+    cyl(0.05, 0.04, 0.1, 0x2456a6, -0.05, 0.83, 0.18, td).castShadow = false;
+    /* 黑板板书（自绘粉笔字画布：分数课 + 字母）+ 字母条 + 国旗 + 时钟 */
+    var chalkTex = cnvTex(640, 300, function(g2){
+      g2.clearRect(0, 0, 640, 300);
+      g2.fillStyle = "rgba(255,255,255,0.92)"; g2.textBaseline = "middle";
+      g2.font = "600 44px 'Segoe Print','Comic Sans MS',cursive"; g2.fillText("Math · Fractions", 36, 52);
+      g2.font = "600 40px 'Segoe Print','Comic Sans MS',cursive";
+      g2.fillText("1/2 + 1/4 = 3/4", 36, 128);
+      g2.fillText("3/4 - 1/4 = 1/2", 36, 196);
+      g2.strokeStyle = "rgba(255,255,255,0.85)"; g2.lineWidth = 4;
+      g2.beginPath(); g2.moveTo(36, 84); g2.lineTo(430, 84); g2.stroke();
+      g2.beginPath(); g2.arc(545, 215, 34, 0, 7); g2.stroke();
+      g2.beginPath(); g2.moveTo(545, 196); g2.lineTo(545, 215); g2.lineTo(562, 224); g2.stroke();
+      g2.font = "34px 'Segoe Print','Comic Sans MS',cursive"; g2.fillText("Aa Bb Cc", 380, 130);
+    });
+    ctx.textures.push(chalkTex);
+    var chalk = new T.Mesh(new T.PlaneGeometry(3.0, 1.4), new T.MeshBasicMaterial({ map: chalkTex, transparent: true }));
+    chalk.position.set(4.3, 2.32, 0.06); sc.add(chalk);
+    var abcTex = cnvTex(640, 72, function(g2){
+      g2.fillStyle = "#fff6ea"; g2.fillRect(0, 0, 640, 72);
+      g2.fillStyle = "#31405e"; g2.font = "700 40px Georgia, serif"; g2.textAlign = "center"; g2.textBaseline = "middle";
+      g2.fillText("Aa  Bb  Cc  Dd  Ee  Ff  Gg", 320, 38);
+    });
+    ctx.textures.push(abcTex);
+    var abc = new T.Mesh(new T.PlaneGeometry(2.9, 0.33), new T.MeshBasicMaterial({ map: abcTex }));
+    abc.position.set(4.3, 3.3, 0.05); sc.add(abc);
+    cyl(0.025, 0.025, 1.5, 0x8a94a6, 2.32, 2.85, 0.05, sc).castShadow = false;
+    var cflag = new T.Mesh(new T.PlaneGeometry(0.92, 0.5), new T.MeshLambertMaterial({ map: flagTex(), side: T.DoubleSide }));
+    cflag.position.set(2.79, 3.32, 0.05); sc.add(cflag); ctx.textures.push(cflag.material.map);
+    var clk = new T.Group(); clk.position.set(6.3, 3.0, 0.05); sc.add(clk);
+    var cdisc = cyl(0.3, 0.3, 0.05, 0xfffdf8, 0, 0, 0, clk); cdisc.rotation.x = Math.PI / 2;
+    cyl(0.33, 0.33, 0.03, 0x8a5a12, 0, 0, -0.012, clk).rotation.x = Math.PI / 2;
+    var chGeo = boxGeo(0.045, 0.18, 0.02).clone(); chGeo.translate(0, 0.07, 0);
+    var cmGeo = boxGeo(0.032, 0.26, 0.02).clone(); cmGeo.translate(0, 0.11, 0);
+    var chH = mesh(chGeo, M(0x31405e), 0, 0, 0.04, clk); chH.castShadow = false;
+    var cmH = mesh(cmGeo, M(0xc8402a), 0, 0, 0.05, clk); cmH.castShadow = false;
+    ctx.updates.push(function(){
+      var now = cityNow();
+      chH.rotation.z = -((now.getHours() % 12) + now.getMinutes() / 60) / 12 * Math.PI * 2;
+      cmH.rotation.z = -(now.getMinutes() + now.getSeconds() / 60) / 60 * Math.PI * 2;
+    });
+    /* 公告栏（黑板右侧墙面）+ 世界地图海报（左侧墙面） */
+    bx(1.8, 1.2, 0.06, 0x8a5a12, 7.55, 2.25, 0.0, sc);
+    bx(1.66, 1.06, 0.05, 0xd8b078, 7.55, 2.25, 0.03, sc);
+    [[-0.55, 0.28, 0xc8402a], [-0.18, 0.3, 0xfff6ea], [0.2, 0.27, 0x5aa7d6], [0.56, 0.3, 0xf2c14e], [-0.36, -0.22, 0x8fce7a], [0.05, -0.24, 0xfff6ea], [0.45, -0.2, 0xc86b9d]].forEach(function(p){
+      bx(0.3, 0.38, 0.02, p[2], 7.55 + p[0], 2.25 + p[1], 0.07, sc).castShadow = false;
+    });
+    bx(1.5, 1.1, 0.05, 0x8a5a12, 1.35, 2.4, 0.0, sc);
+    var mapP = new T.Mesh(new T.PlaneGeometry(1.35, 0.95), new T.MeshBasicMaterial({ map: gradTex("#7fb069", "#3f8fca", "#3f8fca") }));
+    mapP.position.set(1.35, 2.4, 0.05); sc.add(mapP); ctx.textures.push(mapP.material.map);
+    var globeSp = new T.Sprite(new T.SpriteMaterial({ map: emojiTex("🌎"), transparent: true, depthWrite: false }));
+    globeSp.scale.set(0.55, 0.55, 1); globeSp.position.set(1.35, 2.42, 0.12); sc.add(globeSp); ctx.textures.push(globeSp.material.map);
+    /* 左墙书架（开口格 + 三层书） */
+    var shelf = new T.Group(); shelf.position.set(0.52, 0, 4.35); shelf.rotation.y = Math.PI / 2; sc.add(shelf);
+    bx(0.06, 1.9, 0.42, 0x7a5230, -0.82, 0.95, 0, shelf);
+    bx(0.06, 1.9, 0.42, 0x7a5230, 0.82, 0.95, 0, shelf);
+    bx(1.7, 0.06, 0.42, 0x7a5230, 0, 1.92, 0, shelf);
+    bx(1.7, 1.9, 0.04, 0x63431f, 0, 0.95, -0.19, shelf);
+    [0.35, 0.95, 1.5].forEach(function(sy, li){
+      bx(1.58, 0.05, 0.36, 0x7a5230, 0, sy, 0, shelf).castShadow = false;
+      for (var bi = 0; bi < 6; bi++) bx(0.15, 0.32, 0.22, bookCols[(li * 2 + bi) % 6], -0.6 + bi * 0.24, sy + 0.19, 0, shelf).castShadow = false;
+    });
+    /* 左墙背包挂钩排 */
+    bx(0.05, 0.07, 1.5, 0x8a5a12, 0.05, 1.32, 6.35, sc).castShadow = false;
+    [[6.0, 0xc8402a], [6.35, 0x2456a6], [6.7, 0x2e7d4f]].forEach(function(bp){
+      bx(0.24, 0.34, 0.3, bp[1], 0.2, 1.08, bp[0], sc);
+      bx(0.16, 0.12, 0.2, shadeNum(bp[1], 25), 0.2, 1.31, bp[0], sc).castShadow = false;
+    });
+    /* 后墙右储物柜 + 地球仪 */
+    [[7.7, 0x5a76a0], [8.55, 0x7a6396]].forEach(function(cb){
+      bx(0.78, 2.0, 0.55, cb[1], cb[0], 1.0, 0.5, sc);
+      bx(0.5, 0.34, 0.04, 0xf2c14e, cb[0], 1.45, 0.79, sc).castShadow = false;
+      bx(0.5, 0.34, 0.04, 0xe2603f, cb[0], 0.95, 0.79, sc).castShadow = false;
+    });
+    mesh(sphGeo(0.17, 12), M(0x3f8fca), 7.7, 2.28, 0.5, sc);
+    cyl(0.03, 0.05, 0.14, 0x8a5a12, 7.7, 2.05, 0.5, sc).castShadow = false;
+    /* 阅读角（右后）：地毯 + 豆袋 + 书箱 */
+    var rug2 = bx(1.35, 0.03, 1.15, 0xc86b9d, 8.28, 0.09, 6.35, sc); rug2.castShadow = false;
+    [[8.05, 6.15, 0xe9a13b], [8.55, 6.6, 0x5aa7d6]].forEach(function(bb){
+      var bean = mesh(sphGeo(0.34, 10), M(bb[2]), bb[0], 0.16, bb[1], sc); bean.scale.set(1, 0.55, 1);
+    });
+    bx(0.52, 0.3, 0.36, 0xb8894a, 8.68, 0.15, 5.62, sc);
+    bx(0.3, 0.05, 0.22, 0xc8402a, 8.68, 0.33, 5.62, sc).castShadow = false;
+    /* 吊灯两盏（高度层）+ 前左角绿植 */
+    [3.2, 6.2].forEach(function(lx){
+      cyl(0.016, 0.016, 0.85, 0x5a4232, lx, 3.15, 3.6, sc).castShadow = false;
+      mesh(cylGeo(0.07, 0.3, 0.26, 14), M(0x2e4a3e), lx, 2.66, 3.6, sc);
+      mesh(sphGeo(0.075, 8), ME(0xffd98a, night ? 0xffc873 : 0x554411, 1), lx, 2.5, 3.6, sc).castShadow = false;
+    });
+    if (night){ var cpl = new T.PointLight(0xffd9a0, 0.7, 11); cpl.position.set(4.5, 2.5, 3.6); sc.add(cpl); }
+    cyl(0.19, 0.25, 0.42, 0xb3543f, 0.55, 0.21, 1.15, sc);
+    mesh(icoGeo(0.32), M(0x5f9e4e), 0.55, 0.72, 1.15, sc);
+  }
+  /* 教室人物：老师在黑板前 + 15 名学生坐满课桌（主角座位留空）+ 阅读角 1 人，全部无名牌 */
+  function classroomPeople(ctx, lvId){
+    var sc = ctx.scene;
+    ctx.spawnPeople = function(){
+      var seed = hashStr((G ? G.route : "") + ":" + lvId + ":" + (cur ? cur.li : 0) + ":" + (cur ? cur.si : 0));
+      var kidFaces = ["👦", "👧", "🧑", "👱‍♀️", "👱‍♂️", "👩🏻", "👨🏻"];
+      var tp = person({ face: "👩🏻", torso: 0x7a6396 });
+      tp.group.position.set(4.72, 0, 1.34); tp.group.rotation.y = 0.14;
+      sc.add(tp.group); ctx.people.push(tp);
+      var n = 0;
+      CLASS_ROWS.forEach(function(rz, r){
+        CLASS_COLS.forEach(function(cx, c){
+          if (r === 1 && c === 0) return;   /* 第二排第一个是主角的座位 */
+          var P = person({ face: kidFaces[(seed + n * 3) % kidFaces.length], torso: parseInt(NPC_COLORS[(seed + n * 2) % NPC_COLORS.length].slice(1), 16) });
+          P.group.position.set(cx, 0, rz + 0.55);
+          P.group.rotation.y = Math.PI;
+          P.setSeated(true);
+          sc.add(P.group); ctx.people.push(P);
+          if (n === 5) armRaise(ctx, P, 1.5);
+          if (n === 11) armRaise(ctx, P, 9.0);
+          n++;
+        });
+      });
+      var rd = person({ face: kidFaces[(seed + 4) % kidFaces.length], torso: 0xc86b9d });
+      rd.group.position.set(8.05, 0, 6.28); rd.group.rotation.y = -2.25; rd.setSeated(true);
+      sc.add(rd.group); ctx.people.push(rd);
+    };
+    ctx.addHero = function(of){
+      var P = person({ face: of.a, torso: 0xc8402a });
+      P.ring = heroRing(P.group);
+      if (typeof W !== "undefined" && W.name) ctx.textures.push(nameTag(W.name, P.group));
+      sc.add(P.group); ctx.people.push(P);
+      return P;
+    };
+  }
+  /* 逐场补家具（与 venueCrowd 的人配套摆，先于人物生成） */
+  function buildCrowdFurniture(ctx, kind){
+    var sc = ctx.scene;
+    if (kind === "govt" || kind === "airport"){
+      /* 等候区：长椅两排（前排 z=5.9、后排 z=4.5，中间留走道），与 venueCrowd 的坐者配套 */
+      var benchC = kind === "govt" ? 0x8a6a48 : 0x5a76a0;
+      benchAt(sc, 2.3, 5.9, Math.PI, benchC);
+      benchAt(sc, 6.7, 5.9, Math.PI, benchC);
+      benchAt(sc, 2.3, 4.5, Math.PI, benchC);
+      benchAt(sc, 6.7, 4.5, Math.PI, benchC);
+      /* 正中地毯把大片空地板收紧（队伍线与等候区都落在毯面上，走道仍在毯外两侧） */
+      var rugH = bx(3.8, 0.025, 3.6, kind === "govt" ? 0x7a3b4a : 0x39558c, 4.7, 0.085, 4.6, sc); rugH.castShadow = false;
+      /* 信息台（右侧中场）+ 两端绿植：填掉柜台与等候区之间的空角 */
+      bx(1.5, 0.78, 0.62, 0x6e5138, 7.45, 0.39, 2.35, sc);
+      bx(1.62, 0.06, 0.72, 0x8a6a48, 7.45, 0.81, 2.35, sc);
+      var ichip = new T.Sprite(new T.SpriteMaterial({ map: emojiTex("ℹ️"), transparent: true, depthWrite: false }));
+      ichip.scale.set(0.5, 0.5, 1); ichip.position.set(7.45, 1.3, 2.35); sc.add(ichip); ctx.textures.push(ichip.material.map);
+      [[0.95, 3.35], [8.35, 3.35]].forEach(function(pp){
+        cyl(0.17, 0.22, 0.36, 0xb3543f, pp[0], 0.18, pp[1], sc);
+        mesh(icoGeo(0.3), M(0x5f9e4e), pp[0], 0.62, pp[1], sc);
+      });
+      /* 队伍线旁每人一只行李箱（贴队伍左侧放，不挡走道） */
+      var caseCols = [0xc8402a, 0x2456a6, 0xe9a13b, 0x2e7d4f, 0x7a6396, 0x31405e, 0xb8562f];
+      HALL_QUEUE.forEach(function(qp, qi){
+        var cxp = qp[0] - 0.43, czp = qp[1] + 0.13;
+        bx(0.4, 0.56, 0.24, caseCols[qi % caseCols.length], cxp, 0.28, czp, sc);
+        bx(0.2, 0.07, 0.05, 0x3a3f4a, cxp, 0.6, czp, sc).castShadow = false;
+      });
+      if (kind === "airport"){
+        bx(0.44, 0.62, 0.26, 0xc8402a, 8.55, 0.31, 5.35, sc);
+        bx(0.4, 0.55, 0.24, 0x2456a6, 8.6, 0.28, 4.72, sc);
+        bx(0.38, 0.5, 0.22, 0xe9a13b, 8.5, 0.25, 4.15, sc);
+      }
+    } else if (kind === "court"){
+      benchAt(sc, 2.6, 5.7, Math.PI, 0x7a4a2b);
+      benchAt(sc, 6.4, 5.7, Math.PI, 0x7a4a2b);
+    } else if (kind === "office"){
+      [2.3, 6.7].forEach(function(dx){
+        var g = new T.Group(); g.position.set(dx, 0, 5.6); sc.add(g);
+        bx(1.5, 0.07, 0.8, 0x8a6a48, 0, 0.74, 0, g);
+        bx(0.08, 0.72, 0.7, 0x6e5233, -0.66, 0.37, 0, g);
+        bx(0.08, 0.72, 0.7, 0x6e5233, 0.66, 0.37, 0, g);
+        bx(0.62, 0.42, 0.04, 0x141c2c, 0, 1.12, -0.18, g);
+        var scr = new T.Mesh(new T.PlaneGeometry(0.54, 0.34), MB(0x7fd4ff)); scr.position.set(0, 1.12, -0.155); g.add(scr);
+        bx(0.5, 0.03, 0.2, 0x31405e, 0, 0.79, 0.12, g);
+        bx(0.4, 0.02, 0.3, 0xffffff, -0.45, 0.79, 0.05, g).castShadow = false;
+        simpleChair(sc, dx, 6.15, Math.PI, 0x49688f);
+      });
+      /* 等候椅一排：贴后墙左侧（窗带下），与 venueCrowd 的坐者配套 */
+      [1.0, 1.65, 2.3, 2.95].forEach(function(cx){ simpleChair(sc, cx, 0.5, 0, 0x49688f); });
+      /* 等候区地毯：压住队伍线下方的空地（队伍站在毯面上，前场走道留在毯外） */
+      var rugO = bx(2.5, 0.025, 3.3, 0x39558c, 7.0, 0.085, 3.6, sc); rugO.castShadow = false;
+      /* 文件柜贴后墙右侧 + 柜旁绿植 + 右墙边饮水机：收紧右后角 */
+      [7.35, 8.05].forEach(function(fx){
+        bx(0.62, 1.25, 0.4, 0x8a94a6, fx, 0.63, 0.32, sc);
+        bx(0.5, 0.03, 0.03, 0x5a6a86, fx, 0.92, 0.53, sc).castShadow = false;
+        bx(0.5, 0.03, 0.03, 0x5a6a86, fx, 0.55, 0.53, sc).castShadow = false;
+      });
+      cyl(0.15, 0.19, 0.3, 0xb3543f, 6.55, 0.15, 0.42, sc);
+      mesh(icoGeo(0.26), M(0x5f9e4e), 6.55, 0.55, 0.42, sc);
+      bx(0.34, 0.75, 0.34, 0xdde3ea, 8.62, 0.38, 1.35, sc);
+      cyl(0.11, 0.13, 0.42, 0x7fd4ff, 8.62, 0.97, 1.35, sc);
+      /* 两株绿植收前角（办公桌两侧） */
+      [[0.55, 6.5], [8.6, 6.45]].forEach(function(pp){
+        cyl(0.17, 0.22, 0.36, 0xb3543f, pp[0], 0.18, pp[1], sc);
+        mesh(icoGeo(0.3), M(0x5f9e4e), pp[0], 0.62, pp[1], sc);
+      });
+    } else if (kind === "campus"){
+      benchAt(sc, 7.3, 2.3, 0, 0x7a5230);
+      var bl = bx(1.9, 0.03, 1.5, 0xc8402a, 6.6, 0.09, 5.5, sc); bl.castShadow = false;
+      bx(0.42, 0.3, 0.32, 0xb8894a, 6.6, 0.24, 5.5, sc);
+      cyl(0.14, 0.11, 0.03, 0xfff6ea, 6.25, 0.12, 5.25, sc).castShadow = false;
+      cyl(0.14, 0.11, 0.03, 0xfff6ea, 6.95, 0.12, 5.75, sc).castShadow = false;
+    } else if (kind === "street"){
+      [[1.95, 0xb8562f, "🥖"], [4.85, 0x2e7d4f, "☕"]].forEach(function(sh){
+        bx(2.6, 2.5, 0.9, sh[1], sh[0], 1.25, 0.4, sc);
+        var aw = bx(2.9, 0.07, 0.85, shadeNum(sh[1], 30), sh[0], 2.12, 0.95, sc); aw.rotation.x = 0.18;
+        bx(0.75, 1.5, 0.06, 0x31405e, sh[0] - 0.7, 0.75, 0.87, sc).castShadow = false;
+        bx(1.05, 0.95, 0.06, 0xbfe0ff, sh[0] + 0.55, 1.35, 0.87, sc).castShadow = false;
+        var sg = new T.Sprite(new T.SpriteMaterial({ map: emojiTex(sh[2]), transparent: true, depthWrite: false }));
+        sg.scale.set(0.66, 0.66, 1); sg.position.set(sh[0], 2.78, 0.9); sc.add(sg); ctx.textures.push(sg.material.map);
+      });
+      benchAt(sc, 6.3, 5.65, Math.PI, 0x2e7d4f);
+      bx(0.95, 0.48, 0.55, 0x8a5a3c, 3.5, 0.24, 1.35, sc);
+      mesh(icoGeo(0.42), M(0x5f9e4e), 3.5, 0.78, 1.35, sc);
+    } else if (kind === "dealer"){
+      var dc2 = carGroup(0x2456a6); dc2.position.set(7.0, 0, 2.7); dc2.rotation.y = 0.15; sc.add(dc2);
+    } else if (kind === "apartment"){
+      bx(0.52, 0.4, 0.52, 0xb8894a, 4.4, 0.2, 2.35, sc);
+      bx(0.4, 0.3, 0.4, 0xc99a58, 4.42, 0.55, 2.33, sc);
+      cyl(0.17, 0.22, 0.34, 0xb3543f, 1.25, 0.17, 2.3, sc);
+      mesh(icoGeo(0.27), M(0x5f9e4e), 1.25, 0.6, 2.3, sc);
+    } else if (kind === "truck"){
+      bx(0.72, 0.52, 0.72, 0xb8894a, 7.95, 0.26, 4.95, sc);
+      cyl(0.26, 0.26, 0.62, 0x5a76a0, 8.6, 0.31, 4.15, sc);
+    }
+  }
+  /* 大厅队伍后半段：与 venuePeople 的前半段同一条线（HALL_QUEUE）、同一种挪步节奏，全部无名牌 */
+  function hallQueueTail(ctx, seed, from, count){
+    for (var k = 0; k < count; k++){
+      var qp = HALL_QUEUE[from + k]; if (!qp) return;
+      var P = crowdPerson(ctx, crowdFace(seed, 20 + from + k), crowdColor(seed, 20 + from + k), qp[0], qp[1], HALL_Q_RY, false);
+      P.queue = { anchor: new T.Vector3(qp[0], 0, qp[1]), dx: -HALL_Q_DX, dz: -HALL_Q_DZ, off: 0, step: 0.24, max: 0.55, t: 3 + Math.random() * 6 };
+    }
+  }
+  /* 逐场补人（在 venuePeople 的占位玩家之后生成；全部无名牌、只待机微动） */
+  function venueCrowd(ctx, kind, lvId){
+    var sc = ctx.scene;
+    var seed = hashStr("crowd:" + kind + ":" + lvId);
+    function P(i, x, z, ry, seated){ return crowdPerson(ctx, crowdFace(seed, i), crowdColor(seed, i), x, z, ry, seated); }
+    if (kind === "office"){
+      P(0, 2.3, 6.15, Math.PI, true); P(1, 6.7, 6.15, Math.PI, true);
+      /* 等候椅坐者：后墙一排 4 人坐等（与 buildCrowdFurniture 的等候椅配套），全部无名牌 */
+      P(10, 1.0, 0.5, 0, true); P(11, 1.65, 0.5, 0, true); P(12, 2.3, 0.5, 0, true); P(13, 2.95, 0.5, 0, true);
+      /* 右侧办公桌前一条 5 人等候线：朝桌挪步（与大厅队伍同一节奏），半数人抱文件夹，全部无名牌 */
+      OFFICE_QUEUE.forEach(function(qp, qi){
+        var Q = crowdPerson(ctx, crowdFace(seed, 30 + qi), crowdColor(seed, 30 + qi), qp[0], qp[1], OFFICE_Q_RY, false);
+        Q.queue = { anchor: new T.Vector3(qp[0], 0, qp[1]), dx: -OFFICE_Q_DX, dz: -OFFICE_Q_DZ, off: 0, step: 0.24, max: 0.55, t: 3 + Math.random() * 6 };
+        if (qi % 2 === 0) bx(0.3, 0.4, 0.05, [0xe9a13b, 0xc8402a, 0x2456a6][(qi / 2) % 3], 0.1, 0.88, 0.24, Q.group).castShadow = false;
+      });
+    } else if (kind === "govt"){
+      /* 大厅模板：长椅两排坐等候者（前排 4 人、后排 3 人）+ 队伍后半段 2 人（前 5 人在 venuePeople，合 7 人） */
+      P(0, 1.75, 5.9, Math.PI, true); P(1, 2.85, 5.9, Math.PI, true); P(2, 6.15, 5.9, Math.PI, true); P(3, 7.25, 5.9, Math.PI, true);
+      P(4, 1.75, 4.5, Math.PI, true); P(5, 2.85, 4.5, Math.PI, true); P(6, 6.7, 4.5, Math.PI, true);
+      hallQueueTail(ctx, seed, 5, 2);
+    } else if (kind === "airport"){
+      /* 同一大厅模板：长椅两排坐满等候者 + 队伍后半段 3 人（前 4 人在 venuePeople，合 7 人） */
+      P(0, 1.75, 5.9, Math.PI, true); P(1, 2.85, 5.9, Math.PI, true); P(2, 6.15, 5.9, Math.PI, true); P(3, 7.25, 5.9, Math.PI, true);
+      P(4, 1.75, 4.5, Math.PI, true); P(5, 2.85, 4.5, Math.PI, true); P(6, 6.7, 4.5, Math.PI, true);
+      hallQueueTail(ctx, seed, 4, 3);
+    } else if (kind === "court"){
+      P(0, 2.05, 5.7, Math.PI, true); P(1, 3.15, 5.7, Math.PI, true); P(2, 5.85, 5.7, Math.PI, true); P(3, 6.95, 5.7, Math.PI, true);
+      P(4, 8.25, 4.55, -2.2, false);
+    } else if (kind === "campus"){
+      P(0, 6.32, 5.5, Math.PI / 2, true); P(1, 6.88, 5.5, -Math.PI / 2, true);
+      P(2, 1.95, 4.65, 2.2, false); P(3, 2.45, 5.0, -0.95, false);
+      P(4, 7.05, 2.3, 0.15, true);
+    } else if (kind === "street"){
+      P(0, 2.95, 4.35, 0.91, false); P(1, 3.4, 4.7, -2.23, false);
+      P(2, 7.55, 4.55, Math.PI, false);
+      P(3, 5.75, 5.65, Math.PI, true); P(4, 6.85, 5.65, Math.PI, true);
+    } else if (kind === "dealer"){
+      P(0, 6.45, 4.35, 2.55, false); P(1, 6.95, 4.7, -0.6, false);
+    } else if (kind === "apartment"){
+      P(0, 4.75, 4.65, -2.35, false); P(1, 5.2, 5.0, 0.8, false);
+    } else if (kind === "house"){
+      P(0, 7.0, 4.7, -0.6, false);
+      crowdPerson(ctx, "👦", 0xe9a13b, 1.7, 5.0, 0.9, false);
+    } else if (kind === "truck"){
+      P(0, 6.95, 4.45, -2.8, false);
+    } else if (kind === "highway"){
+      P(0, 1.65, 4.65, 2.8, false);
+    } else if (kind === "road"){
+      P(0, 6.85, 4.85, -2.9, false);
+    }
+  }
+  /* 餐馆补人：8 位坐客（有的桌满、有的桌空一两张）+ 柜台旁店员，全部无名牌 */
+  function restaurantCrowd(ctx){
+    var seed = hashStr("crowd:restaurant");
+    [[3.8, 3.2, -Math.PI / 2], [5.8, 2.2, -Math.PI / 2], [5.9, 3.6, Math.PI / 2], [7.9, 3.6, -Math.PI / 2], [6.6, 5.5, Math.PI / 2], [4.4, 6.0, Math.PI / 2], [6.4, 6.0, -Math.PI / 2], [2.3, 6.15, Math.PI / 2]].forEach(function(d, i){
+      crowdPerson(ctx, crowdFace(seed, i), crowdColor(seed, i), d[0], d[1], d[2], true);
+    });
+    crowdPerson(ctx, "🧑", 0x31405e, 6.98, 0.74, 0.5, false);
+  }
+
   /* 场馆前景家具：按 VENUE 原型（arch）用真 3D 体块复刻原 2D 家具的种类与站位 */
   function buildArch(ctx, kind, night){
     var sc = ctx.scene;
@@ -9837,10 +10261,10 @@
       var p2 = grpAt(424, 292); bx(0.55, 0.3, 0.55, 0x2e7d4f, 0, 0.15, 0, p2); mesh(icoGeo(0.3), M(0x549245), 0, 0.55, 0, p2);
     } else if (arch === "counter"){
       var g = grpAt(312, 284);
-      bx(4.4, 1.0, 0.95, 0x6e5138, 0, 0.5, 0, g);
-      bx(4.6, 0.08, 1.1, 0x8a6a48, 0, 1.04, 0, g);
-      bx(0.05, 0.9, 0.8, 0x5d4430, -1.1, 0.45, 0, g);
-      bx(0.05, 0.9, 0.8, 0x5d4430, 1.1, 0.45, 0, g);
+      bx(5.8, 1.0, 0.95, 0x6e5138, 0, 0.5, 0, g);
+      bx(6.0, 0.08, 1.1, 0x8a6a48, 0, 1.04, 0, g);
+      bx(0.05, 0.9, 0.8, 0x5d4430, -1.7, 0.45, 0, g);
+      bx(0.05, 0.9, 0.8, 0x5d4430, 1.7, 0.45, 0, g);
       var chipE = kind === "airport" ? "✈️" : "🏛️";
       var chip = new T.Sprite(new T.SpriteMaterial({ map: emojiTex(chipE), transparent: true, depthWrite: false }));
       chip.scale.set(0.62, 0.62, 1); chip.position.set(0, 1.75, 0); g.add(chip); ctx.textures.push(chip.material.map);
@@ -10000,9 +10424,16 @@
       if (kind === "street" || kind === "road" || kind === "highway") addTraffic(ctx, -1.15, -0.37);   /* 场景后方路面有车缓缓驶过 */
       if (musWeather() === "rain") addRain(ctx, 5, 3);
     }
-    buildArch(ctx, kind, night);
+    if (th.indoor){ var fill = new T.PointLight(0xffe6c0, night ? 0.3 : 0.42, 13); fill.position.set(4.5, 3.0, 3.8); sc.add(fill); }   /* 室内补光：墙面不再空荡发暗 */
+    if (kind === "school") buildClassroom(ctx, night);
+    else { buildArch(ctx, kind, night); buildCrowdFurniture(ctx, kind); }
     venueRing(ctx, lvId);
-    venuePeople(ctx, lvId);
+    if (kind === "school") classroomPeople(ctx, lvId);
+    else {
+      venuePeople(ctx, lvId);
+      var _spw = ctx.spawnPeople;
+      ctx.spawnPeople = function(){ _spw(); venueCrowd(ctx, kind, lvId); };
+    }
   }
   /* 家内景场馆（父母家 / 租房 / 买房 / 婚恋等 homein 关卡）：娃娃屋客厅，家具与「我的家」同套原语 */
   function buildHomeVenue(ctx, lvId){
@@ -10043,6 +10474,31 @@
     });
     if (lvId === "love") glowSprite(0xff9db8, 1.6, 4.55, 2.6, 1.2, sc);
     if (night){ var amb = new T.PointLight(0xffc98a, 0.35, 12); amb.position.set(4.5, 2.6, 3.5); sc.add(amb); }
+    /* 生活气息（不加人）：照片墙 + 小时钟 + 门口鞋柜 + 茶几上的书 + 餐桌水果 + 角落绿植 + 左墙日历 */
+    [[5.78, 2.52, "👨‍👩‍👧"], [6.46, 2.64, "🐶"], [7.12, 2.52, "🌅"]].forEach(function(fr){
+      bx(0.56, 0.68, 0.04, 0x5a4232, fr[0], fr[1], 0.02, sc);
+      var fp = new T.Mesh(new T.PlaneGeometry(0.48, 0.6), new T.MeshBasicMaterial({ map: emojiTex(fr[2]), transparent: true }));
+      fp.position.set(fr[0], fr[1], 0.05); sc.add(fp); ctx.textures.push(fp.material.map);
+    });
+    var hclk = new T.Group(); hclk.position.set(5.85, 3.18, 0.04); sc.add(hclk);
+    var hcd = cyl(0.24, 0.24, 0.04, 0xfffdf8, 0, 0, 0, hclk); hcd.rotation.x = Math.PI / 2;
+    var hg1 = boxGeo(0.04, 0.15, 0.02).clone(); hg1.translate(0, 0.06, 0);
+    var hh1 = mesh(hg1, M(0x31405e), 0, 0, 0.04, hclk); hh1.rotation.z = -0.9; hh1.castShadow = false;
+    var hg2 = boxGeo(0.03, 0.2, 0.02).clone(); hg2.translate(0, 0.08, 0);
+    var mh1 = mesh(hg2, M(0xc8402a), 0, 0, 0.045, hclk); mh1.rotation.z = 0.7; mh1.castShadow = false;
+    bx(0.95, 0.85, 0.4, parseInt(st.wood.slice(1), 16), 8.45, 0.43, 6.35, sc);
+    bx(0.26, 0.09, 0.13, 0xc8402a, 8.2, 0.05, 5.85, sc);
+    bx(0.26, 0.09, 0.13, 0x2456a6, 8.55, 0.05, 5.82, sc);
+    bx(0.3, 0.05, 0.22, 0x2456a6, 4.32, 0.53, 3.22, sc).castShadow = false;
+    bx(0.26, 0.05, 0.2, 0xe9a13b, 4.36, 0.58, 3.24, sc).castShadow = false;
+    cyl(0.15, 0.1, 0.07, 0xfff6ea, 1.7, 0.86, 5.0, sc).castShadow = false;
+    mesh(sphGeo(0.06, 8), M(0xe2603f), 1.62, 0.94, 4.95, sc).castShadow = false;
+    mesh(sphGeo(0.06, 8), M(0xf2c14e), 1.78, 0.94, 5.05, sc).castShadow = false;
+    mesh(sphGeo(0.06, 8), M(0x7fb069), 1.7, 0.97, 5.12, sc).castShadow = false;
+    cyl(0.16, 0.2, 0.32, 0xb3543f, 0.55, 0.16, 6.45, sc);
+    mesh(icoGeo(0.26), M(0x5f9e4e), 0.55, 0.58, 6.45, sc);
+    bx(0.03, 0.78, 0.6, 0xfff6ea, 0.06, 2.25, 4.7, sc).castShadow = false;
+    bx(0.035, 0.16, 0.6, 0xc8402a, 0.06, 2.56, 4.7, sc).castShadow = false;
     venueRing(ctx, lvId);
     venuePeople(ctx, lvId);
   }
@@ -10265,6 +10721,9 @@
     venueFloor(ctx, "#c8a878", "#bb9866", 0x96754e);
     marketStall(sc, 1.9, 1.15, 0xc8402a);
     marketStall(sc, 4.9, 0.95, 0x2456a6);
+    marketStall(sc, 8.15, 4.4, 0x2e7d4f);
+    bx(0.62, 0.42, 0.62, 0xb3543f, 7.0, 0.21, 5.95, sc);
+    bx(0.5, 0.34, 0.5, 0x7d9b76, 7.52, 0.17, 6.2, sc);
     /* 仓储棚 + 货箱（原 2D 右侧大货柜的体块版） */
     bx(2.2, 1.5, 1.4, 0x8a6844, 8.0, 0.75, 1.35, sc);
     bx(2.5, 0.12, 1.7, 0x5d7a4a, 8.0, 1.57, 1.35, sc);
@@ -10287,17 +10746,28 @@
     /* 摊主与顾客（与原 2D 同名同位语义） */
     var p1 = person({ face: "🧑", torso: 0x2e7d4f });
     p1.group.position.set(1.7, 0, 3.6); p1.group.rotation.y = Math.PI / 4;
-    ctx.textures.push(nameTag("老陈", p1.group));
     sc.add(p1.group); ctx.people.push(p1);
     var p2 = person({ face: "👩", torso: 0xc86b9d });
     p2.group.position.set(5.1, 0, 3.8); p2.group.rotation.y = Math.PI / 4;
-    ctx.textures.push(nameTag("Rosa", p2.group));
     sc.add(p2.group); ctx.people.push(p2);
-    p2.wander = { pts: [new T.Vector3(5.1, 0, 3.8), new T.Vector3(7.3, 0, 4.9)], i: 0, wait: 1.5 + Math.random() * 2, speed: 0.95, waitMin: 2.4, waitMax: 5.4 };
+    p2.wander = { pts: [new T.Vector3(5.1, 0, 3.8), new T.Vector3(6.85, 0, 5.35)], i: 0, wait: 1.5 + Math.random() * 2, speed: 0.95, waitMin: 2.4, waitMax: 5.4 };
     var p3 = person({ face: "🧑", torso: 0x2456a6 });
     p3.group.position.set(6.6, 0, 4.7); p3.group.rotation.y = Math.PI / 4;
     sc.add(p3.group); ctx.people.push(p3);
     p3.wander = { pts: [new T.Vector3(6.6, 0, 4.7), new T.Vector3(2.7, 0, 3.6)], i: 0, wait: 0.8 + Math.random() * 1.5, speed: 1.0, waitMin: 2.0, waitMax: 4.8 };
+    /* 第三摊摊主 + 摊前顾客 + 交谈的两人 + 前场慢慢逛的一人（全部无名牌） */
+    var p4 = person({ face: "👩🏽", torso: 0xe9a13b });
+    p4.group.position.set(7.85, 0, 3.6); p4.group.rotation.y = 2.35;
+    sc.add(p4.group); ctx.people.push(p4);
+    [[2.75, 2.4, -2.48, "🧑🏻", 0x5a76a0], [5.75, 2.3, -2.53, "👨🏽", 0xb8562f], [8.3, 2.65, -2.83, "👩🏻", 0x7a6396], [4.35, 5.7, 1.03, "🧑🏽", 0x2e7d4f], [4.85, 6.02, -2.11, "👱‍♀️", 0xc8402a]].forEach(function(cp){
+      var cper = person({ face: cp[3], torso: cp[4] });
+      cper.group.position.set(cp[0], 0, cp[1]); cper.group.rotation.y = cp[2];
+      sc.add(cper.group); ctx.people.push(cper);
+    });
+    var p5 = person({ face: "🧑🏿", torso: 0x8a5a12 });
+    p5.group.position.set(1.3, 0, 6.3); p5.group.rotation.y = Math.PI / 4;
+    sc.add(p5.group); ctx.people.push(p5);
+    p5.wander = { pts: [new T.Vector3(1.3, 0, 6.3), new T.Vector3(8.5, 0, 6.3)], i: 0, wait: 2 + Math.random() * 2, speed: 0.9, waitMin: 3.0, waitMax: 6.0 };
     bubbleEngine(ctx, [p1, p2]);
     if (musWeather() === "rain") addRain(ctx, 5, 3);
   }
@@ -10317,11 +10787,37 @@
       var P = person({ face: NPC_FACES[(seed + i * 3) % NPC_FACES.length], torso: parseInt(NPC_COLORS[(seed + i * 2) % NPC_COLORS.length].slice(1), 16) });
       P.group.position.set(sp[0], 0, sp[1]);
       P.group.rotation.y = Math.PI / 4;
-      ctx.textures.push(nameTag(NPC_NAMES[(seed + i * 5) % NPC_NAMES.length], P.group));
       sc.add(P.group); ctx.people.push(P); npcs.push(P);
       var rt = (visitRoutes[kind] || {})[i];
       if (rt) P.wander = { pts: rt.map(function(p){ return new T.Vector3(p[0], 0, p[1]); }), i: 0, wait: 0.8 + i * 0.8 + Math.random() * 1.5, speed: 0.95, waitMin: 2.2, waitMax: 5.2 };
     });
+    /* 到访场景补人（无名牌）：酒吧店员 + 吧凳坐客、咖啡馆店员 + 坐客、公园长椅 / 野餐、沙滩伞下与浅水边 */
+    if (kind === "bar"){
+      crowdPerson(ctx, "🧑🏽", 0x31405e, 4.5, 0.72, 0.1, false);
+      crowdPerson(ctx, crowdFace(seed, 7), crowdColor(seed, 7), 3.3, 2.58, Math.PI, true);
+      crowdPerson(ctx, crowdFace(seed, 8), crowdColor(seed, 8), 4.5, 2.58, Math.PI, true);
+      crowdPerson(ctx, crowdFace(seed, 9), crowdColor(seed, 9), 5.7, 2.58, Math.PI, true);
+      crowdPerson(ctx, crowdFace(seed, 10), crowdColor(seed, 10), 7.55, 3.35, -2.3, false);
+      crowdPerson(ctx, crowdFace(seed, 11), crowdColor(seed, 11), 7.95, 3.75, 0.85, false);
+    } else if (kind === "cafe"){
+      crowdPerson(ctx, "👩🏻", 0x2e7d4f, 1.55, 0.3, 0.15, false);
+      crowdPerson(ctx, crowdFace(seed, 7), crowdColor(seed, 7), 1.5, 3.4, Math.PI / 2, true);
+      crowdPerson(ctx, crowdFace(seed, 8), crowdColor(seed, 8), 2.9, 3.4, -Math.PI / 2, true);
+      crowdPerson(ctx, crowdFace(seed, 9), crowdColor(seed, 9), 5.9, 4.3, Math.PI / 2, true);
+    } else if (kind === "park"){
+      crowdPerson(ctx, crowdFace(seed, 7), crowdColor(seed, 7), 6.9, 3.35, 0, true);
+      crowdPerson(ctx, crowdFace(seed, 8), crowdColor(seed, 8), 7.6, 3.35, 0, true);
+      crowdPerson(ctx, crowdFace(seed, 9), crowdColor(seed, 9), 1.95, 6.05, Math.PI / 2, true);
+      crowdPerson(ctx, crowdFace(seed, 10), crowdColor(seed, 10), 2.5, 6.05, -Math.PI / 2, true);
+      crowdPerson(ctx, crowdFace(seed, 11), crowdColor(seed, 11), 1.2, 4.3, 1.2, false);
+      crowdPerson(ctx, crowdFace(seed, 12), crowdColor(seed, 12), 1.65, 4.65, -1.95, false);
+    } else if (kind === "beach"){
+      crowdPerson(ctx, crowdFace(seed, 7), crowdColor(seed, 7), 5.0, 5.5, Math.PI, true);
+      crowdPerson(ctx, crowdFace(seed, 8), crowdColor(seed, 8), 5.65, 5.55, Math.PI, true);
+      crowdPerson(ctx, crowdFace(seed, 9), crowdColor(seed, 9), 3.3, 1.6, Math.PI, false);
+      crowdPerson(ctx, crowdFace(seed, 10), crowdColor(seed, 10), 4.05, 1.85, -2.7, false);
+      crowdPerson(ctx, crowdFace(seed, 11), crowdColor(seed, 11), 7.7, 3.6, -1.2, false);
+    }
     if (kind === "park" && npcs[1]){
       /* 公园里一只小狗跟着散步的人小跑，停下时摇尾巴 */
       var owner = npcs[1];
@@ -10391,6 +10887,15 @@
       var wp = new T.Mesh(new T.PlaneGeometry(2.5, 1.45), new T.MeshBasicMaterial({ map: gradTex("#ffd98a", "#ffab6b", "#ff8f66") }));
       wp.position.set(6.6, 2.3, 0.03); sc.add(wp); ctx.textures.push(wp.material.map);
       [[5.6, 0.5], [6.35, 0.75], [7.15, 0.55], [7.8, 0.8]].forEach(function(b){ bx(0.5, b[1], 0.05, 0x31405e, b[0], 1.6 + b[1] / 2, 0.05, sc).castShadow = false; });
+      /* 吧台（后墙左侧）+ 咖啡机 + 杯子，店员站在台后 */
+      bx(2.3, 1.02, 0.85, 0x8a4f30, 1.55, 0.51, 0.95, sc);
+      bx(2.45, 0.07, 0.95, 0xc08540, 1.55, 1.05, 0.95, sc);
+      bx(0.52, 0.46, 0.42, 0x31405e, 1.05, 1.32, 0.9, sc);
+      cyl(0.06, 0.05, 0.07, 0xfff6ea, 1.95, 1.12, 0.85, sc).castShadow = false;
+      cyl(0.06, 0.05, 0.07, 0xc8402a, 2.2, 1.12, 1.05, sc).castShadow = false;
+      simpleChair(sc, 1.5, 3.4, Math.PI / 2, 0x7d5222);
+      simpleChair(sc, 2.9, 3.4, -Math.PI / 2, 0x7d5222);
+      simpleChair(sc, 5.9, 4.3, Math.PI / 2, 0x7d5222);
       [[2.2, 3.4], [6.6, 4.3]].forEach(function(tp){
         cyl(0.09, 0.11, 0.72, 0x7a4e16, tp[0], 0.36, tp[1], sc);
         cyl(0.58, 0.58, 0.06, 0xfff6ea, tp[0], 0.75, tp[1], sc);
@@ -10412,6 +10917,9 @@
       bx(2.6, 0.09, 0.13, 0x8a5f36, 0, 0.78, -0.19, bg);
       bx(0.1, 0.46, 0.42, 0x5a3d20, -1.05, 0.23, 0, bg);
       bx(0.1, 0.46, 0.42, 0x5a3d20, 1.05, 0.23, 0, bg);
+      benchAt(sc, 7.25, 3.35, 0, 0x7a5230);
+      var pb = bx(1.9, 0.03, 1.4, 0xe2603f, 2.2, 0.09, 6.05, sc); pb.castShadow = false;
+      bx(0.42, 0.3, 0.32, 0xb8894a, 2.2, 0.24, 6.05, sc);
       tree(sc, 1.1, 1.3, 1.25); tree(sc, 8.2, 1.6, 1.1); tree(sc, 7.9, 5.9, 0.95);
       if (musWeather() === "rain") addRain(ctx, 5, 3);
     } else { /* beach */
@@ -10425,6 +10933,10 @@
       mesh(cylGeo(0.03, 1.2, 0.55, 10), M(0xe2603f), -0.1, 1.78, 0, up);
       var tw = bx(1.15, 0.04, 0.65, 0xc86b9d, 6.1, 0.06, 3.7, sc); tw.rotation.y = 0.4; tw.castShadow = false;
       bx(1.15, 0.04, 0.3, 0xe29bbd, 6.1, 0.085, 3.7, sc).rotation.y = 0.4;
+      var up2 = new T.Group(); up2.position.set(5.3, 0, 5.35); sc.add(up2);
+      var pole2 = cyl(0.03, 0.03, 1.7, 0x8a5a12, 0, 0.85, 0, up2); pole2.rotation.z = 0.12;
+      mesh(cylGeo(0.03, 1.2, 0.55, 10), M(0x5aa7d6), -0.1, 1.78, 0, up2);
+      var tw2 = bx(1.15, 0.04, 0.65, 0xf2c14e, 5.3, 0.06, 5.8, sc); tw2.rotation.y = -0.3; tw2.castShadow = false;
       tree(sc, 8.3, 1.3, 1.3);
       var cel = mesh(sphGeo(0.5, 12), MB(night ? 0xf4f7ff : 0xfff3c4), 12.5, 7.5, -10, sc); cel.castShadow = false;
       glowSprite(night ? 0xdfe8ff : 0xfff3c4, 4.5, 12.5, 7.5, -10, sc);
