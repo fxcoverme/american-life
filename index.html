@@ -18692,6 +18692,399 @@ setLang = function(code){
 })();
 </script>
 
+<script>
+/* ================================================================
+   ALX3 — 场景内步进层（2026-11-06 · 全游戏体验换骨架）
+   口径：把「弹层问答卡」换成「场景内步进」——
+   ① 点位制：场馆场景里摆编号点位，点当前点位在下方动作面板做事；
+   ② 选择在场景里发生：NPC 有名有事、以气泡说话，不再整页问答卡；
+   ③ 场内活账单：进场即开账单，每笔实时累加，明细/总计/开心值分开；
+   ④ 结算在门口：走完点位 → 点门口「出门」才在门边结算（原结算逻辑
+      一行不改：finishHook / 奖励 / 星级 / 入银行全部照旧调用）；
+      出场落在场馆门口，同城邻近场馆带步行距离，走过去出现「进门」；
+      广场导览列表保留作备用导航；
+   ⑤ 生活气：每个场馆一条轮换环境字幕。
+   铁律：不改 XP_DEFS / XP_CALC / 价格 / 收入 / 步数 / 结算公式，
+   只换呈现与流程；交易（trade）与旅行（trv）只加场景框，不碰其账。
+   ================================================================ */
+(function(){
+"use strict";
+/* ---------------- 文案（五语） ---------------- */
+var SC_TXT = {
+zh:{ billTitle:"你在这里的账单", billEmpty:"还没有消费，第一笔会记在这里。", station:"点位 {n}", atStation:"你现在在：{s}",
+  lockedToast:"先完成眼前的点位，再往前走。", doneToast:"「{s}」已经完成了。",
+  door:"出门", doorLocked:"先把场内的点位都走完，再从门口出门结算。",
+  doorText:"都办完了！走到门口，在门边把「{name}」的账结清，就能出门了。",
+  doorHint:"最后的收入与结算行会在门口点「出门」时一起入账，明细一行都不会少。",
+  doorBtn:"在门口结算", doorstepTitle:"你来到「{venue}」门口",
+  neighborTitle:"附近的去处 · 步行可达", walkM:"步行约 {d} 米", walking:"正在走过去……还剩 {d} 米",
+  enterBtn:"进门 ▶", plazaGuide:"回广场 · 打开导览列表（备用导航）",
+  trvStageTitle:"走进这座城市", trvStageSub:"点场景里的编号点位，就能去对应的地方；下面的列表保留作备用导览。",
+  trvDoneToast:"这个点位已经打过卡了。",
+  tradeNote:"交易大厅 · 一轮一个点位，走完 8 轮在门口结算。",
+  arch:{
+    farm:{ stations:["田头地块","谷仓","拖拉机棚","粮仓柜台"], npcs:[{n:"老周",d:"正在修拖拉机"},{n:"小菊",d:"正在点种子"}], amb:["刚翻过的泥土带着潮气，远处拖拉机突突地响。","玉米叶在风里沙沙作响，谷仓那边有人在卸货。"] },
+    ranch:{ stations:["马厩","草料棚","围栏边","牛市柜台"], npcs:[{n:"阿强",d:"正在喂马"},{n:"小麦",d:"正在修围栏"}], amb:["草料和皮革的味道混在一起，马蹄声由远及近。","风吹过牧场，围栏上的铃铛轻轻响了一声。"] },
+    rocket:{ stations:["任务大厅","训练舱","检查台","发射观景窗"], npcs:[{n:"林工",d:"正在核对清单"},{n:"安娜",d:"正在调试耳机"}], amb:["大厅里飘着咖啡味，大屏上的倒计时一秒一秒跳。","广播里报了一遍天气：晴朗，能见度极佳。"] },
+    cafe:{ stations:["后厨备货台","吧台","出餐口","收银台"], npcs:[{n:"Maria",d:"正在出餐"},{n:"阿峰",d:"正在擦吧台"}], amb:["刚出锅的香气飘满整个店面，门口风铃响了一下。","咖啡机咕噜作响，有人把刚烤好的面包端了出来。"] },
+    city:{ stations:["街口站台","办公楼前台","街边长椅","市集摊位"], npcs:[{n:"Sofia",d:"正在等车"},{n:"大卫",d:"正在看报纸"}], amb:["街上人来人往，咖啡香和汽车声混在一起。","红绿灯变换，鸽子从广场边扑棱棱飞起。"] }
+  } },
+en:{ billTitle:"Your tab here", billEmpty:"Nothing yet — your first charge will appear here.", station:"Station {n}", atStation:"You are at: {s}",
+  lockedToast:"Finish the station in front of you first.", doneToast:"“{s}” is already done.",
+  door:"Exit", doorLocked:"Walk all the stations inside first, then settle at the door.",
+  doorText:"All done! Head to the door and settle the tab for “{name}” right there before you leave.",
+  doorHint:"Final earnings and settlement lines are added when you tap Exit at the door — every line, nothing skipped.",
+  doorBtn:"Settle at the door", doorstepTitle:"You're at the door of “{venue}”",
+  neighborTitle:"Nearby spots · walkable", walkM:"≈ {d} m walk", walking:"Walking over… {d} m to go",
+  enterBtn:"Go in ▶", plazaGuide:"Back to the plaza · guide list (backup nav)",
+  trvStageTitle:"Step into the city", trvStageSub:"Tap a numbered spot in the scene to go there; the list below stays as backup navigation.",
+  trvDoneToast:"You've already checked in here.",
+  tradeNote:"Trading floor · one station per round; settle at the door after round 8.",
+  arch:{
+    farm:{ stations:["Field plot","Barn","Tractor shed","Grain counter"], npcs:[{n:"Hank",d:"fixing the tractor"},{n:"June",d:"counting seed bags"}], amb:["Fresh-turned soil smells damp; a tractor putters in the distance.","Corn leaves rustle in the wind while someone unloads at the barn."] },
+    ranch:{ stations:["Stable","Hay barn","Fence line","Cattle counter"], npcs:[{n:"Cole",d:"feeding the horses"},{n:"Rosa",d:"mending the fence"}], amb:["Hay and leather in the air; hoofbeats drift closer.","Wind crosses the pasture and a fence bell ticks softly."] },
+    rocket:{ stations:["Mission hall","Training pod","Check station","Launch window"], npcs:[{n:"Priya",d:"checking the list"},{n:"Marco",d:"testing headsets"}], amb:["Coffee in the air; the big countdown ticks second by second.","The PA reports the weather: clear, visibility perfect."] },
+    cafe:{ stations:["Kitchen prep counter","Bar","Pass window","Register"], npcs:[{n:"Maria",d:"plating dishes"},{n:"Leo",d:"wiping the bar"}], amb:["Fresh-out-of-the-oven aroma fills the room; the door bell chimes.","The espresso machine gurgles as a tray of warm bread comes out."] },
+    city:{ stations:["Street-corner stop","Office front desk","Sidewalk bench","Market stall"], npcs:[{n:"Sofia",d:"waiting for the bus"},{n:"David",d:"reading a newspaper"}], amb:["People stream by; coffee smells mix with traffic sounds.","The light changes and pigeons burst up from the plaza edge."] }
+  } },
+es:{ billTitle:"Tu cuenta aquí", billEmpty:"Aún nada: tu primer gasto aparecerá aquí.", station:"Punto {n}", atStation:"Estás en: {s}",
+  lockedToast:"Termina primero el punto que tienes delante.", doneToast:"«{s}» ya está hecho.",
+  door:"Salida", doorLocked:"Recorre primero todos los puntos de dentro y luego paga en la puerta.",
+  doorText:"¡Todo listo! Ve a la puerta y liquida la cuenta de «{name}» allí mismo antes de salir.",
+  doorHint:"Los ingresos finales y las líneas de liquidación se añaden al tocar Salir en la puerta, línea por línea.",
+  doorBtn:"Liquidar en la puerta", doorstepTitle:"Estás en la puerta de «{venue}»",
+  neighborTitle:"Lugares cercanos · a pie", walkM:"≈ {d} m a pie", walking:"Caminando… quedan {d} m",
+  enterBtn:"Entrar ▶", plazaGuide:"Volver a la plaza · lista guía (respaldo)",
+  trvStageTitle:"Entra en la ciudad", trvStageSub:"Toca un punto numerado de la escena para ir allí; la lista de abajo queda como guía de respaldo.",
+  trvDoneToast:"Ya hiciste check-in aquí.",
+  tradeNote:"Sala de operaciones · un punto por ronda; liquida en la puerta tras la ronda 8.",
+  arch:{
+    farm:{ stations:["Parcela del campo","Granero","Cobertizo del tractor","Mostrador de granos"], npcs:[{n:"Hank",d:"arreglando el tractor"},{n:"June",d:"contando bolsas de semillas"}], amb:["La tierra recién arada huele a humedad; un tractor suena a lo lejos.","Las hojas de maíz susurran con el viento mientras descargan en el granero."] },
+    ranch:{ stations:["Establo","Granero de heno","Línea de la cerca","Mostrador de ganado"], npcs:[{n:"Cole",d:"alimentando a los caballos"},{n:"Rosa",d:"reparando la cerca"}], amb:["Huele a heno y cuero; se acercan cascos de caballo.","El viento cruza el pastizal y suena suave una campana de la cerca."] },
+    rocket:{ stations:["Sala de misión","Cápsula de entrenamiento","Puesto de control","Ventana de lanzamiento"], npcs:[{n:"Priya",d:"revisando la lista"},{n:"Marco",d:"probando los auriculares"}], amb:["Huele a café; la gran cuenta atrás avanza segundo a segundo.","Por megafonía: tiempo despejado, visibilidad perfecta."] },
+    cafe:{ stations:["Mostrador de cocina","Barra","Ventanilla de platos","Caja"], npcs:[{n:"Maria",d:"sirviendo platos"},{n:"Leo",d:"limpiando la barra"}], amb:["El aroma recién horneado llena el local; suena la campanilla de la puerta.","La cafetera burbujea mientras sale una bandeja de pan caliente."] },
+    city:{ stations:["Parada de la esquina","Recepción de la oficina","Banco de la acera","Puesto del mercado"], npcs:[{n:"Sofia",d:"esperando el autobús"},{n:"David",d:"leyendo el periódico"}], amb:["La gente pasa sin parar; huele a café entre el ruido del tráfico.","Cambia el semáforo y las palomas se elevan desde la plaza."] }
+  } },
+hi:{ billTitle:"यहाँ का आपका बिल", billEmpty:"अभी कुछ नहीं — पहला खर्च यहीं दिखेगा।", station:"पड़ाव {n}", atStation:"आप यहाँ हैं: {s}",
+  lockedToast:"पहले सामने वाला पड़ाव पूरा करें।", doneToast:"“{s}” पहले ही पूरा हो चुका है।",
+  door:"बाहर", doorLocked:"पहले अंदर के सभी पड़ाव पूरे करें, फिर दरवाज़े पर हिसाब करें।",
+  doorText:"सब हो गया! दरवाज़े पर जाकर “{name}” का हिसाब वहीं चुकाकर बाहर निकलें।",
+  doorHint:"अंतिम कमाई और हिसाब की पंक्तियाँ दरवाज़े पर बाहर निकलते समय जुड़ेंगी — एक भी पंक्ति नहीं छूटेगी।",
+  doorBtn:"दरवाज़े पर हिसाब करें", doorstepTitle:"आप “{venue}” के दरवाज़े पर हैं",
+  neighborTitle:"आस-पास की जगहें · पैदल दूरी पर", walkM:"≈ {d} मी पैदल", walking:"चल रहे हैं… {d} मी बाकी",
+  enterBtn:"अंदर जाएँ ▶", plazaGuide:"प्लाज़ा पर वापस · गाइड सूची (वैकल्पिक रास्ता)",
+  trvStageTitle:"शहर में कदम रखें", trvStageSub:"दृश्य में नंबर वाले पड़ाव पर टैप करें; नीचे की सूची वैकल्पिक गाइड के रूप में रहती है।",
+  trvDoneToast:"यहाँ पहले ही चेक-इन हो चुका है।",
+  tradeNote:"ट्रेडिंग फ़्लोर · हर राउंड एक पड़ाव; राउंड 8 के बाद दरवाज़े पर हिसाब।",
+  arch:{
+    farm:{ stations:["खेत का प्लॉट","खलिहान","ट्रैक्टर शेड","अनाज काउंटर"], npcs:[{n:"हैंक",d:"ट्रैक्टर ठीक कर रहा है"},{n:"जून",d:"बीज की बोरियाँ गिन रही है"}], amb:["ताज़ा जोती मिट्टी से नमी की गंध आ रही है; दूर ट्रैक्टर की आवाज़ है।","हवा में मक्के के पत्ते सरसरा रहे हैं, खलिहान में सामान उतर रहा है।"] },
+    ranch:{ stations:["अस्तबल","चारा गोदाम","बाड़ के पास","पशु काउंटर"], npcs:[{n:"कोल",d:"घोड़ों को चारा डाल रहा है"},{n:"रोज़ा",d:"बाड़ ठीक कर रही है"}], amb:["हवा में चारे और चमड़े की गंध है; टापों की आवाज़ पास आ रही है।","हवा चरागाह से गुज़रती है और बाड़ की घंटी धीमे से बजती है।"] },
+    rocket:{ stations:["मिशन हॉल","प्रशिक्षण पॉड","जाँच केंद्र","लॉन्च खिड़की"], npcs:[{n:"प्रिया",d:"सूची जाँच रही है"},{n:"मार्को",d:"हेडसेट टेस्ट कर रहा है"}], amb:["हवा में कॉफ़ी की खुशबू है; बड़ी उलटी गिनती हर सेकंड बढ़ रही है।","घोषणा हुई: मौसम साफ़ है, दृश्यता बेहतरीन है।"] },
+    cafe:{ stations:["रसोई तैयारी काउंटर","बार","परोसने की खिड़की","कैश काउंटर"], npcs:[{n:"मारिया",d:"खाना परोस रही है"},{n:"लियो",d:"बार साफ़ कर रहा है"}], amb:["ताज़ा बने खाने की खुशबू पूरे कमरे में है; दरवाज़े की घंटी बजी।","कॉफ़ी मशीन गड़गड़ा रही है, गर्म ब्रेड की ट्रे बाहर आई।"] },
+    city:{ stations:["सड़क किनारे स्टॉप","ऑफ़िस रिसेप्शन","फुटपाथ की बेंच","बाज़ार की दुकान"], npcs:[{n:"सोफ़िया",d:"बस का इंतज़ार कर रही है"},{n:"डेविड",d:"अख़बार पढ़ रहा है"}], amb:["लोग आ-जा रहे हैं; कॉफ़ी की खुशबू और ट्रैफ़िक की आवाज़ घुली हुई है।","सिग्नल बदला और प्लाज़ा के किनारे से कबूतर उड़ गए।"] }
+  } },
+fr:{ billTitle:"Votre addition ici", billEmpty:"Rien pour l'instant — votre premier achat apparaîtra ici.", station:"Étape {n}", atStation:"Vous êtes à : {s}",
+  lockedToast:"Terminez d'abord l'étape devant vous.", doneToast:"« {s} » est déjà terminé.",
+  door:"Sortie", doorLocked:"Parcourez d'abord toutes les étapes à l'intérieur, puis réglez à la porte.",
+  doorText:"Tout est fait ! Allez à la porte et réglez l'addition de « {name} » sur place avant de partir.",
+  doorHint:"Les gains finaux et les lignes de règlement sont ajoutés quand vous touchez Sortie à la porte — ligne par ligne, sans rien oublier.",
+  doorBtn:"Régler à la porte", doorstepTitle:"Vous êtes à la porte de « {venue} »",
+  neighborTitle:"À deux pas d'ici", walkM:"≈ {d} m à pied", walking:"En route… plus que {d} m",
+  enterBtn:"Entrer ▶", plazaGuide:"Retour à la place · liste guide (secours)",
+  trvStageTitle:"Entrez dans la ville", trvStageSub:"Touchez un point numéroté de la scène pour y aller ; la liste ci-dessous reste en guide de secours.",
+  trvDoneToast:"Vous êtes déjà passé par ici.",
+  tradeNote:"Salle des marchés · une étape par manche ; règlement à la porte après la manche 8.",
+  arch:{
+    farm:{ stations:["Parcelle du champ","Grange","Hangar du tracteur","Comptoir des grains"], npcs:[{n:"Hank",d:"répare le tracteur"},{n:"June",d:"compte les sacs de semences"}], amb:["La terre fraîchement retournée sent l'humidité ; un tracteur pétarade au loin.","Les feuilles de maïs bruissent dans le vent pendant qu'on décharge à la grange."] },
+    ranch:{ stations:["Écurie","Grange à foin","Le long de la clôture","Comptoir du bétail"], npcs:[{n:"Cole",d:"nourrit les chevaux"},{n:"Rosa",d:"répare la clôture"}], amb:["Une odeur de foin et de cuir ; des sabots approchent.","Le vent traverse le pâturage et une clochette tinte doucement."] },
+    rocket:{ stations:["Hall de mission","Capsule d'entraînement","Poste de contrôle","Fenêtre de lancement"], npcs:[{n:"Priya",d:"vérifie la liste"},{n:"Marco",d:"teste les casques"}], amb:["Une odeur de café ; le grand compte à rebours avance seconde par seconde.","Annonce : ciel dégagé, visibilité parfaite."] },
+    cafe:{ stations:["Comptoir de cuisine","Bar","Passe-plats","Caisse"], npcs:[{n:"Maria",d:"dresse les assiettes"},{n:"Léo",d:"essuie le bar"}], amb:["Le parfum du four emplit la salle ; la clochette de la porte tinte.","La machine à café gargouille pendant qu'un plateau de pain chaud arrive."] },
+    city:{ stations:["Arrêt au coin de la rue","Accueil du bureau","Banc du trottoir","Étal du marché"], npcs:[{n:"Sofia",d:"attend le bus"},{n:"David",d:"lit le journal"}], amb:["Les gens défilent ; le parfum du café se mêle au bruit de la circulation.","Le feu change et les pigeons s'envolent du bord de la place."] }
+  } }
+};
+Object.keys(SC_TXT).forEach(function(code){ try { if (typeof LANGS !== "undefined" && LANGS[code] && typeof deepMerge === "function") deepMerge(LANGS[code], { xp:{ scene: SC_TXT[code] } }); } catch(e){} });
+function ST(p){ return t("xp.scene." + p); }
+function STF(p, o){ return fmt(ST(p), o || {}); }
+function archOf(def){ if (!def) return "city"; if (def.kind === "food") return "cafe"; if (def.scene === "farm") return "farm"; if (def.scene === "ranch") return "ranch"; if (def.scene === "rocket") return "rocket"; return "city"; }
+function archData(def){ var a = ST("arch." + archOf(def)); if (!a || typeof a !== "object" || !a.stations) a = (LANGS.en.xp.scene.arch[archOf(def)]); return a; }
+function stationName(def, i){ var a = archData(def); return a.stations[i % a.stations.length]; }
+function npcFor(def, i){ var a = archData(def); var npc = a.npcs[i % a.npcs.length]; var face = "🧑"; try { face = NPC_FACES[Math.abs(hashStr(npc.n)) % NPC_FACES.length]; } catch(e){} return { n: npc.n, d: npc.d, face: face }; }
+function ambLine(def, i){ var a = archData(def); return a.amb[i % a.amb.length]; }
+function stationPos(i, n){ if (n <= 1) return { x:50, y:60 }; var ys = [64,50,70,54,66,48,62,56]; return { x: 10 + 80 * i / (n - 1), y: ys[i % ys.length] }; }
+/* ---------------- 样式 ---------------- */
+var css = ""
++ ".sc-stage{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(33,48,74,.16);background:#8fd2ff;line-height:1;margin:0 0 12px;}"
++ ".sc-stage .sc-scene{line-height:0;} .sc-stage .sc-scene svg{width:100%;height:auto;display:block;}"
++ ".sc-hot{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2.5px solid #fffdf8;background:#2456a6;color:#fff;font:inherit;font-size:14.5px;font-weight:900;cursor:pointer;z-index:12;box-shadow:0 3px 8px rgba(20,26,40,.35);padding:0;line-height:1;}"
++ ".sc-hot.done{background:#2e7d4f;} .sc-hot.lock{opacity:.5;background:#5a6a86;}"
++ ".sc-hot.now{background:#c8402a;animation:scpulse 1.5s ease-out infinite;}"
++ "@keyframes scpulse{0%{box-shadow:0 0 0 0 rgba(200,64,42,.45);}70%{box-shadow:0 0 0 13px rgba(200,64,42,0);}100%{box-shadow:0 0 0 0 rgba(200,64,42,0);}}"
++ ".sc-hot.door{width:auto;height:38px;border-radius:999px;padding:0 12px;font-size:13.5px;background:#8a5a12;}"
++ ".sc-hot.door.now{background:#e9a13b;color:#3a2703;}"
++ ".sc-fig{position:absolute;transform:translate(-50%,-96%);z-index:8;pointer-events:none;text-align:center;line-height:1;transition:left .6s ease,top .6s ease;}"
++ ".sc-fig .sc-face{font-size:27px;filter:drop-shadow(0 2px 2px rgba(20,26,40,.3));display:block;}"
++ ".sc-amb{position:absolute;left:8px;right:8px;bottom:8px;z-index:11;background:rgba(20,26,40,.8);color:#fff;font-size:12.5px;font-weight:700;line-height:1.5;padding:6px 11px;border-radius:10px;pointer-events:none;}"
++ ".sc-bill{margin-top:12px;border:2px dashed var(--line);border-radius:14px;padding:11px 13px;background:var(--bg);}"
++ "@media (prefers-color-scheme: dark){ .sc-bill{background:var(--bg2);} }"
++ ".sc-bill h4{margin:0 0 8px;font-size:15px;font-weight:900;} .sc-bill .xplines{margin:0;}"
++ ".sc-happy{font-size:13.5px;color:var(--ink-soft);margin:8px 0 0;} .sc-happy strong{color:var(--ink);}"
++ ".sc-saywho{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:800;color:var(--ink-soft);margin:0 0 7px;} .sc-saywho .sc-face2{font-size:21px;}"
++ ".sc-at{font-size:13px;font-weight:800;color:var(--blue);margin:10px 2px 0;} @media (prefers-color-scheme: dark){ .sc-at{color:#9dc0ff;} }"
++ ".sc-tags{display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex:0 0 auto;}"
++ ".sc-price{font-size:12px;font-weight:900;border-radius:999px;padding:2px 8px;background:var(--green-soft);color:var(--green);white-space:nowrap;}"
++ ".sc-price.neg{background:var(--red-soft);color:var(--accent);} .sc-price.free{background:var(--gold-soft);color:#8a5a12;}"
++ "@media (prefers-color-scheme: dark){ .sc-price.free{color:var(--gold);} }"
++ ".sc-walk{margin-top:12px;} .sc-walkbar{position:relative;height:38px;border-radius:99px;background:var(--bg);border:2px solid var(--line);overflow:hidden;}"
++ "@media (prefers-color-scheme: dark){ .sc-walkbar{background:var(--bg2);} }"
++ "#wkWalk{position:absolute;top:3px;font-size:25px;transition:left .3s ease;transform:translateX(-50%);}"
++ ".sc-trvwrap{margin:2px 0 4px;} .sc-trvwrap h2{font-size:19px;font-weight:900;margin:0 2px 4px;} .sc-trvwrap p{font-size:13px;color:var(--ink-soft);margin:0 2px 10px;line-height:1.55;}";
+var stEl = document.createElement("style"); stEl.textContent = css; document.head.appendChild(stEl);
+/* ---------------- 场景舞台（点位 + NPC + 玩家 + 环境字幕） ---------------- */
+var __ambTimer = null;
+function sceneStageHTML(def, curI, total){
+  var spots = "";
+  for (var i = 0; i < total; i++){
+    var p = stationPos(i, total);
+    var cls = i < curI ? "done" : i === curI ? "now" : "lock";
+    spots += '<button type="button" class="sc-hot ' + cls + '" data-hot="' + i + '" style="left:' + p.x + '%;top:' + p.y + '%" aria-label="' + STF("station", { n: i + 1 }) + '">' + (i < curI ? "✓" : (i + 1)) + '</button>';
+  }
+  var cp = stationPos(Math.min(curI, total - 1), total);
+  var npc = npcFor(def, curI);
+  var np = stationPos(Math.min(curI + 1, total - 1), total);
+  np = { x: Math.max(24, Math.min(76, np.x)), y: np.y };   /* NPC 名牌较宽：钳制横向位置防被舞台边缘裁掉 */
+  cp = { x: Math.max(16, Math.min(88, cp.x)), y: cp.y };
+  var doorNow = curI >= total;
+  return '<div class="sc-stage"><div class="sc-scene">' + xpSceneSVG(def.scene) + '</div>'
+    + spots
+    + '<button type="button" class="sc-hot door ' + (doorNow ? "now" : "lock") + '" data-door="1" style="left:90%;top:15%">🚪 ' + ST("door") + '</button>'
+    + '<div class="sc-fig" style="left:' + cp.x + '%;top:' + cp.y + '%"><span class="npctag"><i></i>' + esc((W.name || "").slice(0, 12)) + '</span><span class="sc-face">🧑</span></div>'
+    + '<div class="sc-fig" style="left:' + np.x + '%;top:' + np.y + '%"><span class="npctag"><i></i>' + esc(npc.n) + ' · ' + esc(npc.d) + '</span><span class="sc-face">' + npc.face + '</span></div>'
+    + '<div class="sc-amb" id="scAmb">' + esc(ambLine(def, curI)) + '</div></div>';
+}
+function startAmb(def, baseI){
+  if (__ambTimer) clearInterval(__ambTimer);
+  var k = 0;
+  __ambTimer = setInterval(function(){
+    var el = document.getElementById("scAmb");
+    if (!el){ clearInterval(__ambTimer); __ambTimer = null; return; }
+    k++; el.textContent = ambLine(def, baseI + k);
+  }, 6000);
+}
+function xpBillHTML(){
+  var rows = XS.lines.filter(function(L){ return !L.coin; }).map(function(L){
+    return '<div class="xpline"><span>' + L.label + '</span><span class="amt ' + (L.amt < 0 ? "neg" : "") + '">' + (L.amt > 0 ? "+" : "") + money(L.amt) + '</span></div>';
+  }).join("");
+  if (!rows) rows = '<p class="small" style="margin:2px 0;">' + ST("billEmpty") + '</p>';
+  return '<div class="sc-bill"><h4>🧾 ' + ST("billTitle") + '</h4><div class="xplines">' + rows
+    + '<div class="xpline total"><span>' + t("xp.hub.total") + '</span><span class="amt ' + (XS.cash < 0 ? "neg" : "") + '">' + (XS.cash > 0 ? "+" : "") + money(XS.cash) + '</span></div></div>'
+    + '<p class="sc-happy">😊 ' + t("ui.happy") + '：<strong>' + (XS.happy > 0 ? "+" : "") + XS.happy + '</strong></p></div>';
+}
+function bindScene(){
+  if (typeof XS === "undefined" || !XS) return;
+  app.querySelectorAll("[data-hot]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var i = parseInt(b.dataset.hot, 10);
+      if (i === XS.i){ var f = app.querySelector("#xpBody .actbtn, #xpBody .btn"); if (f) f.scrollIntoView({ block:"center", behavior:"smooth" }); sfxTap(); }
+      else if (i < XS.i) toast(STF("doneToast", { s: stationName(XS.def, i) }));
+      else toast(ST("lockedToast"));
+    });
+  });
+  var door = app.querySelector("[data-door]");
+  if (door) door.addEventListener("click", function(){
+    if (XS.i >= XS.def.steps.length) xpFinish();
+    else toast(ST("doorLocked"));
+  });
+  startAmb(XS.def, XS.i);
+}
+/* ---------------- 换壳：xpShellHTML / xpMount ---------------- */
+xpShellHTML = function(body){
+  var def = XS.def, d = t("xp." + XS.id), total = def.steps.length;
+  var settled = !!XS._finishApplied;
+  return topbarHTML()
+    + '<div class="card fadein venuecard">'
+    + '<div class="xphead"><span class="xicon">' + def.icon + '</span><span><h3>' + d.name + '</h3><p>' + cityName(def.city) + ' · ' + fmt(t("xp.hub.stepOf"), { a: Math.min(XS.i + 1, total), b: total }) + '</p></span></div>'
+    + '<div class="xpbar">'
+    + '<div class="stat"><div class="k">🪙 ' + t("ui.coins") + '</div><div class="v coinval">' + W.coins.toLocaleString("en-US") + '</div></div>'
+    + '<div class="stat"><div class="k">💰 ' + t("xp.hub.net") + '</div><div class="v ' + (XS.cash < 0 ? "neg" : "") + '">' + money(XS.cash) + '</div></div>'
+    + '<div class="stat"><div class="k">😊 ' + t("ui.happy") + '</div><div class="v">' + (XS.happy > 0 ? "+" : "") + XS.happy + '</div></div>'
+    + '<div class="stat"><div class="k">🏦 ' + t("xp.hub.bank") + '</div><div class="v">' + money(W.bank || 0) + '</div></div>'
+    + '</div>'
+    + sceneStageHTML(def, Math.min(XS.i, total), total)
+    + '<div id="xpBody">' + body + '</div>'
+    + (settled ? "" : xpBillHTML())
+    + '</div>'
+    + '<div class="entry-actions"><button class="btn ghost" id="xpQuit" type="button">' + t("xp.hub.quit") + '</button></div>'
+    + footerHTML();
+};
+var __xpMount0 = xpMount;
+xpMount = function(body){ __xpMount0(body); bindScene(); };
+/* ---------------- 选择步：NPC 气泡 + 点位动作卡（价格/免费/开心与原账一致） ---------------- */
+xpEvStep = function(step){
+  var e = t("xp." + step.ev), ctx = xpCtx(), def = XS.def, npc = npcFor(def, XS.i);
+  xpMount(
+    (XS.i === 0 && t("xp." + XS.id + ".intro") ? '<p class="small" style="margin:0 0 10px;">' + t("xp." + XS.id + ".intro") + '</p>' : "")
+    + '<div class="sc-saywho"><span class="sc-face2">' + npc.face + '</span><span><strong>' + esc(npc.n) + '</strong> · ' + esc(npc.d) + '</span></div>'
+    + '<div class="sbubble">' + fmt(e.t, ctx) + '</div>'
+    + (step.wx ? '<div class="result-note" style="margin-top:10px;">' + t("xp.farm.wx." + XS.vars.wx) + '</div>' : "")
+    + '<p class="sc-at">📍 ' + STF("atStation", { s: stationName(def, XS.i) }) + ' · ' + STF("station", { n: XS.i + 1 }) + '</p>'
+    + '<div style="display:flex;flex-direction:column;gap:9px;margin-top:10px;">'
+    + e.c.map(function(c, i){
+        var ch = step.ch[i];
+        var delta = (ch.led || []).reduce(function(s, L){ return s + xpVal(L[1]); }, 0);
+        var price = delta < 0 ? '<span class="sc-price neg">' + money(delta) + '</span>' : delta > 0 ? '<span class="sc-price">+' + money(delta) + '</span>' : '<span class="sc-price free">' + t("trv.freeTag") + '</span>';
+        var hap = ch.happy ? '<span class="sc-price">😊 ' + (ch.happy > 0 ? "+" : "") + ch.happy + '</span>' : "";
+        return '<button class="actbtn" data-xc="' + i + '"><span class="abnum">' + (i + 1) + '</span><span style="flex:1;">' + fmt(c, ctx) + '</span><span class="sc-tags">' + price + hap + '</span></button>';
+      }).join("")
+    + '</div>');
+  app.querySelectorAll("[data-xc]").forEach(function(b){ b.addEventListener("click", function(){ xpChoose(parseInt(b.dataset.xc, 10)); }); });
+};
+xpChoose = function(i){
+  var step = XS.def.steps[XS.i], ch = step.ch[i], e = t("xp." + step.ev), ctx = xpCtx();
+  var cashDelta = (ch.led || []).reduce(function(s, L){ return s + xpVal(L[1]); }, 0);
+  xpApplyOutcome(ch);
+  sfxSelect();
+  var npc = npcFor(XS.def, XS.i);
+  xpMount(
+    '<div class="sc-saywho"><span class="sc-face2">' + npc.face + '</span><span><strong>' + esc(npc.n) + '</strong> · ' + esc(npc.d) + '</span></div>'
+    + '<div class="sbubble"><div class="result-note">' + fmt(e.r[i], ctx) + '</div></div>'
+    + '<div class="fxline">' + fxChips([cashDelta, 0, ch.happy || 0]) + '</div>'
+    + '<div style="height:10px"></div>'
+    + '<button class="btn" id="xpNext" type="button">' + t("ui.continueBtn") + ' ▶</button>');
+  $("#xpNext").addEventListener("click", xpAdvance);
+};
+xpCalcStep = function(step){
+  var r = (typeof XP_CALC !== "undefined" && XP_CALC[step.calc]) ? XP_CALC[step.calc](XS) : { note:"" };
+  var npc = npcFor(XS.def, XS.i);
+  xpMount(
+    '<div class="sc-saywho"><span class="sc-face2">' + npc.face + '</span><span><strong>' + esc(npc.n) + '</strong> · ' + esc(npc.d) + '</span></div>'
+    + '<div class="sbubble">' + fmt(t("xp." + step.key + ".t"), xpCtx()) + '</div>'
+    + (r.note ? '<div class="result-note" style="margin-top:10px;">' + r.note + '</div>' : "")
+    + '<div style="height:10px"></div>'
+    + '<button class="btn" id="xpNext" type="button">' + t("ui.continueBtn") + ' ▶</button>');
+  $("#xpNext").addEventListener("click", xpAdvance);
+};
+/* ---------------- 门口结算：走完点位先到门口，点「出门」才跑原结算 ---------------- */
+var __doorstep = null;
+function sceneDoorScreen(){
+  var def = XS.def, d = t("xp." + XS.id), npc = npcFor(def, XS.i);
+  xpMount(
+    '<div class="sc-saywho"><span class="sc-face2">' + npc.face + '</span><span><strong>' + esc(npc.n) + '</strong> · ' + esc(npc.d) + '</span></div>'
+    + '<div class="sbubble">' + STF("doorText", { name: d.name }) + '</div>'
+    + '<p class="small" style="margin:10px 0;">' + ST("doorHint") + '</p>'
+    + '<button class="btn gold" id="scDoorBtn" type="button" style="font-size:17px;">🚪 ' + ST("doorBtn") + '</button>');
+  $("#scDoorBtn").addEventListener("click", function(){ xpFinish(); });
+}
+var __xpFinish0 = xpFinish;
+xpFinish = function(){
+  if (typeof XS === "undefined" || !XS) return;
+  if (XS._finishApplied) return;
+  if (!XS._doorDone){ XS._doorDone = true; sceneDoorScreen(); return; }
+  XS._finishApplied = true;
+  __doorstep = { id: XS.id, city: XS.def.city, back: XS.back, name: t("xp." + XS.id + ".name"), icon: XS.def.icon };
+  __xpFinish0();
+};
+var __xpQuit0 = xpQuit;
+xpQuit = function(){ __doorstep = null; __xpQuit0(); };
+/* 结算屏的「回广场」改为先落在场馆门口（捕获阶段拦截原绑定） */
+document.addEventListener("click", function(e){
+  var el = e.target && e.target.closest ? e.target.closest("#xpDone") : null;
+  if (el && __doorstep){ e.stopPropagation(); e.preventDefault(); var info = __doorstep; __doorstep = null; showDoorstep(info); }
+}, true);
+function showDoorstep(info){
+  var others = xpDefsForCity(info.city).filter(function(id){ return id !== info.id; });
+  var rows = others.map(function(id, idx){
+    var df = XP_DEFS[id], dd = t("xp." + id);
+    var dist = 45 + (Math.abs(hashStr(id)) % 4) * 40 + idx * 25 + (Math.abs(hashStr(id)) % 25);
+    return '<button class="route" data-nb="' + id + '" data-dist="' + dist + '"><span class="ric">' + df.icon + '</span><span><h3>' + dd.name + '</h3><p>' + (dd.sub || "") + '</p><span class="tags"><span class="tag">🚶 ' + STF("walkM", { d: dist }) + '</span></span></span></button>';
+  }).join("");
+  mount(topbarHTML()
+    + '<div class="card fadein"><div class="xphead"><span class="xicon">' + info.icon + '</span><span><h3>' + STF("doorstepTitle", { venue: info.name }) + '</h3><p>' + cityName(info.city) + '</p></span></div>'
+    + '<div class="xpscene">' + xpSceneSVG("city") + '</div>'
+    + '<div id="walkBox"></div>'
+    + (others.length ? '<h3 style="margin:16px 0 8px;font-size:17px;font-weight:900;">' + ST("neighborTitle") + '</h3>' + rows : "")
+    + '<div style="height:12px"></div><button class="btn ghost" id="dsPlaza" type="button">' + ST("plazaGuide") + '</button></div>'
+    + footerHTML());
+  $("#dsPlaza").addEventListener("click", function(){ var b = info.back; info.back = null; if (b) b(); });
+  app.querySelectorAll("[data-nb]").forEach(function(b){ b.addEventListener("click", function(){ walkTo(info, b.dataset.nb, parseInt(b.dataset.dist, 10)); }); });
+  try { setMusic("street", clockTod()); } catch(e){}
+}
+function walkTo(info, nid, dist){
+  var box = $("#walkBox"); if (!box) return;
+  var left = dist;
+  box.innerHTML = '<div class="sc-walk"><div class="sc-walkbar"><span id="wkWalk" style="left:5%;">🚶</span></div><p class="small" id="wkTx" style="margin:8px 0;"></p><button class="btn gold" id="wkEnter" type="button" style="display:none;">' + ST("enterBtn") + '</button></div>';
+  box.scrollIntoView({ block:"center", behavior:"smooth" });
+  var tx = $("#wkTx"), wk = $("#wkWalk");
+  tx.textContent = STF("walking", { d: left });
+  var iv = setInterval(function(){
+    left -= Math.ceil(dist / 6);
+    if (left <= 0){
+      clearInterval(iv); wk.style.left = "93%";
+      tx.textContent = "📍 " + t("xp." + nid + ".name");
+      var eb = $("#wkEnter"); eb.style.display = "block";
+      eb.addEventListener("click", function(){ xpStart(nid, function(){ showCityLanding(info.city); }); });
+    } else {
+      wk.style.left = (5 + (1 - left / dist) * 88) + "%";
+      tx.textContent = STF("walking", { d: left });
+    }
+  }, 340);
+}
+/* ---------------- 交易大厅：只加场景框（轮次点位），账与按钮不动 ---------------- */
+if (typeof xpTradeRender === "function"){
+  var __tradeRender0 = xpTradeRender;
+  xpTradeRender = function(){
+    __tradeRender0();
+    try {
+      var card = document.querySelector(".card .tradestock") ? document.querySelector(".card .tradestock").closest(".card") : null;
+      if (card && !card.querySelector(".sc-stage")){
+        var round = (typeof TRS !== "undefined" && TRS) ? TRS.round : 1;
+        var fakeDef = { scene:"city", kind:"trade" };
+        var div = document.createElement("div");
+        div.innerHTML = sceneStageHTML(fakeDef, Math.min(round - 1, 7), 8) + '<p class="small" style="margin:0 0 10px;">' + ST("tradeNote") + '</p>';
+        div.querySelectorAll("button").forEach(function(b){ b.style.pointerEvents = "none"; });
+        var head = card.querySelector(".xphead");
+        head.parentNode.insertBefore(div, head.nextSibling);
+        startAmb(fakeDef, round);
+      }
+    } catch(e){}
+  };
+}
+/* ---------------- 旅行枢纽（含 47 骨架州府的全部体验）：列表前加场景点位 ---------------- */
+if (typeof showTrvHub === "function"){
+  var __trvHub0 = showTrvHub;
+  showTrvHub = function(){
+    __trvHub0();
+    try {
+      var firstSpot = document.querySelector("[data-spot]");
+      if (!firstSpot) return;
+      var T = trvState(), key = T.city, spots = trvSpotsFor(key), done = T.spots[key] || [];
+      var fakeDef = { scene:"city", kind:"city" };
+      var n = spots.length, spotsHtml = "";
+      spots.forEach(function(s, i){
+        var p = stationPos(i, n), isDone = done.indexOf(s.id) >= 0;
+        spotsHtml += '<button type="button" class="sc-hot ' + (isDone ? "done" : "now") + '" data-tspot="' + s.id + '" style="left:' + p.x + '%;top:' + p.y + '%">' + (isDone ? "✓" : (i + 1)) + '</button>';
+      });
+      var wrap = document.createElement("div");
+      wrap.className = "sc-trvwrap";
+      wrap.innerHTML = '<h2>🚶 ' + ST("trvStageTitle") + ' · ' + esc(cityName(key)) + '</h2><p>' + ST("trvStageSub") + '</p>'
+        + '<div class="sc-stage"><div class="sc-scene">' + sceneSVG() + '</div>' + spotsHtml
+        + '<div class="sc-fig" style="left:50%;top:64%"><span class="npctag"><i></i>' + esc((W.name || "").slice(0, 12)) + '</span><span class="sc-face">🧑</span></div>'
+        + '<div class="sc-amb">' + esc(ambLine(fakeDef, key.length)) + '</div></div>';
+      firstSpot.parentNode.insertBefore(wrap, firstSpot);
+      wrap.querySelectorAll("[data-tspot]").forEach(function(b){
+        b.addEventListener("click", function(){
+          var id = b.dataset.tspot;
+          var target = document.querySelector('[data-spot="' + id + '"]');
+          if (!target) return;
+          if (target.disabled){ toast(ST("trvDoneToast")); return; }
+          target.click();
+        });
+      });
+    } catch(e){}
+  };
+}
+})();
+</script>
+
   </body>
 </html>
 
