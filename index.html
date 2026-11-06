@@ -15441,6 +15441,7 @@ var st = document.createElement("style"); st.textContent = css; document.head.ap
 var ALX_UI = {
 en:{ guideTitle:"📍 Plaza Guide", guideSub:"Everywhere you can go in {city} — tap a pin to head over.", skelMusic:"The sound of this state — in the plaza, the bars and the bandstand.",
   campfireName:"Quiet America · Desert Campfire", campfirePitch:"A campfire out in the desert beyond the city — sit a while, make a wish.",
+  boatName:"Quiet America · Night Boat", boatPitch:"A quiet boat on the night water — sit a while, make a wish.",
   landmark:"Landmark", market:"City Market", marketPitch:"Second-hand stalls and wholesale finds — prices shift daily.",
   visitPitch:{ beach:"Sand, waves and a slow afternoon.", bar:"Local pours and live tunes.", park:"Lawns, shade and weekend crowds.", cafe:"A corner table and the city's favorite brew." },
   headliner:"Headliner Venue", doneMark:"Experienced ✓", againTag:"Play again",
@@ -15466,6 +15467,7 @@ en:{ guideTitle:"📍 Plaza Guide", guideSub:"Everywhere you can go in {city} �
   islandNote:"Island stop: ferries and flights only, no driving in." },
 es:{ guideTitle:"📍 Guía de la plaza", guideSub:"Todo lo que puedes visitar en {city}: toca un pin para ir.", skelMusic:"El sonido de este estado: en la plaza, los bares y el quiosco de música.",
   campfireName:"Quiet America · Fogata en el desierto", campfirePitch:"Una fogata en el desierto, a las afueras de la ciudad: siéntate un rato y pide un deseo.",
+  boatName:"Quiet America · Barco nocturno", boatPitch:"Un barco tranquilo sobre el agua de la noche: siéntate un rato y pide un deseo.",
   landmark:"Monumento", market:"Mercado urbano", marketPitch:"Puestos de segunda mano y mayoristas: los precios cambian cada día.",
   visitPitch:{ beach:"Arena, olas y una tarde tranquila.", bar:"Copas locales y música en vivo.", park:"Césped, sombra y ambiente de fin de semana.", cafe:"Una mesa de esquina y la infusión favorita de la ciudad." },
   headliner:"Lugar estrella", doneMark:"Ya vivido ✓", againTag:"Jugar de nuevo",
@@ -15491,6 +15493,7 @@ es:{ guideTitle:"📍 Guía de la plaza", guideSub:"Todo lo que puedes visitar e
   islandNote:"Parada isleña: solo ferris y vuelos, nada de conducir." },
 fr:{ guideTitle:"📍 Guide de la place", guideSub:"Tous les lieux à visiter à {city} : touchez une épingle pour y aller.", skelMusic:"Le son de cet État : sur la place, dans les bars et au kiosque à musique.",
   campfireName:"Quiet America · Feu de camp dans le désert", campfirePitch:"Un feu de camp dans le désert, aux portes de la ville : assieds-toi un moment et fais un vœu.",
+  boatName:"Quiet America · Bateau de nuit", boatPitch:"Un bateau calme sur l'eau de la nuit : assieds-toi un moment et fais un vœu.",
   landmark:"Monument", market:"Marché urbain", marketPitch:"Stands d'occasion et entrepôt de gros : les prix changent chaque jour.",
   visitPitch:{ beach:"Sable, vagues et après-midi tranquille.", bar:"Verres locaux et musique live.", park:"Pelouses, ombre et foule du week-end.", cafe:"Une table d'angle et la boisson préférée de la ville." },
   headliner:"Lieu vedette", doneMark:"Déjà vécu ✓", againTag:"Rejouer",
@@ -15521,6 +15524,7 @@ alxMerge("fr", { alx:{ ui: ALX_UI.fr } });
 
 ALX_UI.zh = { guideTitle:"📍 广场导览", guideSub:"{city} 能去的地方都在这儿——点一个图钉就过去。", skelMusic:"这个州的声音——在广场、酒吧和音乐台都能听见。",
   campfireName:"Quiet America · 沙漠篝火", campfirePitch:"城外沙漠里的一堆篝火，坐一会儿、许个愿。",
+  boatName:"Quiet America · 夜船", boatPitch:"一艘停在夜色水面上的小船，坐一会儿、许个愿。",
   landmark:"城市地标", market:"城市市场", marketPitch:"二手摊位加批发仓库，价格天天变。",
   visitPitch:{ beach:"沙滩、海浪和一个慢悠悠的下午。", bar:"本地酒水配现场音乐。", park:"草坪、树荫和周末的人气。", cafe:"一个角落座位，加这座城最爱的饮品。" },
   headliner:"头牌场所", doneMark:"已体验 ✓", againTag:"再来一轮",
@@ -15546,6 +15550,7 @@ ALX_UI.zh = { guideTitle:"📍 广场导览", guideSub:"{city} 能去的地方�
   islandNote:"岛屿停靠：只有渡轮和飞机，开车进不去。" };
 ALX_UI.hi = { guideTitle:"📍 प्लाज़ा गाइड", guideSub:"{city} में जाने की हर जगह — पिन पर टैप करो और चल पड़ो।", skelMusic:"इस राज्य की आवाज़ — चौक में, बारों में और बैंडस्टैंड पर।",
   campfireName:"Quiet America · रेगिस्तान की अलाव", campfirePitch:"शहर के बाहर रेगिस्तान में जली एक अलाव — थोड़ी देर बैठो, एक मन्नत माँगो।",
+  boatName:"Quiet America · रात की नाव", boatPitch:"रात के पानी पर ठहरी एक शांत नाव — थोड़ी देर बैठो, एक मन्नत माँगो।",
   landmark:"पहचान स्थल", market:"शहर बाज़ार", marketPitch:"सेकंड-हैंड स्टॉल और थोक गोदाम — दाम रोज़ बदलते हैं।",
   visitPitch:{ beach:"रेत, लहरें और धीमी दोपहर।", bar:"स्थानीय ड्रिंक और लाइव संगीत।", park:"लॉन, छाँव और सप्ताहांत की भीड़।", cafe:"कोने की मेज़ और शहर की पसंदीदा चुस्की।" },
   headliner:"मुख्य स्थल", doneMark:"अनुभव किया ✓", againTag:"फिर से खेलो",
@@ -16117,6 +16122,7 @@ function alxChipList(key){
   const sh = alxShelf();
   chips.push({ icon:"🎁", name: U("shelfTitle"), pitch: esc(sh.length ? (sh.length + " · " + alxShelfLabel(sh[0])) : U("shelfEmpty")), act:"shelf" });
   if (key === "phx") chips.push({ icon:"🔥", name: U("campfireName"), pitch: esc(U("campfirePitch") || ""), act:"campfire" });   /* Quiet America · 沙漠篝火（公开地址，新标签页） */
+  if (["mia","sd","sf","sea","hou","nyc"].indexOf(key) >= 0) chips.push({ icon:"⛵", name: U("boatName"), pitch: esc(U("boatPitch") || ""), act:"boat" });   /* Quiet America · 夜船：六座海港深城共用同一条船（公开地址，新标签页） */
   return chips;
 }
 function alxGuideRender(key){
@@ -16142,6 +16148,7 @@ function alxBindChips(key, chips){
       else if (c.act === "port") alxPort(c.port);
       else if (c.act === "shelf") alxShelfScreen(key);
       else if (c.act === "campfire") window.open("https://americanlifegame.com/campfire", "_blank", "noopener");
+      else if (c.act === "boat") window.open("https://americanlifegame.com/boat", "_blank", "noopener");
     });
   });
 }
