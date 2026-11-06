@@ -12534,6 +12534,7 @@ fr:{
   function cylGeo(rt, rb, h, seg){ var k = "c" + rt + "," + rb + "," + h + "," + seg; if (!geoCache[k]) geoCache[k] = new T.CylinderGeometry(rt, rb, h, seg || 14); return geoCache[k]; }
   function sphGeo(r, seg){ var k = "s" + r + "," + seg; if (!geoCache[k]) geoCache[k] = new T.SphereGeometry(r, seg || 10, Math.max(6, (seg || 10) - 2)); return geoCache[k]; }
   function icoGeo(r){ var k = "i" + r; if (!geoCache[k]) geoCache[k] = new T.IcosahedronGeometry(r, 0); return geoCache[k]; }
+  function domeGeo(r){ var k = "d" + r; if (!geoCache[k]) geoCache[k] = new T.SphereGeometry(r, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2); return geoCache[k]; }   /* 半球穹顶（帽冠 / 毛线帽共用，跨实例缓存） */
   function M(color){ var k = "m" + color; if (!matCache[k]) matCache[k] = new T.MeshLambertMaterial({ color: color }); return matCache[k]; }
   function ME(color, emissive, ei){ var k = "e" + color + "," + emissive; if (!matCache[k]) matCache[k] = new T.MeshLambertMaterial({ color: color, emissive: emissive, emissiveIntensity: ei == null ? 1 : ei }); return matCache[k]; }
   function MB(color){ var k = "b" + color; if (!matCache[k]) matCache[k] = new T.MeshBasicMaterial({ color: color }); return matCache[k]; }
@@ -12729,36 +12730,47 @@ fr:{
   var SKIN = { "🧑🏻": 0xf2c89b, "👩🏻": 0xf2c89b, "👱‍♀️": 0xf2c89b, "👱‍♂️": 0xf2c89b, "👨🏻": 0xf2c89b, "👦": 0xf2c89b, "👧": 0xf2c89b, "👩🏽": 0xb07a4f, "🧑🏽": 0xb07a4f, "👨🏽": 0xb07a4f, "🧑🏿": 0x6b4430, "👨🏿": 0x6b4430, "👩🏿": 0x6b4430, "👴": 0xe8b08a, "👵": 0xe8b08a, "🧔": 0xdba173, "🧑": 0xe8b08a };
   function person(o){
     var g = new T.Group();
-    var legGeo = boxGeo(0.15, 0.46, 0.18).clone(); legGeo.translate(0, -0.23, 0);   /* 必须克隆：boxGeo 是跨实例缓存，原地 translate 会逐人累积下沉 */
+    var skin = SKIN[o.face] || 0xe8b08a;
+    var legGeo = cylGeo(0.085, 0.06, 0.46, 10).clone(); legGeo.translate(0, -0.23, 0);   /* 必须克隆：cylGeo 是跨实例缓存，原地 translate 会逐人累积下沉 */
     var legC = o.legs || 0x31405e;   /* 地方风貌：裤装色随城市调色板（缺省仍是原深蓝） */
     var legL = mesh(legGeo, M(legC), -0.11, 0.46, 0, g);
     var legR = mesh(legGeo, M(legC), 0.11, 0.46, 0, g);
-    var torso = bx(0.54, 0.6, 0.3, o.torso, 0, 0.76, 0, g);
-    var armGeo = boxGeo(0.13, 0.5, 0.16).clone(); armGeo.translate(0, -0.2, 0);
-    var armL = mesh(armGeo, M(o.torso), -0.34, 0.98, 0, g);
-    var armR = mesh(armGeo, M(o.torso), 0.34, 0.98, 0, g);
-    var headG = new T.Group(); headG.position.set(0, 1.3, 0); g.add(headG);
-    var head = bx(0.44, 0.44, 0.4, SKIN[o.face] || 0xe8b08a, 0, 0, 0, headG);
+    [legL, legR].forEach(function(lg){ var sh = mesh(sphGeo(0.075, 8), M(0x2c2c34), 0, -0.45, 0.03, lg); sh.scale.set(1, 0.55, 1.6); sh.castShadow = false; });   /* 鞋：压扁小球，随腿摆动 */
+    /* 躯干：肩宽腰窄的圆柱收分 + 椭圆截面（前后薄），不再是方块身 */
+    var torso = mesh(cylGeo(0.265, 0.185, 0.6, 14), M(o.torso), 0, 0.76, 0, g);
+    torso.scale.set(1, 1, 0.62);
+    var shL = mesh(sphGeo(0.105, 10), M(o.torso), -0.27, 1.0, 0, g);   /* 肩头圆球 */
+    var shR = mesh(sphGeo(0.105, 10), M(o.torso), 0.27, 1.0, 0, g);
+    var armGeo = cylGeo(0.068, 0.052, 0.5, 10).clone(); armGeo.translate(0, -0.2, 0);
+    var armL = mesh(armGeo, M(o.torso), -0.35, 1.0, 0, g);
+    var armR = mesh(armGeo, M(o.torso), 0.35, 1.0, 0, g);
+    [armL, armR].forEach(function(am){ var hd = mesh(sphGeo(0.06, 8), M(skin), 0, -0.47, 0, am); hd.castShadow = false; });   /* 手：臂端小球 */
+    var neck = cyl(0.075, 0.088, 0.14, skin, 0, 1.09, 0, g); neck.castShadow = false;
+    var headG = new T.Group(); headG.position.set(0, 1.32, 0); g.add(headG);
+    var head = mesh(sphGeo(0.24, 16), M(skin), 0, 0, 0, headG);   /* 圆头：球形 */
     head.castShadow = true;
     var faceTex = emojiTex(o.face);
-    var face = new T.Mesh(new T.PlaneGeometry(0.42, 0.42), new T.MeshBasicMaterial({ map: faceTex, transparent: true }));
-    face.position.set(0, 0, 0.215); headG.add(face);
-    /* 地方风貌帽子（城市调色板 npcLook 给出）：牛仔帽宽檐 / 棒球帽 / 毛线帽 / 遮阳草帽，全用体块搭 */
+    var face = new T.Mesh(new T.PlaneGeometry(0.37, 0.37), new T.MeshBasicMaterial({ map: faceTex, transparent: true }));
+    face.position.set(0, 0.01, 0.238); headG.add(face);
+    /* 地方风貌帽子（城市调色板 npcLook 给出）：帽檐 + 帽冠成形——牛仔帽宽檐 / 棒球帽圆顶 + 帽舌 / 毛线帽圆顶 + 绒球 / 遮阳草帽宽檐 */
     if (o.hat){
       var hc = o.hatColor || 0x7a4a2b;
       if (o.hat === "cowboy"){
-        bx(0.64, 0.05, 0.64, hc, 0, 0.235, 0, headG);
-        bx(0.34, 0.2, 0.34, hc, 0, 0.35, 0, headG);
-        bx(0.36, 0.06, 0.36, 0x31405e, 0, 0.27, 0, headG).castShadow = false;
+        cyl(0.35, 0.37, 0.045, hc, 0, 0.13, 0, headG);                       /* 宽檐 */
+        cyl(0.15, 0.19, 0.2, hc, 0, 0.245, 0, headG);                       /* 帽冠 */
+        cyl(0.195, 0.20, 0.055, 0x31405e, 0, 0.165, 0, headG).castShadow = false;   /* 帽带 */
       } else if (o.hat === "cap"){
-        bx(0.47, 0.15, 0.44, hc, 0, 0.28, 0, headG);
-        bx(0.4, 0.04, 0.24, hc, 0, 0.225, 0.32, headG).castShadow = false;
+        mesh(domeGeo(0.252), M(hc), 0, 0.09, 0, headG);                     /* 圆顶帽冠 */
+        var tongue = cyl(0.145, 0.145, 0.03, hc, 0, 0.115, 0.30, headG);    /* 帽舌 */
+        tongue.scale.set(1, 1, 1.45); tongue.rotation.x = 0.10; tongue.castShadow = false;
+        mesh(sphGeo(0.045, 8), M(hc), 0, 0.345, 0, headG).castShadow = false;   /* 顶扣 */
       } else if (o.hat === "beanie"){
-        bx(0.48, 0.17, 0.45, hc, 0, 0.29, 0, headG);
-        bx(0.5, 0.05, 0.47, shadeNum(hc, -18), 0, 0.215, 0, headG).castShadow = false;
+        mesh(domeGeo(0.255), M(hc), 0, 0.07, 0, headG);                     /* 圆顶 */
+        cyl(0.256, 0.256, 0.07, shadeNum(hc, -18), 0, 0.085, 0, headG).castShadow = false;   /* 帽边 */
+        mesh(sphGeo(0.07, 8), M(hc), 0, 0.335, 0, headG).castShadow = false;   /* 绒球 */
       } else if (o.hat === "sun"){
-        var brim = cyl(0.36, 0.38, 0.035, hc, 0, 0.235, 0, headG); brim.castShadow = false;
-        cyl(0.19, 0.23, 0.17, hc, 0, 0.33, 0, headG);
+        var brim = cyl(0.37, 0.39, 0.035, hc, 0, 0.13, 0, headG); brim.castShadow = false;   /* 宽檐 */
+        cyl(0.155, 0.20, 0.17, hc, 0, 0.225, 0, headG);                     /* 帽冠 */
       }
     }
     var P = {
@@ -12768,8 +12780,10 @@ fr:{
         P.seated = b;
         legL.visible = legR.visible = !b;
         torso.position.y = b ? 0.62 : 0.76;
-        headG.position.y = b ? 1.16 : 1.3;
-        armL.position.y = armR.position.y = b ? 0.84 : 0.98;
+        headG.position.y = b ? 1.18 : 1.32;
+        armL.position.y = armR.position.y = b ? 0.86 : 1.0;
+        shL.position.y = shR.position.y = b ? 0.86 : 1.0;
+        neck.position.y = b ? 0.95 : 1.09;
       },
       faceToward: function(dx, dz){ if (Math.abs(dx) + Math.abs(dz) > 0.001) g.rotation.y = Math.atan2(dx, dz); }
     };
@@ -15426,6 +15440,7 @@ var st = document.createElement("style"); st.textContent = css; document.head.ap
 /* ---------------- ALX 通用 UI 文案（五语） ---------------- */
 var ALX_UI = {
 en:{ guideTitle:"📍 Plaza Guide", guideSub:"Everywhere you can go in {city} — tap a pin to head over.", skelMusic:"The sound of this state — in the plaza, the bars and the bandstand.",
+  campfireName:"Quiet America · Desert Campfire", campfirePitch:"A campfire out in the desert beyond the city — sit a while, make a wish.",
   landmark:"Landmark", market:"City Market", marketPitch:"Second-hand stalls and wholesale finds — prices shift daily.",
   visitPitch:{ beach:"Sand, waves and a slow afternoon.", bar:"Local pours and live tunes.", park:"Lawns, shade and weekend crowds.", cafe:"A corner table and the city's favorite brew." },
   headliner:"Headliner Venue", doneMark:"Experienced ✓", againTag:"Play again",
@@ -15450,6 +15465,7 @@ en:{ guideTitle:"📍 Plaza Guide", guideSub:"Everywhere you can go in {city} �
   ferryOnly:"Ferry or flight only — no road reaches this island.", noRoad:"No highway route — pick flight or ground below.",
   islandNote:"Island stop: ferries and flights only, no driving in." },
 es:{ guideTitle:"📍 Guía de la plaza", guideSub:"Todo lo que puedes visitar en {city}: toca un pin para ir.", skelMusic:"El sonido de este estado: en la plaza, los bares y el quiosco de música.",
+  campfireName:"Quiet America · Fogata en el desierto", campfirePitch:"Una fogata en el desierto, a las afueras de la ciudad: siéntate un rato y pide un deseo.",
   landmark:"Monumento", market:"Mercado urbano", marketPitch:"Puestos de segunda mano y mayoristas: los precios cambian cada día.",
   visitPitch:{ beach:"Arena, olas y una tarde tranquila.", bar:"Copas locales y música en vivo.", park:"Césped, sombra y ambiente de fin de semana.", cafe:"Una mesa de esquina y la infusión favorita de la ciudad." },
   headliner:"Lugar estrella", doneMark:"Ya vivido ✓", againTag:"Jugar de nuevo",
@@ -15474,6 +15490,7 @@ es:{ guideTitle:"📍 Guía de la plaza", guideSub:"Todo lo que puedes visitar e
   ferryOnly:"Solo ferry o vuelo: ninguna carretera llega a esta isla.", noRoad:"Sin ruta por carretera: elige vuelo o tierra abajo.",
   islandNote:"Parada isleña: solo ferris y vuelos, nada de conducir." },
 fr:{ guideTitle:"📍 Guide de la place", guideSub:"Tous les lieux à visiter à {city} : touchez une épingle pour y aller.", skelMusic:"Le son de cet État : sur la place, dans les bars et au kiosque à musique.",
+  campfireName:"Quiet America · Feu de camp dans le désert", campfirePitch:"Un feu de camp dans le désert, aux portes de la ville : assieds-toi un moment et fais un vœu.",
   landmark:"Monument", market:"Marché urbain", marketPitch:"Stands d'occasion et entrepôt de gros : les prix changent chaque jour.",
   visitPitch:{ beach:"Sable, vagues et après-midi tranquille.", bar:"Verres locaux et musique live.", park:"Pelouses, ombre et foule du week-end.", cafe:"Une table d'angle et la boisson préférée de la ville." },
   headliner:"Lieu vedette", doneMark:"Déjà vécu ✓", againTag:"Rejouer",
@@ -15503,6 +15520,7 @@ alxMerge("es", { alx:{ ui: ALX_UI.es } });
 alxMerge("fr", { alx:{ ui: ALX_UI.fr } });
 
 ALX_UI.zh = { guideTitle:"📍 广场导览", guideSub:"{city} 能去的地方都在这儿——点一个图钉就过去。", skelMusic:"这个州的声音——在广场、酒吧和音乐台都能听见。",
+  campfireName:"Quiet America · 沙漠篝火", campfirePitch:"城外沙漠里的一堆篝火，坐一会儿、许个愿。",
   landmark:"城市地标", market:"城市市场", marketPitch:"二手摊位加批发仓库，价格天天变。",
   visitPitch:{ beach:"沙滩、海浪和一个慢悠悠的下午。", bar:"本地酒水配现场音乐。", park:"草坪、树荫和周末的人气。", cafe:"一个角落座位，加这座城最爱的饮品。" },
   headliner:"头牌场所", doneMark:"已体验 ✓", againTag:"再来一轮",
@@ -15527,6 +15545,7 @@ ALX_UI.zh = { guideTitle:"📍 广场导览", guideSub:"{city} 能去的地方�
   ferryOnly:"只能坐船或飞机——没有公路能到这座岛。", noRoad:"没有公路路线——在下面选飞机或陆路。",
   islandNote:"岛屿停靠：只有渡轮和飞机，开车进不去。" };
 ALX_UI.hi = { guideTitle:"📍 प्लाज़ा गाइड", guideSub:"{city} में जाने की हर जगह — पिन पर टैप करो और चल पड़ो।", skelMusic:"इस राज्य की आवाज़ — चौक में, बारों में और बैंडस्टैंड पर।",
+  campfireName:"Quiet America · रेगिस्तान की अलाव", campfirePitch:"शहर के बाहर रेगिस्तान में जली एक अलाव — थोड़ी देर बैठो, एक मन्नत माँगो।",
   landmark:"पहचान स्थल", market:"शहर बाज़ार", marketPitch:"सेकंड-हैंड स्टॉल और थोक गोदाम — दाम रोज़ बदलते हैं।",
   visitPitch:{ beach:"रेत, लहरें और धीमी दोपहर।", bar:"स्थानीय ड्रिंक और लाइव संगीत।", park:"लॉन, छाँव और सप्ताहांत की भीड़।", cafe:"कोने की मेज़ और शहर की पसंदीदा चुस्की।" },
   headliner:"मुख्य स्थल", doneMark:"अनुभव किया ✓", againTag:"फिर से खेलो",
@@ -16097,6 +16116,7 @@ function alxChipList(key){
   ["beach","bar","park","cafe"].forEach(k2=> chips.push({ icon: VISIT[k2].icon, name: t("ui.venues." + k2), pitch: esc((U("visitPitch") || {})[k2] || ""), act:"visit", visit:k2 }));
   const sh = alxShelf();
   chips.push({ icon:"🎁", name: U("shelfTitle"), pitch: esc(sh.length ? (sh.length + " · " + alxShelfLabel(sh[0])) : U("shelfEmpty")), act:"shelf" });
+  if (key === "phx") chips.push({ icon:"🔥", name: U("campfireName"), pitch: esc(U("campfirePitch") || ""), act:"campfire" });   /* Quiet America · 沙漠篝火（公开地址，新标签页） */
   return chips;
 }
 function alxGuideRender(key){
@@ -16121,6 +16141,7 @@ function alxBindChips(key, chips){
       else if (c.act === "stadium") alxStadium(key);
       else if (c.act === "port") alxPort(c.port);
       else if (c.act === "shelf") alxShelfScreen(key);
+      else if (c.act === "campfire") window.open("https://americanlifegame.com/campfire", "_blank", "noopener");
     });
   });
 }
@@ -18051,6 +18072,11 @@ merge2("zh", { ui:{ entry3d:{ overview:"全景", stepIn:"走进", closeUp:"细�
 merge2("es", { ui:{ entry3d:{ overview:"Panorámica", stepIn:"Entrar", closeUp:"Detalle", drag:"↔ Arrastra para cambiar el ángulo" } } });
 merge2("hi", { ui:{ entry3d:{ overview:"विहंगम", stepIn:"अंदर चलें", closeUp:"बारीक़ी से देखें", drag:"↔ कोण बदलने के लिए हल्का सा खींचें" } } });
 merge2("fr", { ui:{ entry3d:{ overview:"Panorama", stepIn:"Entrer", closeUp:"Gros plan", drag:"↔ Glisse pour changer d'angle" } } });
+merge2("en", { ui:{ campfire:"Desert Campfire · Quiet America" } });
+merge2("zh", { ui:{ campfire:"沙漠篝火 · Quiet America" } });
+merge2("es", { ui:{ campfire:"Fogata en el desierto · Quiet America" } });
+merge2("hi", { ui:{ campfire:"रेगिस्तान की अलाव · Quiet America" } });
+merge2("fr", { ui:{ campfire:"Feu de camp du désert · Quiet America" } });
 
 var m3css = `
 .map3d-stage{position:relative;width:100%;aspect-ratio:46/47;max-height:68vh;border-radius:12px;overflow:hidden;background:#f2e3c2;touch-action:none;cursor:grab;line-height:1;}
@@ -18069,6 +18095,7 @@ var m3css = `
 .map3d-mk.ne{z-index:6;}
 .map3d-mk.ne .tag{background:#fff3d0;border-color:#c9962e;color:#4a3418;box-shadow:0 3px 10px rgba(84,58,20,.35);}
 .map3d-mk.lm .tag{font-size:11px;padding:2px 8px;}
+.map3d-mk.fire .tag{font-size:10.5px;font-weight:700;padding:1.5px 8px;background:rgba(255,244,224,.94);color:#7a4416;border-color:#d9a05a;box-shadow:0 0 10px rgba(255,138,42,.45),0 3px 8px rgba(84,58,20,.20);}
 .map3d-mk.port .tag{font-size:10px;padding:1px 6px;background:rgba(255,248,234,.85);}
 .map3d-mk.isl .tag{font-size:10.5px;padding:1.5px 8px;background:rgba(255,248,234,.9);}
 @keyframes m3pulse{0%{box-shadow:0 0 0 0 rgba(201,150,46,.5)}70%{box-shadow:0 0 0 12px rgba(201,150,46,0)}100%{box-shadow:0 0 0 0 rgba(201,150,46,0)}}
@@ -18360,7 +18387,7 @@ function m3Upgrade(){
     b.setAttribute("aria-label", aria || label);
     b.addEventListener("click", fn);
     markersEl.appendChild(b);
-    var rec = { el: b, obj: obj, off: off || [0, 0], city: cls === "city", ne: cls === "st ne", line: null, vis: false, x: 0, y: 0, bx: 0, by: 0, wd: 40, hh: 30 };
+    var rec = { el: b, obj: obj, off: off || [0, 0], city: cls === "city", ne: cls === "st ne", prio: cls === "fire", line: null, vis: false, x: 0, y: 0, bx: 0, by: 0, wd: 40, hh: 30 };
     if (rec.city || withLine){
       var ln = document.createElementNS("http://www.w3.org/2000/svg", "line");
       ln.setAttribute("stroke", "rgba(133,94,32,.55)"); ln.setAttribute("stroke-width", "1.3"); ln.setAttribute("stroke-dasharray", "3 2.5");
@@ -18389,6 +18416,23 @@ function m3Upgrade(){
     var obj = anchorAt(pp[0], TOP + 2.3, pp[1], scene);
     addMarker(obj, "city", cityName(k), cityName(k), function(){ goCity(k); }, CITY_OFF[k] || [0, 0], true);
   });
+  /* Quiet America · 沙漠篝火：凤凰城西南沙漠里的一小堆火（石圈 + 柴 + 火苗微光），
+     签比城市签小一号、离凤凰城签留空，点签新标签页打开公开篝火页 */
+  miniCity(-112.75, 32.9, function(c){
+    for (var si = 0; si < 6; si++){ var sa = si / 6 * Math.PI * 2; sp(c, .075, 0x8a8578, Math.cos(sa) * .34, .05, Math.sin(sa) * .34, 1, .75, 1); }
+    var lg1 = cy(c, .055, .055, .55, 0x7a4a2b, 0, -0.215, 0, 7); lg1.rotation.z = Math.PI / 2.15; lg1.rotation.y = .5;   /* y 先沉到圆心贴地，再横放成柴 */
+    var lg2 = cy(c, .055, .055, .5, 0x8a5a34, 0, -0.15, 0, 7); lg2.rotation.z = Math.PI / 2.15; lg2.rotation.y = -.7;
+    var glow = circ(c, .58, 0xff9a3d, 0, .03, 0); glow.material = mt(0xff9a3d, { transparent: true, opacity: .30, roughness: 1 }); glow.castShadow = false;
+    var fl1 = cn(c, .17, .52, 0xff8a3d, 0, .10, 0, 8); fl1.material = mt(0xff8a3d, { emissive: 0xff5a00, emissiveIntensity: .85, roughness: .6 }); fl1.castShadow = false;
+    var fl2 = cn(c, .09, .34, 0xffd98a, 0, .12, 0, 8); fl2.material = mt(0xffd98a, { emissive: 0xffb03a, emissiveIntensity: .9, roughness: .6 }); fl2.castShadow = false;
+    if (!reduced) ANIMS.push(function(t){ var f = 1 + Math.sin(t * 7.3) * .10 + Math.sin(t * 13.7) * .05; fl1.scale.set(1 / Math.sqrt(f), f, 1 / Math.sqrt(f)); fl2.scale.set(1, 1 + Math.sin(t * 9.1 + 1.3) * .13, 1); glow.material.opacity = .26 + Math.sin(t * 7.3) * .05; });
+  });
+  (function(){
+    var pp = m3LL(-112.75, 32.9);
+    var obj = anchorAt(pp[0], TOP + 1.05, pp[1], scene);
+    var nm = T2("ui.campfire");
+    addMarker(obj, "fire", "🔥 " + nm, nm, function(){ try { sfxTap(); } catch(e){} window.open("https://americanlifegame.com/campfire", "_blank", "noopener"); }, [0, 0], false, true);
+  })();
   /* 地标 / 港口 / 岛屿：与平面图同一份 ALX 数据、同一个处理器 */
   var ALXM = window.__ALX_MAP;
   if (ALXM){
@@ -18579,13 +18623,13 @@ function m3Upgrade(){
       m.avoidHide = false; placed.push(m);
     });
     markers.forEach(function(m){
-      if (!m.vis || m.city || !m.ne) return;
+      if (!m.vis || m.city || !(m.ne || m.prio)) return;
       var s = findSpot(m, 176);
       if (s){ m.x = s[0]; m.y = s[1]; } else { m.x = m.bx; m.y = m.by; }
       m.avoidHide = false; placed.push(m);   /* 东北九签：任何机位不隐藏（修复 VT/NH 被分级隐藏后不可达） */
     });
     markers.forEach(function(m){
-      if (!m.vis || m.city || m.ne) return;
+      if (!m.vis || m.city || m.ne || m.prio) return;
       var s = findSpot(m, 110);
       if (s){ m.x = s[0]; m.y = s[1]; m.avoidHide = false; placed.push(m); }
       else if (curView === "wide"){ m.avoidHide = true; }
