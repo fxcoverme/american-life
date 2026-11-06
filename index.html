@@ -147,6 +147,9 @@
       @keyframes walkbob{from{transform:translateY(0) rotate(-3deg);}to{transform:translateY(-6px) rotate(3deg);}}
       @keyframes idlebob{0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);}}
       .citypick{margin:0 0 4px;}
+      .panelhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+      .panelclose{flex:0 0 auto;margin-top:16px;width:34px;height:34px;border-radius:999px;border:1px solid #d9c69c;background:#fff8ea;color:#6d573f;font-size:15px;font-weight:700;line-height:1;cursor:pointer;}
+      .panelclose:hover{background:#b5502a;border-color:#b5502a;color:#fff8ec;}
       .cityq{font-size:14.5px;font-weight:900;margin:0 2px 8px;}
       .citychips{display:flex;gap:8px;flex-wrap:wrap;}
       .citychip{font:inherit;font-size:13.5px;font-weight:800;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:8px 13px;cursor:pointer;}
@@ -11726,13 +11729,15 @@ fr:{
           <span class="cic">🌽</span>
           <span><h3>${t("ui.entry.farmTitle")}</h3><p>${t("ui.entry.farmSub")}</p><span class="ctags"><span class="tag">🌽 ${t("ui.entry.farmTag")}</span></span></span>
         </button>` : "";
-      return `<h2 class="q-title" style="margin-top:16px;">${fmt(t("ui.entry.citiesIn"), { state: stateName(code) })}</h2>
+      return `<div class="panelhead"><h2 class="q-title" style="margin-top:16px;">${fmt(t("ui.entry.citiesIn"), { state: stateName(code) })}</h2><button type="button" class="panelclose" id="mapPanelClose" aria-label="${t("ui.panel.close")}">✕</button></div>
         <div class="citypick">${rows}${farm}</div>`;
     }
     function bindMapPanel(){
       app.querySelectorAll("#mapPanel [data-city]").forEach(b=> b.addEventListener("click", ()=>{ setCity(b.dataset.city); sfxArrive(); showCityLanding(b.dataset.city); }));
       const fb = $("#mapFarmBtn");
       if (fb) fb.addEventListener("click", ()=> showFarmHub());
+      const cb = $("#mapPanelClose");
+      if (cb) cb.addEventListener("click", ()=> closeMapPanel());
     }
     function selectMapState(code){
       mapSel = code;
@@ -11743,6 +11748,21 @@ fr:{
       if (dots) dots.innerHTML = mapDotsSVG(code);
       const panel = $("#mapPanel");
       if (panel){ panel.innerHTML = mapPanelHTML(code); bindMapPanel(); }
+    }
+    function closeMapPanel(){
+      mapSel = null;
+      app.querySelectorAll("#usMap .mstate").forEach(p=> p.classList.remove("sel"));
+      app.querySelectorAll("#usMap .necell").forEach(p=> p.classList.remove("sel"));
+      const dots = $("#mapDots");
+      if (dots) dots.innerHTML = "";
+      const panel = $("#mapPanel");
+      if (panel){ panel.innerHTML = mapPanelHTML(null); bindMapPanel(); }
+      if (window.__m3SetSel){ try { window.__m3SetSel(null); } catch(e){} }
+    }
+    function tapMapState(code){
+      const panel = $("#mapPanel");
+      if (code && mapSel === code && panel && panel.querySelector(".citypick")){ closeMapPanel(); return; }
+      selectMapState(code);
     }
     function showStateMap(){
       G = null;
@@ -11757,11 +11777,11 @@ fr:{
         ${footerHTML()}`);
       bindStartChrome();
       app.querySelectorAll("#usMap [data-state]").forEach(el=>{
-        el.addEventListener("click", ()=> selectMapState(el.dataset.state));
-        el.addEventListener("keydown", e=>{ if (e.key === "Enter" || e.key === " "){ e.preventDefault(); selectMapState(el.dataset.state); } });
+        el.addEventListener("click", ()=> tapMapState(el.dataset.state));
+        el.addEventListener("keydown", e=>{ if (e.key === "Enter" || e.key === " "){ e.preventDefault(); tapMapState(el.dataset.state); } });
       });
       bindMapPanel();
-      $("#listViewBtn").addEventListener("click", ()=> showStateList());
+      $("#listViewBtn").addEventListener("click", ()=>{ mapSel = null; if (window.__m3SetSel){ try { window.__m3SetSel(null); } catch(e){} } showStateList(); });
       cgLoaded();   /* 大地图入口就绪（CG loadingFinished，非 CG no-op） */
     }
     /* 备用入口：原 51 州按钮网格（地图异常时的兜底/无障碍路径） */
@@ -17443,6 +17463,9 @@ showStateMap = function(){
     });
   } catch(e){}
 };
+/* 立体入口地图（AL3DMAP · ALX2 ④）复用本层地标 / 港口 / 岛屿数据与处理器：
+   同一份数据、同一个港口页与岛屿说明弹窗，入口换 3D 呈现不另起口径。 */
+window.__ALX_MAP = { landmarks: ALX_LANDMARKS, ports: ALX_PORT_PTS, islands: ALX_ISLANDS, port: alxPort, island: alxIslandInfo };
 
 /* ---------------- 公路网（州际干线按真实走向，节点=游戏城市） ---------------- */
 var ALX_CORRIDORS = [
@@ -18010,6 +18033,631 @@ xpFinish = function(){
     lines.insertAdjacentElement("afterend", p);
   } catch(e){}
 };
+
+/* ---------------- ④ 入口立体地形图 AL3DMAP（入口改版轮） ----------------
+   入口首屏的平面美国地图换成与「无限视觉书 · Infinite Visual Book」封面
+   同一套视觉语言的 3D 立体地形图：大陆隆起、五大湖为水面、落基山 /
+   阿巴拉契亚山脊、66 号公路丝带、地标在真实位置、发光点 + 名称标签。
+   只换呈现，不动口径：欢迎语两行、选州 → 既有城市列表面板（selectMapState /
+   mapPanelHTML）、16 城内容、城际交通、经济结算、CG 桥一律原样。
+   - 点州地形块或州名签 → selectMapState 打开该州城市列表（州府 + 深玩城市）
+   - 16 座深玩城市 = 发光点 + 城市名签，点签直达城市页（与既有面板同路径）
+   - 地标 / 港口 / 岛屿：复用 ALX 层同一份数据与处理器（window.__ALX_MAP）
+   - 东北小州：名称签错开排布 + 放大热区圆盘兜底；「📋 列表视图」常驻不变
+   - 与既有 Three.js 共用一份（window.THREE）；像素比封顶 1.75、地形低多边形
+   - WebGL 不可用（AL3D.ok() 为假）→ 不做任何替换，平面图原样工作 */
+merge2("en", { ui:{ entry3d:{ overview:"Overview", stepIn:"Step In", closeUp:"Close-up", drag:"↔ Drag to look from another angle" } } });
+merge2("zh", { ui:{ entry3d:{ overview:"全景", stepIn:"走进", closeUp:"细看", drag:"↔ 轻拖可换个角度看" } } });
+merge2("es", { ui:{ entry3d:{ overview:"Panorámica", stepIn:"Entrar", closeUp:"Detalle", drag:"↔ Arrastra para cambiar el ángulo" } } });
+merge2("hi", { ui:{ entry3d:{ overview:"विहंगम", stepIn:"अंदर चलें", closeUp:"बारीक़ी से देखें", drag:"↔ कोण बदलने के लिए हल्का सा खींचें" } } });
+merge2("fr", { ui:{ entry3d:{ overview:"Panorama", stepIn:"Entrer", closeUp:"Gros plan", drag:"↔ Glisse pour changer d'angle" } } });
+
+var m3css = `
+.map3d-stage{position:relative;width:100%;aspect-ratio:46/47;max-height:68vh;border-radius:12px;overflow:hidden;background:#f2e3c2;touch-action:none;cursor:grab;line-height:1;}
+.map3d-stage:active{cursor:grabbing;}
+.map3d-stage canvas{display:block;width:100%;height:100%;}
+.map3d-markers{position:absolute;inset:0;pointer-events:none;z-index:4;}
+.map3d-leaders{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.map3d-mk{z-index:2;}
+.map3d-mk.city{z-index:3;}
+.map3d-mk{position:absolute;left:0;top:0;transform:translate(-50%,-100%);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:auto;}
+.map3d-mk .dot{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe9b0,#c9962e 55%,#a8741a);border:2px solid #fff6df;box-shadow:0 0 0 0 rgba(201,150,46,.55);animation:m3pulse 2.2s infinite;flex:0 0 auto;}
+.map3d-mk .tag{font-size:12px;font-weight:700;color:#3d2c1c;white-space:nowrap;background:#fff8ea;border:1px solid #d9c69c;border-radius:999px;padding:2.5px 10px;box-shadow:0 3px 8px rgba(84,58,20,.22);}
+.map3d-mk:hover .tag,.map3d-mk:focus-visible .tag{background:#b5502a;color:#fff8ec;border-color:#b5502a;}
+.map3d-mk.st .tag{font-size:10.5px;font-weight:800;padding:1.5px 7px;background:rgba(255,248,234,.88);color:#5a4632;}
+.map3d-mk.st.sel .tag{background:#e9a13b;border-color:#b97a12;color:#21304a;}
+.map3d-mk.ne{z-index:6;}
+.map3d-mk.ne .tag{background:#fff3d0;border-color:#c9962e;color:#4a3418;box-shadow:0 3px 10px rgba(84,58,20,.35);}
+.map3d-mk.lm .tag{font-size:11px;padding:2px 8px;}
+.map3d-mk.port .tag{font-size:10px;padding:1px 6px;background:rgba(255,248,234,.85);}
+.map3d-mk.isl .tag{font-size:10.5px;padding:1.5px 8px;background:rgba(255,248,234,.9);}
+@keyframes m3pulse{0%{box-shadow:0 0 0 0 rgba(201,150,46,.5)}70%{box-shadow:0 0 0 12px rgba(201,150,46,0)}100%{box-shadow:0 0 0 0 rgba(201,150,46,0)}}
+.map3d-views{position:absolute;right:10px;bottom:10px;z-index:5;display:flex;gap:6px;}
+.map3d-views button{font:inherit;font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:999px;border:1px solid #d9c69c;background:#fff8ea;color:#6d573f;cursor:pointer;box-shadow:0 3px 8px rgba(84,58,20,.18);}
+.map3d-views button.on{background:#1f6f6b;border-color:#1f6f6b;color:#f2fffc;}
+.map3d-netab{position:absolute;left:0;top:0;background:#fff6df;border:1px solid #c9962e;color:#7a5a1e;font-size:10.5px;font-weight:700;border-radius:999px;padding:1.5px 8px;white-space:nowrap;pointer-events:none;z-index:8;box-shadow:0 2px 6px rgba(84,58,20,.18);line-height:1.25;}
+.map3d-hint{position:absolute;left:10px;top:10px;z-index:5;font-size:11.5px;color:#6d573f;background:rgba(255,248,234,.85);border-radius:999px;padding:4px 10px;pointer-events:none;}
+@media (max-width:520px){
+  .map3d-mk .tag{font-size:11px;padding:2px 8px;}
+  .map3d-mk .dot{width:12px;height:12px;}
+  .map3d-mk.st .tag{font-size:9.5px;padding:1px 5px;}
+  .map3d-views button{font-size:11.5px;padding:5px 10px;}
+  .map3d-hint{font-size:10.5px;padding:3px 8px;}
+}
+@media (prefers-reduced-motion: reduce){ .map3d-mk .dot{animation:none;} }
+`;
+var m3st = document.createElement("style"); m3st.textContent = m3css; document.head.appendChild(m3st);
+
+var M3 = null;   /* 当前立体地图实例（离开入口即随 DOM 断开自动销毁） */
+function m3Dispose(){
+  if (!M3) return;
+  var inst = M3; M3 = null; inst.dead = true;
+  try { cancelAnimationFrame(inst.raf); } catch(e){}
+  try { if (inst.ro) inst.ro.disconnect(); } catch(e){}
+  try { if (inst.io) inst.io.disconnect(); } catch(e){}
+  try { inst.renderer.dispose(); } catch(e){}
+}
+function m3LL(lon, lat){ return [ (lon + 98) * 0.60, (39.5 - lat) * 0.80 ]; }
+
+function m3Upgrade(){
+  var wrap = app.querySelector(".usmapwrap");
+  if (!wrap || wrap.dataset.m3done) return;
+  if (!window.THREE || !window.AL3D || !AL3D.ok()) return;   /* 无 WebGL：平面图原样 */
+  m3Dispose();
+  var T = window.THREE;
+  var stage = document.createElement("div");
+  stage.className = "map3d-stage"; stage.id = "map3dStage";
+  var markersEl = document.createElement("div"); markersEl.className = "map3d-markers";
+  var leaders = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  leaders.setAttribute("class", "map3d-leaders"); markersEl.appendChild(leaders);
+  var hint = document.createElement("div"); hint.className = "map3d-hint"; hint.textContent = T2("ui.entry3d.drag");
+  var views = document.createElement("div"); views.className = "map3d-views";
+  [["wide","overview"],["near","stepIn"],["detail","closeUp"]].forEach(function(vd, i){
+    var b = document.createElement("button"); b.type = "button"; b.dataset.mv = vd[0];
+    b.textContent = T2("ui.entry3d." + vd[1]); if (i === 0) b.className = "on";
+    views.appendChild(b);
+  });
+  stage.appendChild(markersEl); stage.appendChild(hint); stage.appendChild(views);
+
+  var renderer;
+  try {
+    renderer = new T.WebGLRenderer({ antialias: true });
+  } catch(e){
+    return;   /* 构造失败：不动 DOM，平面图原样工作 */
+  }
+  wrap.innerHTML = ""; wrap.appendChild(stage); wrap.dataset.m3done = "1";
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = T.PCFSoftShadowMap;
+  renderer.outputEncoding = T.sRGBEncoding;
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+
+  var scene = new T.Scene();
+  scene.background = new T.Color(0xf2e3c2);
+  scene.fog = new T.Fog(0xf2e3c2, 95, 175);
+  var camera = new T.PerspectiveCamera(42, 1, 0.1, 300);
+  scene.add(new T.HemisphereLight(0xfff4dd, 0x7a6a4e, 0.45));
+  var sun = new T.DirectionalLight(0xffe2b0, 1.95);
+  sun.position.set(16, 17, 3); sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.camera.left = -26; sun.shadow.camera.right = 26;
+  sun.shadow.camera.top = 26; sun.shadow.camera.bottom = -26; sun.shadow.camera.far = 80;
+  sun.shadow.bias = -0.0006;
+  scene.add(sun); scene.add(sun.target);
+
+  /* ---------- 与书同款的低多边形搭建工具 ---------- */
+  var matCache = {};
+  function mt(c, o){ var k = c + "|" + (o ? JSON.stringify(o) : ""); if (!matCache[k]) matCache[k] = new T.MeshStandardMaterial(Object.assign({ color: c, roughness: .92, metalness: .02, flatShading: true }, o || {})); return matCache[k]; }
+  function bx(g, w, h, d, c, x, y, z, ry){ var m = new T.Mesh(new T.BoxGeometry(w, h, d), mt(c)); m.position.set(x, (y || 0) + h / 2, z); if (ry) m.rotation.y = ry; m.castShadow = true; m.receiveShadow = true; g.add(m); return m; }
+  function cy(g, rt, rb, h, c, x, y, z, seg){ var m = new T.Mesh(new T.CylinderGeometry(rt, rb, h, seg || 12), mt(c)); m.position.set(x, (y || 0) + h / 2, z); m.castShadow = true; m.receiveShadow = true; g.add(m); return m; }
+  function cn(g, r, h, c, x, y, z, seg){ var m = new T.Mesh(new T.ConeGeometry(r, h, seg || 12), mt(c)); m.position.set(x, (y || 0) + h / 2, z); m.castShadow = true; m.receiveShadow = true; g.add(m); return m; }
+  function sp(g, r, c, x, y, z, sx, sy, sz){ var m = new T.Mesh(new T.SphereGeometry(r, 14, 11), mt(c)); m.position.set(x, y, z); m.scale.set(sx || 1, sy || 1, sz || 1); m.castShadow = true; g.add(m); return m; }
+  function pl(g, w, d, c, x, y, z){ var m = new T.Mesh(new T.PlaneGeometry(w, d), mt(c, { roughness: .65 })); m.rotation.x = -Math.PI / 2; m.position.set(x, y, z); m.receiveShadow = true; g.add(m); return m; }
+  function circ(g, r, c, x, y, z){ var m = new T.Mesh(new T.CircleGeometry(r, 26), mt(c)); m.rotation.x = -Math.PI / 2; m.position.set(x, y, z); m.receiveShadow = true; g.add(m); return m; }
+  function tree(g, x, z, s, c){ cy(g, .09 * s, .13 * s, 1.0 * s, 0x7a5a38, x, 0, z, 7); cn(g, .85 * s, 1.7 * s, c || 0x5d8a4e, x, 0.8 * s, z, 8); cn(g, .6 * s, 1.3 * s, c || 0x6b9a58, x, 1.7 * s, z, 8); }
+  function palm(g, x, z, s){ for (var i = 0; i < 4; i++) cy(g, .09 * s, .12 * s, (0.5 + i * 0.55) * s, 0x9a7a52, x, i * 0.55 * s, z + i * 0.14 * s, 7); var tx = x, tz = z + 4 * 0.14 * s, ty = 2.3 * s; for (var j = 0; j < 6; j++){ var a = j / 6 * Math.PI * 2; var f = cn(g, .16 * s, 1.5 * s, 0x4f9a52, tx + Math.cos(a) * .7 * s, ty, tz + Math.sin(a) * .7 * s, 5); f.rotation.set(Math.sin(a) * 1.15, 0, -Math.cos(a) * 1.15); } }
+
+  var root = new T.Group(); scene.add(root);
+  var ANIMS = [];
+  var TOP = 1.28;
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- 大陆地形（与书封面同一轮廓 / 同一配色） ---------- */
+  pl(root, 120, 90, 0x86b8b2, 1, -0.32, 2);
+  var outline = [[-66.95,44.6],[-68.7,44.2],[-70.2,43.5],[-70.75,42.8],[-71.35,41.6],[-72,41.15],[-73.65,40.6],[-73.95,39.4],[-75.05,38.45],[-75.95,37.1],[-75.75,35.85],[-76.3,34.7],[-77.35,34.05],[-78.65,33.85],[-79.75,32.6],[-80.95,31.15],[-81.45,30.35],[-81.65,28.6],[-81.05,26.75],[-81.75,25.95],[-82.65,27.95],[-84.35,30.05],[-85.45,29.75],[-87.35,30.25],[-88.9,30.25],[-89.65,29.15],[-90.6,28.95],[-91.6,29.45],[-93.75,29.65],[-95.3,28.85],[-97.15,27.75],[-97.35,25.95],[-99.15,26.4],[-99.5,27.55],[-100.6,28.2],[-102.95,29.35],[-104.85,29.3],[-106.45,31.78],[-108.2,31.78],[-109.05,31.35],[-111.07,31.33],[-114.75,32.55],[-117.12,32.53],[-117.25,33.35],[-118.45,33.72],[-120.65,34.58],[-120.9,35.15],[-122.4,36.95],[-122.52,37.83],[-123.8,38.95],[-124.22,40.42],[-124.05,43.35],[-123.95,46.28],[-124,47.9],[-122.75,48.38],[-122.76,49],[-117.03,49],[-109.05,49],[-104,49],[-98,49],[-97.23,49],[-95.16,49.36],[-94.63,48.68],[-92.6,48.05],[-89.8,47.95],[-87.6,46.95],[-85.6,46.85],[-84.63,46.5],[-84.55,45.85],[-83.9,45.5],[-83.4,44.9],[-82.7,43.9],[-82.45,43],[-81.9,42.3],[-79.8,42.2],[-78.9,42.9],[-77.6,43.55],[-76.2,43.85],[-75,44.1],[-73.9,44.65],[-73.35,45],[-71.5,45],[-70.3,45.3],[-69.2,45.65],[-68.2,45.2],[-67.1,45.05],[-67.05,44.8]];
+  function shapeOf(polys){
+    var sh = new T.Shape();
+    polys.forEach(function(poly){
+      poly.forEach(function(pt, i){ var sx = (pt[0] + 98) * 0.60, sy = (pt[1] - 39.5) * 0.80; if (i === 0) sh.moveTo(sx, sy); else sh.lineTo(sx, sy); });
+      sh.closePath();
+    });
+    return sh;
+  }
+  var landGeo = new T.ExtrudeGeometry(shapeOf([outline]), { depth: 1.05, bevelEnabled: true, bevelThickness: .18, bevelSize: .18, bevelSegments: 1 });
+  var land = new T.Mesh(landGeo, [mt(0xdabd80), mt(0x77572f)]);
+  land.rotation.x = -Math.PI / 2; land.position.y = 0.03; land.castShadow = true; land.receiveShadow = true;
+  root.add(land);
+  /* 五大湖（水面） */
+  [[-88,47.5,2.6,1.1],[-87,44,1.1,2.2],[-82.5,44.7,1.9,1.2],[-80.8,42.4,1.5,.7],[-77.8,43.6,1.2,.6]].forEach(function(L){ var p = m3LL(L[0], L[1]); var m = circ(root, 1, 0x1d5f8a, p[0], TOP + 0.03, p[1]); m.material = mt(0x1d5f8a, { roughness: .16 }); m.scale.set(L[2], L[3], 1); });
+  /* 地表分区域着色（极低透明覆膜，仅着色不增几何）：东绿 / 中原金 / 西南锈 / 西北林，
+     让平顶大陆在全景下也读得出地貌分区与隆起走向 */
+  [[-81,36.5,3.6,2.6,0x5d8a4e,.26],[-84,41,2.8,1.9,0x5d8a4e,.20],[-98,38.5,4.6,3.4,0xc7a24e,.17],[-104,33,3.4,2.4,0xb5673f,.18],[-112,41,3.2,2.6,0x6b7d4a,.16],[-95,30.5,3.0,1.8,0x8a9a5b,.14]].forEach(function(L){ var p = m3LL(L[0], L[1]); var m = circ(root, 1, L[4], p[0], TOP + 0.02, p[1]); m.material = mt(L[4], { transparent: true, opacity: L[5], roughness: 1 }); m.castShadow = false; m.scale.set(L[2], L[3], 1); });
+  /* 落基山 + 阿巴拉契亚 + 喀斯喀特 / 内华达（雪顶与林绿两式） */
+  [[-113,43],[-110,40],[-107,37],[-114,45.5],[-105.5,39],[-111,44.2],[-108.5,42.5],[-106,35.8]].forEach(function(p){ var q = m3LL(p[0], p[1]); cn(root, 1.55, 3.5, 0x8d8172, q[0], TOP, q[1], 7); cn(root, .82, 1.55, 0xf3ead6, q[0], TOP + 2.45, q[1], 7); });
+  /* 山脊连接段：主峰之间补中峰并沿走向拉长，成脊不成孤峰 */
+  [[-111.5,41.6],[-108.2,39.6],[-112.8,38.2],[-109.6,44.8]].forEach(function(p){ var q = m3LL(p[0], p[1]); var m = cn(root, 1.15, 2.3, 0x96887a, q[0], TOP, q[1], 7); m.scale.z = 1.5; });
+  [[-79,38],[-80.5,36.5],[-77.5,40],[-81.5,35.2],[-78.2,39.3],[-82.8,33.8],[-76.8,41.2],[-80,34.6]].forEach(function(p, i){ var q = m3LL(p[0], p[1]); var m = cn(root, 1.35, 2.3, 0x6f9459, q[0], TOP, q[1], 7); if (i % 2) m.scale.z = 1.45; });
+  [[-121.8,44.4],[-119.2,36.8],[-123,46.5]].forEach(function(p){ var q = m3LL(p[0], p[1]); cn(root, .9, 2.0, 0x8a9a7c, q[0], TOP, q[1], 7); cn(root, .48, .9, 0xf3ead6, q[0], TOP + 1.4, q[1], 7); });
+  /* 内华达山脉（加州东界雪脊） */
+  [[-118.6,37.6],[-119.4,39.2]].forEach(function(p){ var q = m3LL(p[0], p[1]); cn(root, 1.0, 2.4, 0x8d8172, q[0], TOP, q[1], 7); cn(root, .55, 1.1, 0xf3ead6, q[0], TOP + 1.7, q[1], 7); });
+  /* 66 号公路丝带（芝加哥 → 洛杉矶，与书同一条线） */
+  var r66 = [[-87.63,41.88],[-90,39.8],[-95.4,35.4],[-101.83,35.19],[-106,35.5],[-111.6,35.2],[-117.5,34.6],[-118.24,34.05]];
+  for (var ri = 0; ri < r66.length - 1; ri++){
+    var ra = m3LL(r66[ri][0], r66[ri][1]), rb = m3LL(r66[ri + 1][0], r66[ri + 1][1]);
+    var steps = Math.max(2, Math.floor(Math.hypot(rb[0] - ra[0], rb[1] - ra[1]) / 0.7));
+    for (var rs = 0; rs < steps; rs++){ var rt = rs / steps; var seg = bx(root, .42, .06, .3, 0x5b4a38, ra[0] + (rb[0] - ra[0]) * rt, TOP + 0.02, ra[1] + (rb[1] - ra[1]) * rt, Math.atan2(rb[0] - ra[0], rb[1] - ra[1])); seg.castShadow = false; }
+  }
+
+  /* ---------- 迷你地标小景（位置 = 游戏城市真实经纬度） ---------- */
+  function miniCity(lon, lat, fn, dx, dz){ var p = m3LL(lon, lat); var cg = new T.Group(); cg.position.set(p[0] + (dx || 0), TOP, p[1] + (dz || 0)); root.add(cg); fn(cg); return cg; }
+  function cluster(c, cols){ cols.forEach(function(b, i){ bx(c, b[0], b[1], b[0], b[2], (i - (cols.length - 1) / 2) * 0.95, 0, (i % 2) * 0.5 - 0.25); }); }
+  miniCity(-74.0, 40.71, function(c){ bx(c, 1.0, 2.3, .9, 0x7d8fa3, -1.1, 0, -.5); bx(c, .85, 3.1, .85, 0x647b94, -.1, 0, -.9); bx(c, .9, 2.5, .9, 0x8b9db2, .9, 0, -.4); bx(c, 1.5, .5, 1.5, 0x77a06b, .4, 0, 1.2); cn(c, .42, 1.35, 0x5fa8a0, .4, .5, 1.2, 9); sp(c, .14, 0x5fa8a0, .4, 2.0, 1.2); });              /* 纽约 */
+  miniCity(-87.63, 41.88, function(c){ bx(c, .9, 3.3, .9, 0x4c4c55, -.6, 0, 0); bx(c, .8, 2.4, .8, 0x6d7686, .6, 0, .3); });                                                                                              /* 芝加哥 */
+  miniCity(-122.42, 37.8, function(c){ bx(c, .22, 1.9, .22, 0xd2602f, -1.2, 0, 0); bx(c, .22, 1.9, .22, 0xd2602f, 1.2, 0, 0); bx(c, 3.0, .18, .5, 0xd2602f, 0, 1.35, 0); cn(c, 1.3, 1.2, 0x7fa06b, 0, 0, -1.6, 8); }); /* 旧金山 · 金门 */
+  miniCity(-80.19, 25.79, function(c){ bx(c, 3.4, .28, 1.6, 0xf0dcae, 0, 0, .6); bx(c, 1.1, 1.2, .9, 0xf2a7b8, -1.0, .28, -.6); palm(c, .9, .1, 1.0); palm(c, 1.6, .9, .8); });                                       /* 迈阿密 */
+  miniCity(-96.8, 32.78, function(c){ bx(c, 1.5, .9, 1.0, 0xa33f27, .9, 0, .4); var legs = [[-.8,-.5],[.8,-.5],[-.8,.5],[.8,.5]]; legs.forEach(function(L){ var m = bx(c, .07, 1.9, .07, 0x8b8f96, L[0], 0, L[1]); m.rotation.z = L[0] * .18; m.rotation.x = -L[1] * .18; }); var rotor = new T.Group(); rotor.position.set(0, 2.0, .35); c.add(rotor); for (var i = 0; i < 4; i++){ var bl = bx(rotor, .09, .85, .03, 0xd8dde2, 0, .3, 0); bl.rotation.z = i * Math.PI / 2; } if (!reduced) ANIMS.push(function(t){ rotor.rotation.z = t * 1.4; }); var tail = bx(c, .07, .8, .03, 0x8b8f96, -.75, 1.35, -.2); tail.rotation.z = .5; }); /* 达拉斯 · 风车牧场 */
+  miniCity(-95.37, 29.76, function(c){ cy(c, .34, .42, 2.9, 0xf2f0ea, 0, 0, 0, 12); cn(c, .34, .8, 0xe8e4da, 0, 2.9, 0, 12); bx(c, .5, .5, .5, 0x3d3d44, 0, 1.9, 0); bx(c, 1.6, .7, 1.1, 0x9fb2c4, 1.5, 0, .6); }); /* 休斯顿 · 火箭 */
+  miniCity(-83.0, 39.96, function(c){ bx(c, 1.2, .9, 1.0, 0x9fb2c4, 0, 0, 0); cy(c, .42, .42, .35, 0xe8e4da, 0, .9, 0, 12); sp(c, .42, 0xe8e4da, 0, 1.45, 0, 1, .75, 1); }, 0, 0);                                   /* 哥伦布 · 州府穹顶 */
+  miniCity(-82.9, 40.05, function(c){ bx(c, 1.7, 1.1, 1.2, 0xa8322a, -.6, 0, 0); var rf = cn(c, 1.05, 1.5, 0x8c2f24, -.6, 0, 0, 4); rf.rotation.y = Math.PI / 4; rf.scale.set(1.25, .8, 1); cy(c, .32, .32, 1.9, 0xb9bec4, .9, 0, .2, 10); for (var i = 0; i < 7; i++) cn(c, .16, .6, 0xd9a83c, -1.4 + (i % 4) * .5, 0, 1.1 + Math.floor(i / 4) * .5, 5); }, 1.5, 1.1); /* Ohio 农场（哥伦布旁） */
+  miniCity(-118.24, 34.05, function(c){ bx(c, 1.6, .5, 1.1, 0xe8dcc0, -.8, 0, .3); bx(c, 1.0, 1.1, .9, 0xd9c9a8, .7, 0, -.3); cn(c, .9, .8, 0x7fa06b, .2, 0, -1.5, 8); bx(c, .95, .26, .1, 0xf5f2ea, .2, .72, -1.45); palm(c, -1.6, -.7, .9); palm(c, 1.6, .8, .8); }); /* 洛杉矶 */
+  miniCity(-121.89, 37.34, function(c){ cluster(c, [[.8, 2.2, 0x7d8fa3], [.7, 1.6, 0x647b94], [.9, 1.9, 0x8b9db2]]); });                                                                                              /* 圣何塞 */
+  miniCity(-122.33, 47.61, function(c){ cy(c, .05, .1, 2.6, 0xd8dde2, 0, 0, 0, 8); cy(c, .55, .55, .14, 0xe8e4da, 0, 2.3, 0, 16); bx(c, .9, 1.1, .8, 0x6d7686, 1.0, 0, .5); });                                       /* 西雅图 · 太空针 */
+  miniCity(-71.06, 42.36, function(c){ bx(c, 1.0, 1.5, .9, 0xa85f43, -.6, 0, 0); bx(c, .8, 1.1, .8, 0xb56a4a, .6, 0, .3); cy(c, .4, .4, .3, 0xf2ead6, -.6, 1.5, 0, 12); sp(c, .4, 0xf2ead6, -.6, 1.95, 0, 1, .7, 1); }); /* 波士顿 */
+  miniCity(-84.39, 33.75, function(c){ cluster(c, [[.8, 1.9, 0x6d7686], [.9, 2.4, 0x4c4c55]]); tree(c, 1.2, .8, .9); tree(c, -1.3, .9, .8); });                                                                       /* 亚特兰大 */
+  miniCity(-112.07, 33.45, function(c){ cn(c, 1.1, .9, 0xc47a4a, -.6, 0, .4, 7); cy(c, .09, .11, 1.15, 0x4f7d3a, .8, 0, -.3, 7); cy(c, .07, .09, .7, 0x4f7d3a, 1.3, 0, .3, 7); bx(c, 2.6, .22, 1.4, 0xe8cf9e, 0, 0, 1.0); }); /* 凤凰城 · 沙漠仙人掌 */
+  miniCity(-117.16, 32.72, function(c){ bx(c, 3.0, .24, 1.3, 0xf0dcae, 0, 0, .7); bx(c, .9, .8, .8, 0xf5f2ea, -0.9, .24, -.4); palm(c, 1.1, .2, .95); });                                                         /* 圣地亚哥 */
+  miniCity(-75.16, 39.95, function(c){ cluster(c, [[.8, 2.0, 0x8b6f5a], [.7, 1.5, 0x6d7686]]); bx(c, .45, 2.3, .45, 0xd9c9a8, 1.1, 0, -.4); cn(c, .4, .6, 0x8c2f24, 1.1, 2.3, -.4, 4); });                               /* 费城 */
+  miniCity(-77.04, 38.91, function(c){ bx(c, 1.8, .65, 1.0, 0xf5f2ea, -.4, 0, .2); sp(c, .45, 0xf5f2ea, -.4, 1.0, .2, 1, .7, 1); bx(c, .16, 2.3, .16, 0xe8e4da, 1.2, 0, -.4); });                                   /* 华盛顿特区 */
+  miniCity(-112.1, 36.1, function(c){ bx(c, 3.4, .8, 2.2, 0xb5673f, 0, 0, 0); bx(c, 3.0, .7, 1.9, 0xc47a4a, 0, .8, 0); bx(c, 2.6, .65, 1.6, 0xd19a68, 0, 1.5, 0); bx(c, 1.1, .5, .8, 0x7fb0ad, -.3, 2.15, .1); }); /* 大峡谷 */
+  miniCity(-110.59, 44.46, function(c){ circ(c, 1.5, 0xf0e3c2, 0, .02, 0); circ(c, 1.0, 0xe08b3e, 0, .05, 0); circ(c, .62, 0x53b8a6, 0, .08, 0); cn(c, .5, .8, 0xe8e0cc, 0, .05, 0, 10); var ps = []; if (!reduced){ for (var i = 0; i < 5; i++){ var pp = sp(c, .4 + (i % 3) * .13, 0xffffff, (i % 2 ? .5 : -.45), 1.1 + i * .42, (i % 3 - 1) * .3); pp.material = mt(0xffffff, { transparent: true, opacity: .5 }); pp.castShadow = false; pp.userData.o = i * .5; ps.push(pp); } ANIMS.push(function(t){ ps.forEach(function(p){ var yy = ((t * .55 + p.userData.o) % 2.6); p.position.y = .95 + yy; p.material.opacity = .5 * (1 - yy / 2.8); var s = 1 + yy * .55; p.scale.set(s, s, s); }); }); } }); /* 黄石 · 喷泉蒸汽 */
+  miniCity(-101.83, 35.19, function(c){ bx(c, 1.6, .85, 1.0, 0xf3e3c2, 0, 0, 0); var r2 = cn(c, 1.0, .7, 0xb5502a, 0, .85, 0, 4); r2.rotation.y = Math.PI / 4; bx(c, .9, .5, .5, 0x4f7fa0, 1.2, 0, .5); });   /* 66 号公路 · 阿马里洛餐馆 */
+  /* 云朵（书同款，缓漂） */
+  var clouds = [];
+  [[-8,8.6,-4],[6,9.4,3],[14,8.2,-6],[-14,9.0,5]].forEach(function(cd){ var cl = new T.Group(); var m1 = sp(cl, 1.1, 0xffffff, cd[0], cd[1], cd[2], 1.6, .55, 1); var m2 = sp(cl, .8, 0xffffff, cd[0] + 1.1, cd[1] - .1, cd[2], 1.3, .45, .9); [m1, m2].forEach(function(m){ m.material = mt(0xffffff, { transparent: true, opacity: .85 }); m.castShadow = false; }); root.add(cl); clouds.push(cl); });
+  if (!reduced) ANIMS.push(function(t){ clouds.forEach(function(c, i){ c.position.x = Math.sin(t * .07 + i * 1.7) * 1.4; }); });
+
+  /* ---------- 阿拉斯加 / 夏威夷（左下与下方插图位，与平面图同一约定） ---------- */
+  var AK_POLY = [[-168,65.6],[-161,58.6],[-153,58.2],[-151.5,59.5],[-145,60.3],[-139.8,59.6],[-136.5,57.8],[-133,56.2],[-130.8,55.3],[-131.5,57.5],[-137,59.2],[-140.5,60.8],[-141.5,64],[-143,70.1],[-152,71.2],[-158,71],[-164.8,68.7]];
+  var HI_POLYS = [
+    [[-155.9,19.1],[-154.8,19.6],[-155.05,20.25],[-156.05,20.05]],
+    [[-156.7,20.6],[-155.98,20.9],[-156.3,21.05],[-156.75,20.85]],
+    [[-158.3,21.45],[-157.65,21.6],[-157.7,21.72],[-158.25,21.6]],
+    [[-159.75,21.95],[-159.3,22.05],[-159.35,22.2],[-159.78,22.1]]
+  ];
+  var akGroup = new T.Group(); akGroup.scale.set(0.36, 1, 0.36); akGroup.position.set(-3.7, 0, 19.1); scene.add(akGroup);
+  var akLand = new T.Mesh(new T.ExtrudeGeometry(shapeOf([AK_POLY]), { depth: 1.05, bevelEnabled: true, bevelThickness: .18, bevelSize: .18, bevelSegments: 1 }), [mt(0xdabd80), mt(0x77572f)]);
+  akLand.rotation.x = -Math.PI / 2; akLand.position.y = 0.03; akLand.castShadow = true; akLand.receiveShadow = true; akGroup.add(akLand);
+  [[-162,55.3],[-166,54.6],[-170,53.9],[-174,52.9],[-178,52.2]].forEach(function(d){ var q = m3LL(d[0], d[1]); cy(akGroup, .55, .55, .5, 0xd6bd8f, q[0], -0.28, q[1], 10); });
+  var hiGroup = new T.Group(); hiGroup.scale.set(1.5, 1, 1.5); hiGroup.position.set(48.35, 0, -8.0); scene.add(hiGroup);
+  HI_POLYS.forEach(function(poly){
+    var im = new T.Mesh(new T.ExtrudeGeometry(shapeOf([poly]), { depth: 1.05, bevelEnabled: true, bevelThickness: .14, bevelSize: .14, bevelSegments: 1 }), [mt(0xdabd80), mt(0x77572f)]);
+    im.rotation.x = -Math.PI / 2; im.position.y = 0.03; im.castShadow = true; im.receiveShadow = true; hiGroup.add(im);
+  });
+  /* 波多黎各小岛（右下插图位，与平面图同一约定） */
+  cy(root, 1.35, 1.5, .5, 0xd6bd8f, 8.5, -0.3, 15.8, 14); cn(root, .5, .7, 0x7fa06a, 8.2, 0.2, 15.6, 7);
+
+  /* ---------- 拾取层：每州一块隐形地形片 + 东北放大热区圆盘 ---------- */
+  var hitMat = new T.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
+  var hitMeshes = [], discs = [];
+  function hitShape(polys, code, parent, y){
+    polys.forEach(function(poly){
+      var m = new T.Mesh(new T.ShapeGeometry(shapeOf([poly])), hitMat);
+      m.rotation.x = -Math.PI / 2; m.position.y = y || (TOP + 0.04); m.userData.state = code;
+      (parent || root).add(m); hitMeshes.push(m);
+    });
+  }
+  Object.keys(US_MAP).forEach(function(code){ hitShape(US_MAP[code].p, code, root); });
+  hitShape([AK_POLY], "AK", akGroup);
+  HI_POLYS.forEach(function(poly){ hitShape([poly], "HI", hiGroup); });
+  function hitDisc(lon, lat, r, code, parent, local){
+    var m = new T.Mesh(new T.CircleGeometry(r, 20), hitMat);
+    m.rotation.x = -Math.PI / 2;
+    if (local) m.position.set(lon, TOP + 0.05, lat); else { var p = m3LL(lon, lat); m.position.set(p[0], TOP + 0.05, p[1]); }
+    m.userData.state = code;
+    m.userData.r = r; m.userData.cx = m.position.x; m.userData.cz = m.position.z;
+    m.userData.main = !local && ((parent || root) === root);
+    (parent || root).add(m); discs.push(m); return m;
+  }
+  /* 东北九小辖区：可见金色圆盘（图钉式）沿东缘扇形拉开——盘面视觉中心与命中圆心
+     严格同心（命中半径 0.55，盘面半径 0.36），两两间距 ≥1.17，不再互相吞点；
+     取代旧 r=1.35 隐形大盘（DE 误开 WV / 特区吞邻州的根源）。州域形状命中保留，
+     点本州地形仍可开面板。 */
+  var NE_PUCK = { VT: [15.6, -3.4], NH: [16.7, -3.0], MA: [17.1, -1.9], RI: [17.4, -0.8], CT: [16.7, 0.2], NJ: [17.3, 1.2], DE: [16.8, 2.2], MD: [15.8, 3.0], DC: [14.7, 3.6] };
+  function hitDiscXY(x, z, r, code){
+    var m = new T.Mesh(new T.CircleGeometry(r, 20), hitMat);
+    m.rotation.x = -Math.PI / 2; m.position.set(x, TOP + 0.05, z);
+    m.userData.state = code; m.userData.r = r; m.userData.cx = x; m.userData.cz = z; m.userData.main = true;
+    root.add(m); discs.push(m); return m;
+  }
+  Object.keys(NE_PUCK).forEach(function(code){
+    var px = NE_PUCK[code][0], pz = NE_PUCK[code][1];
+    cy(root, .10, .13, 1.62, 0xb98a2e, px, -0.30, pz, 8);            /* 图钉杆（海面上的盘不悬空） */
+    cy(root, .44, .48, .13, 0xe0a83c, px, TOP + 0.02, pz, 22);      /* 盘体 */
+    circ(root, .26, 0xfff3d0, px, TOP + 0.155, pz);                  /* 盘面亮心 */
+    hitDiscXY(px, pz, 0.55, code);
+  });
+  /* 东北放大插图框：细边框 + 小标题（ui.entry.neZoom 五语）+ 引线连回各辖区真实
+     锚点——东缘位移排布读作有意设计，与平面图旧版「Northeast, enlarged」插图框
+     同一做法。元素建一次，每帧在 updateMarkers 里按圆盘投影定位。 */
+  var NE_CODES = Object.keys(NE_PUCK);
+  var nePuckV = {}, neTrueV = {};
+  NE_CODES.forEach(function(code){
+    nePuckV[code] = new T.Vector3(NE_PUCK[code][0], TOP + 0.2, NE_PUCK[code][1]);
+    var tp = code === "DC" ? [-77.04, 38.91] : ((US_MAP[code] && (US_MAP[code].c || US_MAP[code].cap)) || [-98, 39]);
+    var tv = m3LL(tp[0], tp[1]); neTrueV[code] = new T.Vector3(tv[0], TOP + 0.1, tv[1]);
+  });
+  var neBoxRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+  neBoxRect.setAttribute("fill", "rgba(255,246,222,.40)");
+  neBoxRect.setAttribute("stroke", "rgba(161,116,40,.85)");
+  neBoxRect.setAttribute("stroke-width", "1.2"); neBoxRect.setAttribute("rx", "10");
+  neBoxRect.style.display = "none"; leaders.appendChild(neBoxRect);
+  var neLead = {};
+  NE_CODES.forEach(function(code){
+    var ln = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    ln.setAttribute("stroke", "rgba(133,94,32,.45)"); ln.setAttribute("stroke-width", "1");
+    ln.setAttribute("stroke-dasharray", "2.5 2.5"); ln.style.display = "none";
+    leaders.appendChild(ln); neLead[code] = ln;
+  });
+  /* 标题做成 HTML 小签骑在框线左上角（实底、层级在所有名称签之上）——SVG 文字
+     会被城市名签盖住一半，标题必须任何机位下完整可读。 */
+  var neBoxTitle = document.createElement("div");
+  neBoxTitle.className = "map3d-netab"; neBoxTitle.style.display = "none";
+  neBoxTitle.textContent = T2("ui.entry.neZoom");
+  markersEl.appendChild(neBoxTitle);
+  hitDisc(-35.9, 15.2, 2.3, "HI", hiGroup, true);
+  function pip(lon, lat, poly){ var inside = false; for (var i = 0, j = poly.length - 1; i < poly.length; j = i++){ var xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1]; if (((yi > lat) !== (yj > lat)) && (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi)) inside = !inside; } return inside; }
+  function stateAt(lon, lat){ var codes = Object.keys(US_MAP); for (var i = 0; i < codes.length; i++){ var ps = US_MAP[codes[i]].p; for (var k = 0; k < ps.length; k++) if (pip(lon, lat, ps[k])) return codes[i]; } return null; }
+
+  /* ---------- 选中州高亮（金色覆膜，形状 = 该州真实轮廓） ---------- */
+  var selMat = new T.MeshBasicMaterial({ color: 0xe9a13b, transparent: true, opacity: .5, depthWrite: false });
+  var hovMat = new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .22, depthWrite: false });
+  var selGrp = null, hovGrp = null;
+  function overlayFor(code, mat){
+    var grp = new T.Group();
+    function add(polys, parent, y){
+      polys.forEach(function(poly){
+        var m = new T.Mesh(new T.ShapeGeometry(shapeOf([poly])), mat);
+        m.rotation.x = -Math.PI / 2; m.position.y = y; parent.add(m);
+      });
+    }
+    if (code === "AK") add([AK_POLY], grp, TOP + 0.07), grp.scale.set(0.36, 1, 0.36), grp.position.set(-3.7, 0, 19.1);
+    else if (code === "HI") add(HI_POLYS, grp, TOP + 0.07), grp.scale.set(1.5, 1, 1.5), grp.position.set(48.35, 0, -8.0);
+    else if (code === "DC"){ var p = m3LL(-77.04, 38.91); var cm = new T.Mesh(new T.CircleGeometry(.85, 20), mat); cm.rotation.x = -Math.PI / 2; cm.position.set(p[0], TOP + 0.07, p[1]); grp.add(cm); }
+    else if (US_MAP[code]) add(US_MAP[code].p, grp, TOP + 0.07);
+    else return null;
+    scene.add(grp); return grp;
+  }
+  var stateChips = {};
+  function m3SetSel(code){
+    if (selGrp){ scene.remove(selGrp); selGrp = null; }
+    if (code) selGrp = overlayFor(code, selMat);
+    Object.keys(stateChips).forEach(function(k){ stateChips[k].classList.toggle("sel", k === code); });
+  }
+  window.__m3SetSel = m3SetSel;
+  function m3SetHov(code){
+    if (hovGrp){ scene.remove(hovGrp); hovGrp = null; }
+    if (code && code !== (typeof mapSel !== "undefined" ? mapSel : null)) hovGrp = overlayFor(code, hovMat);
+  }
+
+  /* ---------- 标记层（发光点 + 名称标签，与书同款 HTML 标记） ---------- */
+  var markers = [];
+  function anchorAt(x, y, z, parent){ var o = new T.Object3D(); o.position.set(x, y, z); (parent || scene).add(o); return o; }
+  function addMarker(obj, cls, label, aria, fn, off, withDot, withLine){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "map3d-mk " + cls;
+    if (withDot){ var d = document.createElement("span"); d.className = "dot"; b.appendChild(d); }
+    var tg = document.createElement("span"); tg.className = "tag"; tg.textContent = label; b.appendChild(tg);
+    b.setAttribute("aria-label", aria || label);
+    b.addEventListener("click", fn);
+    markersEl.appendChild(b);
+    var rec = { el: b, obj: obj, off: off || [0, 0], city: cls === "city", ne: cls === "st ne", line: null, vis: false, x: 0, y: 0, bx: 0, by: 0, wd: 40, hh: 30 };
+    if (rec.city || withLine){
+      var ln = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      ln.setAttribute("stroke", "rgba(133,94,32,.55)"); ln.setAttribute("stroke-width", "1.3"); ln.setAttribute("stroke-dasharray", "3 2.5");
+      ln.style.display = "none"; leaders.appendChild(ln); rec.line = ln;
+    }
+    markers.push(rec);
+    return b;
+  }
+  function goCity(k){ setCity(k); sfxArrive(); showCityLanding(k); }
+  function pickState(code){ if (!code) return; tapMapState(code); m3SetSel(typeof mapSel !== "undefined" ? mapSel : null); m3SetHov(null); }
+  /* 州名签（小州错开排布，签本身即放大热区） */
+  var NE_OFF = { VT: [-30, -16], NH: [22, -20], MA: [30, -12], RI: [32, 8], CT: [26, 2], NJ: [28, 10], DE: [22, 22], MD: [-12, 26], DC: [-34, 20], ME: [-14, -8], NY: [-4, -6], PA: [0, 6] };
+  Object.keys(US_STATES).forEach(function(code){
+    var obj, off = NE_OFF[code] || [0, 0];
+    var isNE = !!NE_PUCK[code];
+    if (code === "AK") obj = anchorAt(-31, 2.8, -19, akGroup);
+    else if (code === "HI") obj = anchorAt(-35.9, 2.8, 15.2, hiGroup);
+    else if (isNE) obj = anchorAt(NE_PUCK[code][0], TOP + 0.62, NE_PUCK[code][1], scene);
+    else { var s = US_MAP[code]; var pt = (s && (s.c || s.cap)) || [-98, 39]; var pp = m3LL(pt[0], pt[1]); obj = anchorAt(pp[0], TOP + 1.0, pp[1], scene); }
+    stateChips[code] = addMarker(obj, isNE ? "st ne" : "st", code, stateName(code), function(){ pickState(code); }, off, false, isNE);
+  });
+  /* 16 座深玩城市：发光点 + 城市名签，点签直达城市页 */
+  var CITY_OFF = { nyc: [4, -12], bos: [2, -18], phi: [-30, -16], dc: [22, 18], atl: [2, 8], chi: [-2, -10], dal: [-6, 14], hou: [14, 20], mia: [12, 4], la: [12, 12], sd: [16, 16], sf: [44, -24], sjc: [26, 22], sea: [34, -22], phx: [0, 12], col: [4, -12] };
+  Object.keys(MAP_CITY_PT).forEach(function(k){
+    var pt = MAP_CITY_PT[k]; var pp = m3LL(pt[0], pt[1]);
+    var obj = anchorAt(pp[0], TOP + 2.3, pp[1], scene);
+    addMarker(obj, "city", cityName(k), cityName(k), function(){ goCity(k); }, CITY_OFF[k] || [0, 0], true);
+  });
+  /* 地标 / 港口 / 岛屿：与平面图同一份 ALX 数据、同一个处理器 */
+  var ALXM = window.__ALX_MAP;
+  if (ALXM){
+    var LM_OFF = { arch: [16, 18], rushmore: [0, -8], canyon: [-30, -22], yellowstone: [6, -24] };
+    (ALXM.landmarks || []).forEach(function(M){
+      if (M.city) return;   /* 有深玩城市的地标已由城市名签承担，避免同点双签 */
+      var pp = m3LL(M.pt[0], M.pt[1]);
+      var obj = anchorAt(pp[0], TOP + 2.0, pp[1], scene);
+      var nm = T2("alx.geo.lm." + M.id);
+      addMarker(obj, "lm", M.g + " " + nm, nm, function(){ if (M.state) pickState(M.state); }, LM_OFF[M.id] || [0, 0], true);
+    });
+    var PORT_OFF = { nyc: [-24, 22], hou: [-24, 24], mia: [24, 22], sea: [-26, 10], la: [-22, 24], oak: [-34, 4], sav: [0, 8], nola: [0, 8] };
+    Object.keys(ALXM.ports || {}).forEach(function(pid){
+      var pt = ALXM.ports[pid]; var pp = m3LL(pt[0], pt[1]);
+      var obj = anchorAt(pp[0], TOP + 1.1, pp[1], scene);
+      var nm = T2("alx.ports." + pid + ".name");
+      addMarker(obj, "port", "⚓", nm, function(){ try { sfxTap(); } catch(e){} ALXM.port(pid); }, PORT_OFF[pid] || [0, 6], false);
+    });
+    var ISL_OFF = { longisland: [26, 14], keys: [0, 12], catalina: [30, 18], nantucket: [-64, -18], galveston: [-4, 16], mackinac: [0, -14], sanjuan: [44, -14] };
+    (ALXM.islands || []).forEach(function(I){
+      var iv = T2("alx.geo.isl." + I.id); var nm = (iv && iv[0]) || "";
+      var obj;
+      if (I.id === "hawaii") obj = anchorAt(-35.9, 2.8, 15.2, hiGroup);
+      else { var pp = m3LL(I.lx, I.ly); obj = anchorAt(pp[0], TOP + 1.1, pp[1], scene); }
+      addMarker(obj, "isl", "🏝️ " + nm, nm, function(){ try { sfxTap(); } catch(e){} ALXM.island(I.id); }, I.id === "hawaii" ? [58, 30] : (ISL_OFF[I.id] || [0, 0]), false);
+    });
+    var aleObj = anchorAt(-12.5, TOP + 1.1, 16.5, scene);
+    var aleIv = T2("alx.geo.isl.aleutian"); var aleNm = (aleIv && aleIv[0]) || "";
+    addMarker(aleObj, "isl", "🏝️ " + aleNm, aleNm, function(){ try { sfxTap(); } catch(e){} ALXM.island("aleutian"); }, [16, 14], false);
+    var prObj = anchorAt(8.5, TOP + 1.3, 15.8, scene);
+    var prIv = T2("alx.geo.isl.puertorico"); var prNm = (prIv && prIv[0]) || "";
+    addMarker(prObj, "isl", "🏝️ " + prNm, prNm, function(){ try { sfxTap(); } catch(e){} ALXM.island("puertorico"); }, [0, 4], false);
+  }
+
+  /* ---------- 相机：三档机位 + 轻拖换角 + 捏合 / 滚轮缩放（与书同款） ---------- */
+  var cam = { th: -0.30, phi: 0.99, d: 34, tx: 1.5, ty: 1.0, tz: 0.9 };
+  var camT = { th: cam.th, phi: cam.phi, d: cam.d, tx: cam.tx, ty: cam.ty, tz: cam.tz };
+  var viewBase = { th: -0.30, phi: 0.99 };
+  var VIEWS = { wide: { d: 34, phi: 0.99, th: -0.30 }, near: { d: 24, phi: 1.0, th: -0.18 }, detail: { d: 16, phi: .92, th: -0.02 } };   /* wide：机位略抬高（phi 1.07→0.99 减透视压缩）+ 拉近（37→34），全景下地形隆起可辨 */
+  function portF(){ var w = stage.clientWidth || 1, h = stage.clientHeight || 1; return (w / h < 1.05) ? 1.52 : 1; }
+  var curView = "wide";
+  var userTouched = false;   /* 用户拖动 / 缩放 / 切机位后为真；此前尺寸定型时一律按 Overview 复位帧对齐首屏 */
+  function setView(name, instant){
+    var v = VIEWS[name]; if (!v) return;
+    curView = name;
+    camT.d = v.d * portF(); camT.phi = v.phi; camT.th = v.th;
+    viewBase = { th: v.th, phi: v.phi };
+    views.querySelectorAll("button").forEach(function(b){ b.classList.toggle("on", b.dataset.mv === name); });
+    if (instant || reduced) { cam.d = camT.d; cam.phi = camT.phi; cam.th = camT.th; }
+  }
+  views.querySelectorAll("button").forEach(function(b){ b.addEventListener("click", function(){ userTouched = true; setView(b.dataset.mv, false); }); });
+  setView("wide", true);
+
+  var ray = new T.Raycaster(), ndc = new T.Vector2();
+  var hitPlane = new T.Plane(new T.Vector3(0, 1, 0), -(TOP + 0.05));
+  var gpV = new T.Vector3();
+  function pickAt(cx, cy){
+    var r = renderer.domElement.getBoundingClientRect();
+    if (!r.width || !r.height) return null;
+    ndc.set(((cx - r.left) / r.width) * 2 - 1, -((cy - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    /* 最近目标判定：先把点击落到圆盘平面，再在所有命中的圆盘里取离落点最近的圆心。
+       圆盘（东北小州放大热区 + 特区小热区）优先于州形多边形——小州圆盘彼此及与
+       特区圆盘重叠时不再靠射线先后误判（旧逻辑下 MD/CT 的点选会被特区圆盘吞掉）。 */
+    if (ray.ray.intersectPlane(hitPlane, gpV)){
+      var best = null, bestD = Infinity, bestR = 0;
+      for (var i = 0; i < discs.length; i++){
+        var d = discs[i]; if (!d.userData.main) continue;
+        var dx = gpV.x - d.userData.cx, dz = gpV.z - d.userData.cz, dd = dx * dx + dz * dz;
+        if (dd < bestD){ bestD = dd; best = d.userData.state; bestR = d.userData.r; }
+      }
+      if (best && bestD <= bestR * bestR) return best;
+      /* 最近盘吸附：落点在最近圆盘的小半径（0.88）内即判给该盘——VT/DE/MD 等小辖区
+         首点略偏也能点对；但落点若明确在他州地形上则不抢，照常走下方州形判定。 */
+      if (best && bestD <= 0.88 * 0.88){
+        var sAt = stateAt(gpV.x / 0.60 - 98, 39.5 - gpV.z / 0.80);
+        if (!sAt || sAt === best) return best;
+      }
+    }
+    var hits = ray.intersectObjects(hitMeshes, false);
+    if (hits.length) return hits[0].object.userData.state;
+    hits = ray.intersectObject(land, false);
+    if (hits.length){ var p = hits[0].point; return stateAt(p.x / 0.60 - 98, 39.5 - p.z / 0.80); }
+    return null;
+  }
+  var ptrs = new Map(), pinchD = 0, movedPx = 0, downT = 0, lastX = 0, lastY = 0;
+  stage.addEventListener("pointerdown", function(e){
+    if (e.target.closest && (e.target.closest("button"))) return;
+    ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+    userTouched = true;
+    lastX = e.clientX; lastY = e.clientY; movedPx = 0; downT = performance.now();
+    if (ptrs.size === 2){ var a = [...ptrs.values()]; pinchD = Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]); }
+  });
+  stage.addEventListener("pointermove", function(e){
+    if (!ptrs.has(e.pointerId)){
+      if (e.pointerType === "mouse" && !e.buttons){ var hc = pickAt(e.clientX, e.clientY); m3SetHov(hc); }
+      return;
+    }
+    ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+    if (ptrs.size === 1){
+      var dx = e.clientX - lastX, dy = e.clientY - lastY;
+      lastX = e.clientX; lastY = e.clientY;
+      movedPx += Math.abs(dx) + Math.abs(dy);
+      if (movedPx > 2){
+        camT.th = Math.max(viewBase.th - .95, Math.min(viewBase.th + .95, camT.th - dx * .005));
+        camT.phi = Math.max(.55, Math.min(1.42, camT.phi - dy * .004));
+        m3SetHov(null);
+      }
+    } else if (ptrs.size === 2){
+      var a2 = [...ptrs.values()];
+      var d2 = Math.hypot(a2[0][0] - a2[1][0], a2[0][1] - a2[1][1]);
+      if (pinchD > 0 && d2 > 0) camT.d = Math.max(12, Math.min(64, camT.d * pinchD / d2));
+      pinchD = d2; movedPx += 10;
+    }
+  });
+  function endPtr(e){
+    var wasTap = ptrs.size === 1 && movedPx < 7 && performance.now() - downT < 450;
+    ptrs.delete(e.pointerId);
+    if (wasTap){ var code = pickAt(e.clientX, e.clientY); if (code) pickState(code); }
+  }
+  stage.addEventListener("pointerup", endPtr);
+  stage.addEventListener("pointercancel", function(e){ ptrs.delete(e.pointerId); });
+  stage.addEventListener("pointerleave", function(){ m3SetHov(null); });
+  stage.addEventListener("wheel", function(e){ e.preventDefault(); userTouched = true; camT.d = Math.max(12, Math.min(64, camT.d + e.deltaY * .02)); }, { passive: false });
+
+  /* ---------- 主循环（不可见 / 离屏 / 切后台自动暂停，断开自动销毁） ---------- */
+  var inst = { renderer: renderer, raf: 0, dead: false, ro: null, io: null, inView: true, last: performance.now() };
+  M3 = inst;
+  function size(){
+    var w = stage.clientWidth || 300, h = stage.clientHeight || 300;
+    renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+    /* 首屏定版：构造时舞台尺寸可能未定型，portF 会算错缩放（首开比按一次 Overview
+       更近、标签互压的根源）。尺寸每次定型且用户尚未操作时，按当前机位（初始即
+       wide）以复位口径瞬时重算——首屏第一帧 = Overview 复位帧，分毫不差。 */
+    if (!userTouched && stage.clientWidth > 0) setView(curView, true);
+  }
+  size();
+  if (window.ResizeObserver){ inst.ro = new ResizeObserver(size); inst.ro.observe(stage); }
+  if (window.IntersectionObserver){ inst.io = new IntersectionObserver(function(es){ inst.inView = es[0].isIntersecting; }, { threshold: 0.02 }); inst.io.observe(stage); }
+  var V3 = new T.Vector3();
+  function updateMarkers(){
+    var w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h) return;
+    markers.forEach(function(m){
+      m.obj.getWorldPosition(V3); V3.project(camera);
+      if (V3.z > 1 || V3.z < -1){ m.vis = false; return; }
+      m.vis = true;
+      m.wd = m.el.offsetWidth || 40; m.hh = m.el.offsetHeight || 30;
+      var x = Math.round(((V3.x * .5 + .5) * w + m.off[0]) * 2) / 2, y = Math.round(((-V3.y * .5 + .5) * h + m.off[1]) * 2) / 2;
+      /* 舞台边缘钳制：任何机位下名称签都不被切掉（窄屏西海岸 / 东北角必备） */
+      var hw = m.wd / 2;
+      x = Math.max(hw + 2, Math.min(w - hw - 2, x));
+      y = Math.max(m.hh + 2, Math.min(h - 2, y));
+      m.bx = x; m.by = y; m.x = x; m.y = y;
+    });
+    /* 标签避让（机位分级）：城市名签优先占位——先在城市签之间用「原位 → 环形搜索」
+       找到互不重叠的位置（移位时以引线连回锚点）；其余签（州签 / 地标 / 港口 / 岛屿）
+       随后绕开已占位排布，全景下实在无位可放的次要签本帧隐藏、走进后全显。
+       无重叠则零位移，Step In / Close-up 不隐藏任何签。 */
+    var placed = [];
+    function boxHit(x, y, m){
+      var x1 = x - m.wd / 2 - 2, x2 = x + m.wd / 2 + 2, y1 = y - m.hh - 2, y2 = y + 2;
+      for (var j = 0; j < placed.length; j++){
+        var o = placed[j];
+        if (Math.min(x2, o.x + o.wd / 2 + 2) - Math.max(x1, o.x - o.wd / 2 - 2) > 0 &&
+            Math.min(y2, o.y + 2) - Math.max(y1, o.y - o.hh - 2) > 0) return true;
+      }
+      return false;
+    }
+    function findSpot(m, maxR){
+      if (!boxHit(m.bx, m.by, m)) return [m.bx, m.by];
+      for (var r = 9; r <= maxR; r += 9){
+        for (var a = 0; a < 12; a++){
+          var th = a / 12 * Math.PI * 2 - Math.PI / 2;
+          var px = m.bx + Math.cos(th) * r, py = m.by + Math.sin(th) * r * 0.8;
+          var hw = m.wd / 2;
+          px = Math.max(hw + 2, Math.min(w - hw - 2, px));
+          py = Math.max(m.hh + 2, Math.min(h - 2, py));
+          if (!boxHit(px, py, m)) return [px, py];
+        }
+      }
+      return null;
+    }
+    markers.forEach(function(m){
+      if (!m.vis || !m.city) return;
+      var s = findSpot(m, 132);
+      if (s){ m.x = s[0]; m.y = s[1]; } else { m.x = m.bx; m.y = m.by; }
+      m.avoidHide = false; placed.push(m);
+    });
+    markers.forEach(function(m){
+      if (!m.vis || m.city || !m.ne) return;
+      var s = findSpot(m, 176);
+      if (s){ m.x = s[0]; m.y = s[1]; } else { m.x = m.bx; m.y = m.by; }
+      m.avoidHide = false; placed.push(m);   /* 东北九签：任何机位不隐藏（修复 VT/NH 被分级隐藏后不可达） */
+    });
+    markers.forEach(function(m){
+      if (!m.vis || m.city || m.ne) return;
+      var s = findSpot(m, 110);
+      if (s){ m.x = s[0]; m.y = s[1]; m.avoidHide = false; placed.push(m); }
+      else if (curView === "wide"){ m.avoidHide = true; }
+      else { m.x = m.bx; m.y = m.by; m.avoidHide = false; placed.push(m); }
+    });
+    markers.forEach(function(m){
+      if (!m.vis || m.avoidHide){ m.el.style.opacity = "0"; m.el.style.pointerEvents = "none"; if (m.line) m.line.style.display = "none"; return; }
+      m.el.style.transform = "translate(" + m.x + "px," + m.y + "px) translate(-50%,-100%)";
+      m.el.style.opacity = "1"; m.el.style.pointerEvents = "auto";
+      if (m.line){
+        var dx = m.x - m.bx, dy = m.y - m.by;
+        if (dx * dx + dy * dy > 49){
+          m.line.setAttribute("x1", m.bx); m.line.setAttribute("y1", m.by);
+          m.line.setAttribute("x2", m.x); m.line.setAttribute("y2", m.y);
+          m.line.style.display = "";
+        } else m.line.style.display = "none";
+      }
+    });
+    /* 东北放大框跟随圆盘投影：九盘全在画面内才画框（任一出画整框隐藏）；
+       框宽不足标题长时向左扩，确保五语标题完整落在框内。 */
+    var neOK = true, nePts = {};
+    NE_CODES.forEach(function(code){
+      V3.copy(nePuckV[code]).project(camera);
+      if (V3.z > 1 || V3.z < -1){ neOK = false; return; }
+      var sx = (V3.x * .5 + .5) * w, sy = (-V3.y * .5 + .5) * h;
+      if (sx < -6 || sx > w + 6 || sy < -6 || sy > h + 6) neOK = false;
+      var rec = [sx, sy, 0, 0];
+      V3.copy(neTrueV[code]).project(camera);
+      rec[2] = (V3.x * .5 + .5) * w; rec[3] = (-V3.y * .5 + .5) * h;
+      nePts[code] = rec;
+    });
+    if (neOK){
+      var mnx = 1e9, mxx = -1e9, mny = 1e9, mxy = -1e9;
+      NE_CODES.forEach(function(code){ var q = nePts[code]; if (q[0] < mnx) mnx = q[0]; if (q[0] > mxx) mxx = q[0]; if (q[1] < mny) mny = q[1]; if (q[1] > mxy) mxy = q[1]; });
+      var bx1 = Math.min(w - 2, mxx + 15), by0 = Math.max(2, mny - 40), by1 = Math.min(h - 2, mxy + 13);
+      var bx0 = Math.max(2, mnx - 15);
+      neBoxRect.setAttribute("x", bx0); neBoxRect.setAttribute("y", by0);
+      neBoxRect.setAttribute("width", bx1 - bx0); neBoxRect.setAttribute("height", by1 - by0);
+      neBoxRect.style.display = "";
+      neBoxTitle.style.transform = "translate(" + bx1 + "px," + by0 + "px) translate(calc(-100% - 6px),-50%)";
+      neBoxTitle.style.display = "";
+      NE_CODES.forEach(function(code){ var q = nePts[code], ln = neLead[code]; ln.setAttribute("x1", q[0]); ln.setAttribute("y1", q[1]); ln.setAttribute("x2", q[2]); ln.setAttribute("y2", q[3]); ln.style.display = ""; });
+    } else {
+      neBoxRect.style.display = "none"; neBoxTitle.style.display = "none";
+      NE_CODES.forEach(function(code){ neLead[code].style.display = "none"; });
+    }
+  }
+  function frame(now){
+    if (inst.dead) return;
+    inst.raf = requestAnimationFrame(frame);
+    if (!renderer.domElement.isConnected){ m3Dispose(); return; }
+    if (document.hidden || inst.inView === false){ inst.last = now; return; }
+    var dt = Math.min(.05, (now - inst.last) / 1000); inst.last = now;
+    var t = now / 1000;
+    if (!reduced) ANIMS.forEach(function(fn){ try { fn(t, dt); } catch(e){} });
+    var k = 1 - Math.exp(-dt * 4.2);
+    cam.th += (camT.th - cam.th) * k; cam.phi += (camT.phi - cam.phi) * k; cam.d += (camT.d - cam.d) * k;
+    if (Math.abs(camT.th - cam.th) < .0004) cam.th = camT.th;
+    if (Math.abs(camT.phi - cam.phi) < .0004) cam.phi = camT.phi;
+    if (Math.abs(camT.d - cam.d) < .004) cam.d = camT.d;
+    camera.position.set(cam.tx + cam.d * Math.sin(cam.phi) * Math.sin(cam.th), cam.ty + cam.d * Math.cos(cam.phi), cam.tz + cam.d * Math.sin(cam.phi) * Math.cos(cam.th));
+    camera.lookAt(cam.tx, cam.ty, cam.tz);
+    renderer.render(scene, camera);
+    updateMarkers();
+  }
+  inst.raf = requestAnimationFrame(frame);
+  try { m3SetSel(typeof mapSel !== "undefined" ? mapSel : null); } catch(e){}
+}
+var _sm3d = showStateMap;
+showStateMap = function(){ _sm3d(); try { m3Upgrade(); } catch(e){} };
+/* 开局时若已停在地图入口（注册玩家 initGame 直达），就地升级为立体图 */
+try { if (document.querySelector("#app .usmapwrap")) m3Upgrade(); } catch(e){}
 
 /* ---------------- ③ 切换语言保持位置 + 状态面板刷新 ---------------- */
 var ALX2_VIEW = null;
