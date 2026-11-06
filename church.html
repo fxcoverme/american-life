@@ -454,7 +454,15 @@
           footer: "一个受美国小教堂启发的安静角落。这里不是礼拜，只是坐一会儿的地方。"
         }
       };
-      var lang = (navigator.language || "en").toLowerCase().indexOf("zh") === 0 ? "zh" : "en";
+      var LANG_KEY = "qa-chapel-lang";
+      var savedLang = null;
+      try { savedLang = window.localStorage.getItem(LANG_KEY); } catch (e) { savedLang = null; }
+      var lang = (savedLang === "zh" || savedLang === "en")
+        ? savedLang
+        : ((navigator.language || "en").toLowerCase().indexOf("zh") === 0 ? "zh" : "en");
+      function saveLang() {
+        try { window.localStorage.setItem(LANG_KEY, lang); } catch (e) { /* storage unavailable */ }
+      }
       function t() { return STR[lang]; }
       function setHtmlLang() { document.documentElement.lang = lang === "zh" ? "zh-CN" : "en"; }
 
@@ -1312,6 +1320,7 @@
       /* --- language & sound toggles --- */
       $("langToggle").addEventListener("click", function () {
         lang = lang === "zh" ? "en" : "zh";
+        saveLang();
         applyLang();
       });
       $("soundToggle").addEventListener("click", function () {
