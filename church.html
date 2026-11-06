@@ -1,0 +1,1443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Quiet America · The Little Chapel</title>
+    <style>
+      :root {
+        --bg: #faf6ec;
+        --bg-soft: #f3ecdb;
+        --card: #fffdf6;
+        --ink: #2f2a21;
+        --ink-soft: #6d6353;
+        --line: #ddd2ba;
+        --wood: #8a6844;
+        --wood-deep: #6d4f30;
+        --gold: #b98a2f;
+        --accent-soft: #efe3c8;
+        --chip-bg: rgba(255, 253, 246, 0.88);
+        --shadow: 0 10px 30px rgba(80, 62, 32, 0.14);
+        --radius: 14px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #17140f;
+          --bg-soft: #201b14;
+          --card: #221d15;
+          --ink: #ece4d2;
+          --ink-soft: #b3a78f;
+          --line: #3d3527;
+          --wood: #c49a68;
+          --wood-deep: #a87f4f;
+          --gold: #d9ab4e;
+          --accent-soft: #2e2718;
+          --chip-bg: rgba(28, 24, 17, 0.88);
+          --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 14px 14px 30px;
+      }
+      /* ---------- Scene ---------- */
+      .scene-box {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4 / 4.6;
+        max-height: 62vh;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #efe6d0;
+        box-shadow: var(--shadow);
+      }
+      @media (min-width: 700px) {
+        .scene-box { aspect-ratio: 16 / 11; max-height: 66vh; }
+      }
+      .scene-box canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        touch-action: manipulation;
+      }
+      .scene-chips {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 8px;
+        z-index: 5;
+      }
+      .chip {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: var(--chip-bg);
+        color: var(--ink);
+        font-size: 13px;
+        line-height: 1;
+        padding: 8px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+        backdrop-filter: blur(4px);
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--wood);
+        border-color: var(--wood);
+        color: #fff8ea;
+      }
+      .scene-hint {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        z-index: 5;
+        font-size: 12px;
+        color: #5d5340;
+        background: rgba(255, 251, 240, 0.78);
+        padding: 5px 10px;
+        border-radius: 999px;
+        pointer-events: none;
+      }
+      @media (prefers-color-scheme: dark) {
+        .scene-hint { color: #e6dcc4; background: rgba(24, 20, 14, 0.72); }
+      }
+      /* ---------- Intro / count ---------- */
+      .intro {
+        text-align: center;
+        margin: 18px 6px 4px;
+        font-family: Georgia, "Times New Roman", "Songti SC", "STSong", serif;
+        font-size: 19px;
+        line-height: 1.55;
+      }
+      .count-line {
+        text-align: center;
+        color: var(--ink-soft);
+        font-size: 13.5px;
+        margin: 6px 0 2px;
+      }
+      .count-line b { color: var(--wood-deep); font-weight: 600; }
+      @media (prefers-color-scheme: dark) { .count-line b { color: var(--gold); } }
+      /* ---------- Actions ---------- */
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .action {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: var(--card);
+        color: var(--ink);
+        border-radius: var(--radius);
+        padding: 16px 12px 14px;
+        cursor: pointer;
+        text-align: center;
+        font-family: inherit;
+        transition: border-color 0.2s ease, background 0.2s ease;
+      }
+      .action:hover { border-color: var(--wood); }
+      .action[aria-pressed="true"] {
+        background: var(--accent-soft);
+        border-color: var(--wood);
+      }
+      .action .a-icon {
+        display: block;
+        width: 26px; height: 26px;
+        margin: 0 auto 8px;
+        color: var(--wood);
+      }
+      .action .a-label { display: block; font-size: 15.5px; font-weight: 600; }
+      .action .a-sub { display: block; font-size: 12px; color: var(--ink-soft); margin-top: 3px; line-height: 1.45; }
+      /* ---------- Panels ---------- */
+      .panel {
+        margin-top: 14px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px 16px;
+        box-shadow: var(--shadow);
+      }
+      .panel[hidden] { display: none; }
+      /* Breathing */
+      .breath-wrap { text-align: center; }
+      .breath-ring {
+        width: 132px; height: 132px;
+        margin: 4px auto 10px;
+        border-radius: 50%;
+        border: 2px solid var(--line);
+        display: flex; align-items: center; justify-content: center;
+        position: relative;
+      }
+      .breath-core {
+        width: 74px; height: 74px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 42% 38%, #f3d489, #c99b3f 78%);
+        transform: scale(0.72);
+        will-change: transform;
+      }
+      .breath-word { font-size: 15px; color: var(--ink-soft); min-height: 22px; }
+      .breath-timer {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 26px;
+        margin-top: 2px;
+        font-variant-numeric: tabular-nums;
+      }
+      /* Verse */
+      .verse-card { text-align: center; }
+      .verse-text {
+        font-family: Georgia, "Times New Roman", "Songti SC", "STSong", serif;
+        font-size: 19px;
+        line-height: 1.75;
+        margin: 2px 4px 10px;
+      }
+      .verse-ref { color: var(--wood-deep); font-size: 14px; letter-spacing: 0.02em; }
+      @media (prefers-color-scheme: dark) { .verse-ref { color: var(--gold); } }
+      /* Candle form */
+      .field { margin-bottom: 12px; }
+      .field label { display: block; font-size: 13px; color: var(--ink-soft); margin-bottom: 5px; }
+      .field input {
+        width: 100%;
+        font: inherit;
+        font-size: 16px;
+        padding: 11px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      .field input:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+      .char-n { float: right; font-size: 11.5px; color: var(--ink-soft); }
+      .primary-btn {
+        appearance: none;
+        width: 100%;
+        border: none;
+        background: var(--wood);
+        color: #fff8ea;
+        font: inherit;
+        font-size: 15.5px;
+        font-weight: 600;
+        padding: 13px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      .primary-btn:disabled { opacity: 0.55; cursor: default; }
+      .form-note { font-size: 13.5px; line-height: 1.6; margin: 10px 2px 0; min-height: 20px; }
+      .form-note.ok { color: var(--wood-deep); }
+      @media (prefers-color-scheme: dark) { .form-note.ok { color: var(--gold); } }
+      /* Reading card */
+      .read-card { text-align: center; }
+      .read-flame { font-size: 22px; line-height: 1; }
+      .read-line {
+        font-family: Georgia, "Times New Roman", "Songti SC", "STSong", serif;
+        font-size: 17.5px;
+        line-height: 1.7;
+        margin: 8px 4px 6px;
+        overflow-wrap: anywhere;
+      }
+      .read-name { color: var(--ink-soft); font-size: 13.5px; }
+      .quiet-btn {
+        appearance: none;
+        margin-top: 12px;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--ink-soft);
+        font: inherit;
+        font-size: 13.5px;
+        padding: 8px 18px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      /* Stand list */
+      .stand-list { margin-top: 20px; }
+      .stand-title {
+        font-size: 13px;
+        color: var(--ink-soft);
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .stand-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+      .candle-chip {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: var(--card);
+        color: var(--ink);
+        font: inherit;
+        font-size: 13px;
+        padding: 7px 12px 7px 9px;
+        border-radius: 999px;
+        cursor: pointer;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .candle-chip .dot {
+        display: inline-block;
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: var(--gold);
+        margin-right: 7px;
+        box-shadow: 0 0 6px 1px rgba(201, 155, 63, 0.65);
+        vertical-align: 1px;
+      }
+      .stand-empty {
+        text-align: center;
+        color: var(--ink-soft);
+        font-size: 13.5px;
+        line-height: 1.7;
+      }
+      /* Footer */
+      footer {
+        margin-top: 30px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        text-align: center;
+        color: var(--ink-soft);
+      }
+      footer .f-brand { font-size: 13px; letter-spacing: 0.03em; }
+      footer .f-line { font-size: 12.5px; line-height: 1.7; margin-top: 5px; }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <div class="scene-box" id="sceneBox">
+        <div class="scene-chips">
+          <button class="chip" id="soundToggle" type="button" aria-pressed="false"></button>
+          <button class="chip" id="langToggle" type="button"></button>
+        </div>
+        <div class="scene-hint" id="sceneHint"></div>
+      </div>
+
+      <p class="intro" id="introLine"></p>
+      <p class="count-line" id="countLine"></p>
+
+      <div class="actions">
+        <button class="action" id="btnSit" type="button" aria-pressed="false">
+          <svg class="a-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3.4"/></svg>
+          <span class="a-label" data-i18n="sit"></span>
+          <span class="a-sub" data-i18n="sitSub"></span>
+        </button>
+        <button class="action" id="btnHymn" type="button" aria-pressed="false">
+          <svg class="a-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18.5V6l10-2v11.5"/><circle cx="6.5" cy="18.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/></svg>
+          <span class="a-label" data-i18n="hymn"></span>
+          <span class="a-sub" data-i18n="hymnSub"></span>
+        </button>
+        <button class="action" id="btnVerse" type="button" aria-pressed="false">
+          <svg class="a-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-1.8-1.5-4-2-7-2v14c3 0 5.2.5 7 2 1.8-1.5 4-2 7-2V4c-3 0-5.2.5-7 2z"/><path d="M12 6v14"/></svg>
+          <span class="a-label" data-i18n="verse"></span>
+          <span class="a-sub" data-i18n="verseSub"></span>
+        </button>
+        <button class="action" id="btnCandle" type="button" aria-pressed="false">
+          <svg class="a-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1.2 1.8 2 3 2 4.4A2 2 0 0 1 10 7.4C10 6 10.8 4.8 12 3z"/><path d="M9.5 11.5h5V21h-5z"/></svg>
+          <span class="a-label" data-i18n="candle"></span>
+          <span class="a-sub" data-i18n="candleSub"></span>
+        </button>
+      </div>
+
+      <section class="panel breath-wrap" id="panelSit" hidden>
+        <div class="breath-ring"><div class="breath-core" id="breathCore"></div></div>
+        <div class="breath-word" id="breathWord"></div>
+        <div class="breath-timer" id="breathTimer">0:00</div>
+      </section>
+
+      <section class="panel verse-card" id="panelVerse" hidden>
+        <p class="verse-text" id="verseText"></p>
+        <div class="verse-ref" id="verseRef"></div>
+      </section>
+
+      <section class="panel" id="panelCandle" hidden>
+        <form id="candleForm" novalidate>
+          <div class="field">
+            <label for="cName"><span data-i18n="nameLabel"></span><span class="char-n" id="nameCount"></span></label>
+            <input id="cName" type="text" maxlength="24" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="cLine"><span data-i18n="lineLabel"></span><span class="char-n" id="lineCount"></span></label>
+            <input id="cLine" type="text" maxlength="80" autocomplete="off" />
+          </div>
+          <button class="primary-btn" id="candleSubmit" type="submit"></button>
+          <p class="form-note" id="formNote"></p>
+        </form>
+      </section>
+
+      <section class="panel read-card" id="panelRead" hidden>
+        <div class="read-flame" aria-hidden="true">🕯</div>
+        <p class="read-line" id="readLine"></p>
+        <div class="read-name" id="readName"></div>
+        <button class="quiet-btn" id="readClose" type="button"></button>
+      </section>
+
+      <div class="stand-list" id="standList">
+        <div class="stand-title" id="standTitle"></div>
+        <div class="stand-chips" id="standChips"></div>
+        <p class="stand-empty" id="standEmpty" hidden></p>
+      </div>
+
+      <footer>
+        <div class="f-brand">Quiet America · Velagrid Technologies</div>
+        <div class="f-line" id="footerLine"></div>
+      </footer>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
+    <script>
+      "use strict";
+      /* ================= Language ================= */
+      var STR = {
+        en: {
+          soundOn: "Sound on", soundOff: "Sound off",
+          intro: "A small white chapel. Come in, sit down, stay a little while.",
+          hint: "Tap a seated guest or a candle to read their line",
+          count: function (n) { return "Candles lit here: <b>" + n + "</b>"; },
+          countUnknown: "Candles lit here: <b>—</b>",
+          sit: "Sit a while", sitSub: "Breathe slowly, watch the light",
+          sitStop: "Stand up", sitStopSub: "Thank you for sitting",
+          hymn: "Hear the hymn", hymnSub: "Amazing Grace, played very quietly",
+          hymnStop: "Stop the hymn", hymnStopSub: "Let the quiet come back",
+          verse: "A verse for today", verseSub: "One verse, chosen by the day",
+          candle: "Light a candle", candleSub: "Leave a small light on the stand",
+          breatheIn: "Breathe in…", breatheOut: "Breathe out…",
+          nameLabel: "Your name", lineLabel: "One short line",
+          namePh: "e.g. Mary", linePh: "A few quiet words…",
+          lightIt: "Light this candle",
+          filterMsg: "Let's keep those words in your heart for now.",
+          needBoth: "A name and a short line, please — both are needed for a candle.",
+          thanks: "Your candle is lit. It will stay on the stand for the next visitor.",
+          resting: "The chapel is resting right now — your candle could not be sent. Please try again later.",
+          standTitle: "On the candle stand",
+          standEmpty: "The stand is empty for now. The first candle is waiting to be lit.",
+          readBy: function (n) { return "— lit by " + n; },
+          close: "Close",
+          footer: "A quiet place inspired by small American churches. Not a church service — just a place to sit."
+        },
+        zh: {
+          soundOn: "声音开", soundOff: "声音关",
+          intro: "一座白色的小教堂。进来坐下，静静待一会儿。",
+          hint: "点一点坐着的客人或烛台上的烛，读他们留下的话",
+          count: function (n) { return "这里已点亮的烛：<b>" + n + "</b> 支"; },
+          countUnknown: "这里已点亮的烛：<b>—</b>",
+          sit: "坐一会儿", sitSub: "慢慢呼吸，看着光",
+          sitStop: "站起来", sitStopSub: "谢谢你坐了这一会儿",
+          hymn: "听圣歌", hymnSub: "《奇异恩典》，轻轻地弹",
+          hymnStop: "停下圣歌", hymnStopSub: "让安静回来",
+          verse: "读一句经文", verseSub: "按今天的日子选的一句",
+          candle: "点一支烛", candleSub: "在烛台上留一盏小小的光",
+          breatheIn: "慢慢吸气…", breatheOut: "慢慢呼气…",
+          nameLabel: "你的名字", lineLabel: "一句话",
+          namePh: "比如：小华", linePh: "一句安静的话…",
+          lightIt: "点亮这支烛",
+          filterMsg: "这句话先留在心里吧。",
+          needBoth: "请写下名字和一句话——点烛需要这两样。",
+          thanks: "你的烛点亮了。它会留在烛台上，等下一位来的人看见。",
+          resting: "教堂正在休息，烛光暂时送不出去，晚些时候再试吧。",
+          standTitle: "烛台上的烛",
+          standEmpty: "烛台还空着。第一支烛，等着被点亮。",
+          readBy: function (n) { return "—— " + n + " 点的"; },
+          close: "收起",
+          footer: "一个受美国小教堂启发的安静角落。这里不是礼拜，只是坐一会儿的地方。"
+        }
+      };
+      var lang = (navigator.language || "en").toLowerCase().indexOf("zh") === 0 ? "zh" : "en";
+      function t() { return STR[lang]; }
+      function setHtmlLang() { document.documentElement.lang = lang === "zh" ? "zh-CN" : "en"; }
+
+      /* ================= Verses (public domain: KJV / 和合本) ================= */
+      var VERSES = [
+        { refEn: "Psalm 46:10", refZh: "诗篇 46:10",
+          en: "Be still, and know that I am God.",
+          zh: "你们要休息，要知道我是神。" },
+        { refEn: "Matthew 11:28", refZh: "马太福音 11:28",
+          en: "Come unto me, all ye that labour and are heavy laden, and I will give you rest.",
+          zh: "凡劳苦担重担的人，可以到我这里来，我就使你们得安息。" },
+        { refEn: "Psalm 23:1", refZh: "诗篇 23:1",
+          en: "The Lord is my shepherd; I shall not want.",
+          zh: "耶和华是我的牧者，我必不至缺乏。" },
+        { refEn: "John 14:27", refZh: "约翰福音 14:27",
+          en: "Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",
+          zh: "我留下平安给你们，我将我的平安赐给你们。我所赐的，不像世人所赐的。你们心里不要忧愁，也不要胆怯。" },
+        { refEn: "Isaiah 41:10", refZh: "以赛亚书 41:10",
+          en: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee.",
+          zh: "你不要害怕，因为我与你同在；不要惊惶，因为我是你的神。我必坚固你，我必帮助你。" },
+        { refEn: "Philippians 4:7", refZh: "腓立比书 4:7",
+          en: "And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",
+          zh: "神所赐出人意外的平安，必在基督耶稣里，保守你们的心怀意念。" },
+        { refEn: "Psalm 121:1–2", refZh: "诗篇 121:1–2",
+          en: "I will lift up mine eyes unto the hills, from whence cometh my help. My help cometh from the Lord, which made heaven and earth.",
+          zh: "我要向山举目。我的帮助从何而来？我的帮助从造天地的耶和华而来。" },
+        { refEn: "Lamentations 3:22–23", refZh: "耶利米哀歌 3:22–23",
+          en: "It is of the Lord's mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.",
+          zh: "我们不至消灭，是出于耶和华诸般的慈爱，是因他的怜悯不至断绝。每早晨这都是新的。你的诚实极其广大。" },
+        { refEn: "Joshua 1:9", refZh: "约书亚记 1:9",
+          en: "Be strong and of a good courage; be not afraid, neither be thou dismayed: for the Lord thy God is with thee whithersoever thou goest.",
+          zh: "你当刚强壮胆！不要惧怕，也不要惊惶，因为你无论往哪里去，耶和华你的神必与你同在。" },
+        { refEn: "Psalm 27:1", refZh: "诗篇 27:1",
+          en: "The Lord is my light and my salvation; whom shall I fear? the Lord is the strength of my life; of whom shall I be afraid?",
+          zh: "耶和华是我的亮光，是我的拯救，我还怕谁呢？耶和华是我性命的保障，我还惧谁呢？" },
+        { refEn: "Isaiah 40:31", refZh: "以赛亚书 40:31",
+          en: "But they that wait upon the Lord shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.",
+          zh: "但那等候耶和华的，必从新得力。他们必如鹰展翅上腾，他们奔跑却不困倦，行走却不疲乏。" },
+        { refEn: "Romans 15:13", refZh: "罗马书 15:13",
+          en: "Now the God of hope fill you with all joy and peace in believing, that ye may abound in hope.",
+          zh: "但愿使人有盼望的神，因信将诸般的喜乐平安充满你们的心，使你们借着圣灵的能力大有盼望。" },
+        { refEn: "Psalm 19:14", refZh: "诗篇 19:14",
+          en: "Let the words of my mouth, and the meditation of my heart, be acceptable in thy sight, O Lord, my strength, and my redeemer.",
+          zh: "耶和华我的磐石、我的救赎主啊，愿我口中的言语、心里的意念，在你面前蒙悦纳。" },
+        { refEn: "Psalm 4:8", refZh: "诗篇 4:8",
+          en: "I will both lay me down in peace, and sleep: for thou, Lord, only makest me dwell in safety.",
+          zh: "我必安然躺下睡觉，因为独有你耶和华使我安然居住。" }
+      ];
+      function verseForToday() {
+        var now = new Date();
+        var start = new Date(now.getFullYear(), 0, 0);
+        var day = Math.floor((now - start) / 86400000);
+        return VERSES[day % VERSES.length];
+      }
+
+      /* ================= Content filter ================= */
+      var LINK_RE = /(https?:\/\/|www\.|\.com\b|\.net\b|\.org\b|\.io\b|\.cn\b|\.xyz\b|\.top\b|\.shop\b|\.info\b|\.site\b|\.online\b|bit\.ly|t\.me|goo\.gl|tinyurl)/i;
+      var BAD_WORDS = [
+        "fuck", "shit", "bitch", "bastard", "whore", "porn", "sex chat", "viagra", "casino",
+        "free money", "buy now", "click here", "make money fast", "crypto giveaway", "onlyfans",
+        "操你", "他妈的", "傻逼", "滚蛋", "加微信", "微信号", "博彩", "赌场", "代开发票",
+        "刷单", "兼职赚钱", "日赚", "色情", "约炮", "贷款秒批", "出售账号"
+      ];
+      function isBlocked(text) {
+        if (!text) return false;
+        if (LINK_RE.test(text)) return true;
+        var low = text.toLowerCase();
+        for (var i = 0; i < BAD_WORDS.length; i++) {
+          if (low.indexOf(BAD_WORDS[i].toLowerCase()) !== -1) return true;
+        }
+        return false;
+      }
+      function rowVisible(row) {
+        return row && !LINK_RE.test(row.name || "") && !LINK_RE.test(row.line || "");
+      }
+
+      /* ================= Store (Supabase REST) ================= */
+      var SB_BASE = "https://bvtmzeivblmtwvwconnv.supabase.co";
+      var SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2dG16ZWl2YmxtdHd2d2Nvbm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5ODM4OTAsImV4cCI6MjEwOTU1OTg5MH0.1OWXQjn87isAWJq2spUb01uqPJPmbUwQC481w25s2Rg";
+      function sbHeaders(extra) {
+        var h = { "apikey": SB_KEY, "Authorization": "Bearer " + SB_KEY, "Content-Type": "application/json" };
+        if (extra) for (var k in extra) h[k] = extra[k];
+        return h;
+      }
+      var storeState = { ok: false, total: null, rows: [] };
+
+      function fetchTotal() {
+        return fetch(SB_BASE + "/rest/v1/candles?select=id&limit=1", {
+          headers: sbHeaders({ "Prefer": "count=exact" })
+        }).then(function (res) {
+          var cr = res.headers.get("Content-Range") || "";
+          var parts = cr.split("/");
+          var n = parseInt(parts[1], 10);
+          if (!isNaN(n)) storeState.total = n;
+          if (!res.ok) throw new Error("count failed");
+        });
+      }
+      function fetchRows() {
+        return fetch(SB_BASE + "/rest/v1/candles?select=name,line,created_at&order=created_at.desc&limit=24", {
+          headers: sbHeaders()
+        }).then(function (res) {
+          if (!res.ok) throw new Error("rows failed");
+          return res.json();
+        }).then(function (data) {
+          storeState.rows = (data || []).filter(rowVisible);
+        });
+      }
+      function refreshStore() {
+        return Promise.allSettled([fetchTotal(), fetchRows()]).then(function (results) {
+          storeState.ok = results.some(function (r) { return r.status === "fulfilled"; });
+          renderCount();
+          renderStandList();
+          if (window.__scene) window.__scene.setCandles(storeState.rows);
+        });
+      }
+      function postCandle(name, line) {
+        return fetch(SB_BASE + "/rest/v1/candles", {
+          method: "POST",
+          headers: sbHeaders({ "Prefer": "return=minimal" }),
+          body: JSON.stringify({ name: name, line: line })
+        }).then(function (res) {
+          if (!res.ok) throw new Error("post failed");
+        });
+      }
+
+      /* ================= Seeded appearance ================= */
+      function seedOf(str) {
+        var h = 2166136261;
+        for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+        return (h >>> 0);
+      }
+      var COAT_COLORS = [0x7a4a3a, 0x44586e, 0x5d6e46, 0x8a6d3b, 0x6e4459, 0x3f5c5c, 0x946b4a, 0x565064];
+      var SKIN_TONES = [0xf2c9a0, 0xe0ac7e, 0xc6885a, 0x9c6644, 0xf5d7b5];
+      function appearanceFor(row) {
+        var s = seedOf((row.name || "") + "|" + (row.created_at || ""));
+        return {
+          coat: COAT_COLORS[s % COAT_COLORS.length],
+          skin: SKIN_TONES[Math.floor(s / 8) % SKIN_TONES.length],
+          hat: COAT_COLORS[Math.floor(s / 64) % COAT_COLORS.length]
+        };
+      }
+</script>
+
+    <script>
+      "use strict";
+      /* ================= Shared figure factory (3D) ================= */
+      function makeFigure3D(app, isVisitor) {
+        var g = new THREE.Group();
+        var coatMat = new THREE.MeshLambertMaterial({ color: app.coat });
+        var skinMat = new THREE.MeshLambertMaterial({ color: app.skin });
+        var hatMat = new THREE.MeshLambertMaterial({ color: app.hat });
+        // tapered human body
+        var body = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.30, 0.78, 12), coatMat);
+        body.position.y = 0.39;
+        g.add(body);
+        // head
+        var head = new THREE.Mesh(new THREE.SphereGeometry(0.21, 18, 14), skinMat);
+        head.position.y = 0.98;
+        g.add(head);
+        // eyes (front, +z)
+        var eyeMat = new THREE.MeshBasicMaterial({ color: 0x2b2118 });
+        var eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.022, 8, 8), eyeMat);
+        eyeL.position.set(-0.075, 1.0, 0.195);
+        var eyeR = eyeL.clone(); eyeR.position.x = 0.075;
+        g.add(eyeL); g.add(eyeR);
+        // real-shaped hat: brim + crown
+        var brim = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.30, 0.035, 18), hatMat);
+        brim.position.y = 1.13;
+        var crown = new THREE.Mesh(new THREE.CylinderGeometry(0.155, 0.185, 0.20, 14), hatMat);
+        crown.position.y = 1.24;
+        g.add(brim); g.add(crown);
+        g.userData = { head: head, eyeL: eyeL, eyeR: eyeR, body: body, isVisitor: !!isVisitor };
+        return g;
+      }
+
+      /* ================= 3D scene ================= */
+      function createScene3D(container, onTap) {
+        var renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        container.appendChild(renderer.domElement);
+        var scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xefe4cb);
+        scene.fog = new THREE.Fog(0xefe4cb, 16, 30);
+
+        var camera = new THREE.PerspectiveCamera(46, 1, 0.1, 60);
+        camera.position.set(0, 2.6, 8.6);
+        camera.lookAt(0, 1.15, -2.5);
+
+        scene.add(new THREE.AmbientLight(0xfff1d6, 0.85));
+        var warm = new THREE.DirectionalLight(0xffe3ae, 0.75);
+        warm.position.set(2.5, 6, -3);
+        scene.add(warm);
+        var fill = new THREE.DirectionalLight(0xfff6e0, 0.3);
+        fill.position.set(-3, 4, 6);
+        scene.add(fill);
+
+        var woodMat = new THREE.MeshLambertMaterial({ color: 0x8a6844 });
+        var woodDark = new THREE.MeshLambertMaterial({ color: 0x6d4f30 });
+        var wallMat = new THREE.MeshLambertMaterial({ color: 0xf7f1e2 });
+
+        function box(w, h, d, mat, x, y, z) {
+          var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+          m.position.set(x, y, z); scene.add(m); return m;
+        }
+        // floor
+        var floor = new THREE.Mesh(new THREE.PlaneGeometry(11, 16), new THREE.MeshLambertMaterial({ color: 0xbd9264 }));
+        floor.rotation.x = -Math.PI / 2; floor.position.z = -1; scene.add(floor);
+        // aisle runner
+        var runner = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 13), new THREE.MeshLambertMaterial({ color: 0x9e4f43 }));
+        runner.rotation.x = -Math.PI / 2; runner.position.set(0, 0.005, 0.4); scene.add(runner);
+        // walls
+        box(11, 5.4, 0.2, wallMat, 0, 2.7, -7.1);            // front
+        box(0.2, 5.4, 16, wallMat, -5.5, 2.7, -1);           // left
+        box(0.2, 5.4, 16, wallMat, 5.5, 2.7, -1);            // right
+        box(11, 0.25, 16, new THREE.MeshLambertMaterial({ color: 0xe9dfc8 }), 0, 5.45, -1); // ceiling
+
+        /* Stained-glass window (canvas texture) */
+        function stainedTexture() {
+          var c = document.createElement("canvas"); c.width = 256; c.height = 448;
+          var x = c.getContext("2d");
+          var cols = ["#c94f42", "#3f6fb5", "#e0a83c", "#4d8a5a", "#7a4a8c", "#d97b2f", "#4a90a4", "#c94f42"];
+          var cw = 256 / 4, ch = 448 / 7;
+          for (var i = 0; i < 4; i++) for (var j = 0; j < 7; j++) {
+            x.fillStyle = cols[(i * 3 + j * 5 + ((i + j) % 3)) % cols.length];
+            x.fillRect(i * cw + 3, j * ch + 3, cw - 6, ch - 6);
+          }
+          x.fillStyle = "#f3d489";
+          x.beginPath(); x.arc(128, 150, 44, 0, Math.PI * 2); x.fill();
+          x.strokeStyle = "#3a3128"; x.lineWidth = 7;
+          x.strokeRect(0, 0, 256, 448);
+          x.beginPath(); x.moveTo(128, 96); x.lineTo(128, 204); x.moveTo(88, 138); x.lineTo(168, 138); x.stroke();
+          var tex = new THREE.CanvasTexture(c);
+          return tex;
+        }
+        var winFrame = box(2.5, 4.5, 0.14, woodDark, 0, 2.9, -6.95);
+        var winGlass = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 4.2),
+          new THREE.MeshBasicMaterial({ map: stainedTexture() }));
+        winGlass.position.set(0, 2.9, -6.86); scene.add(winGlass);
+        var winGlow = new THREE.PointLight(0xffd9a0, 0.5, 9);
+        winGlow.position.set(0, 2.8, -5.6); scene.add(winGlow);
+
+        /* Colored light patch on the floor — drifts VERY slowly */
+        function lightPatchTexture() {
+          var c = document.createElement("canvas"); c.width = 256; c.height = 256;
+          var x = c.getContext("2d");
+          var cols = ["rgba(201,79,66,0.55)", "rgba(63,111,181,0.5)", "rgba(224,168,60,0.55)", "rgba(77,138,90,0.5)"];
+          for (var i = 0; i < 4; i++) {
+            var grd = x.createRadialGradient(64 + (i % 2) * 128, 64 + Math.floor(i / 2) * 128, 6, 64 + (i % 2) * 128, 64 + Math.floor(i / 2) * 128, 86);
+            grd.addColorStop(0, cols[i]); grd.addColorStop(1, "rgba(255,255,255,0)");
+            x.fillStyle = grd; x.fillRect(0, 0, 256, 256);
+          }
+          return new THREE.CanvasTexture(c);
+        }
+        var patch = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 4.6),
+          new THREE.MeshBasicMaterial({ map: lightPatchTexture(), transparent: true, opacity: 0.5, depthWrite: false }));
+        patch.rotation.x = -Math.PI / 2; patch.rotation.z = 0.35;
+        patch.position.set(0, 0.012, -3.4); scene.add(patch);
+
+        /* Simple wooden cross on the front wall */
+        box(0.09, 1.1, 0.06, woodDark, -2.6, 3.6, -6.94);
+        box(0.62, 0.09, 0.06, woodDark, -2.6, 3.75, -6.94);
+
+        /* Pews: two columns, center aisle */
+        var pewRows = [2.6, 1.2, -0.2, -1.6];
+        function makePew(x, z) {
+          var g = new THREE.Group();
+          function bx(w, h, d, mat, px, py, pz) {
+            var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+            m.position.set(px, py, pz); g.add(m); return m;
+          }
+          bx(2.6, 0.09, 0.55, woodMat, 0, 0.46, 0);          // seat
+          bx(2.6, 0.62, 0.09, woodMat, 0, 0.78, -0.26);      // back
+          bx(0.09, 0.95, 0.62, woodDark, -1.28, 0.48, 0);   // ends
+          bx(0.09, 0.95, 0.62, woodDark, 1.28, 0.48, 0);
+          bx(2.6, 0.07, 0.5, woodDark, 0, 0.06, 0.02);       // base
+          g.position.set(x, 0, z); scene.add(g); return g;
+        }
+        pewRows.forEach(function (z) { makePew(-2.35, z); makePew(2.35, z); });
+
+        /* Candle stand (front right) */
+        var stand = new THREE.Group();
+        (function () {
+          function bx(w, h, d, mat, px, py, pz) {
+            var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+            m.position.set(px, py, pz); stand.add(m); return m;
+          }
+          bx(1.9, 0.07, 0.62, woodDark, 0, 0.92, 0);
+          bx(0.08, 0.92, 0.08, woodDark, -0.85, 0.46, -0.24);
+          bx(0.08, 0.92, 0.08, woodDark, 0.85, 0.46, -0.24);
+          bx(0.08, 0.92, 0.08, woodDark, -0.85, 0.46, 0.24);
+          bx(0.08, 0.92, 0.08, woodDark, 0.85, 0.46, 0.24);
+          bx(1.9, 0.05, 0.5, woodMat, 0, 0.55, 0);
+          stand.position.set(3.1, 0, -4.6);
+          stand.rotation.y = -0.5;
+          scene.add(stand);
+        })();
+        var flameLight = new THREE.PointLight(0xffb84d, 0.0, 4);
+        flameLight.position.set(3.1, 1.5, -4.6); scene.add(flameLight);
+
+        var candleMeshes = [];
+        var candleGroup = new THREE.Group(); scene.add(candleGroup);
+        function buildCandles(rows) {
+          while (candleGroup.children.length) candleGroup.remove(candleGroup.children[0]);
+          candleMeshes = [];
+          var waxMat = new THREE.MeshLambertMaterial({ color: 0xf6ecd4 });
+          rows.slice(0, 24).forEach(function (row, i) {
+            var col = i % 8, rowIdx = Math.floor(i / 8);
+            // local stand coords -> world (stand rotated -0.5 rad at (3.1,0,-4.6))
+            var lx = -0.78 + col * 0.223, lz = -0.19 + rowIdx * 0.19;
+            var cos = Math.cos(-0.5), sin = Math.sin(-0.5);
+            var wx = 3.1 + lx * cos - lz * sin;
+            var wz = -4.6 + lx * sin + lz * cos;
+            var h = 0.16 + (seedOf(row.name + row.created_at) % 10) / 100;
+            var cg = new THREE.Group();
+            var wax = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.036, h, 10), waxMat);
+            wax.position.y = h / 2; cg.add(wax);
+            var flame = new THREE.Mesh(new THREE.SphereGeometry(0.021, 8, 8),
+              new THREE.MeshBasicMaterial({ color: 0xffc45e }));
+            flame.scale.y = 1.7; flame.position.y = h + 0.045; cg.add(flame);
+            cg.position.set(wx, 0.955, wz);
+            cg.userData = { record: row, flame: flame };
+            candleGroup.add(cg);
+            candleMeshes.push(cg);
+          });
+          flameLight.intensity = rows.length ? 0.55 : 0.0;
+        }
+
+        /* Visitor figure: walks in, down the aisle, sits in a pew */
+        var visitor = makeFigure3D({ coat: 0x74563c, skin: 0xf0c08a, hat: 0x4a3b2c }, true);
+        visitor.position.set(0, 0, 6.8);
+        scene.add(visitor);
+        var walk = { t: 0, dur: 6.2, done: false };
+        var path = [
+          { x: 0, z: 6.8 }, { x: 0, z: 1.35 }, { x: -1.05, z: 1.2 }, { x: -1.9, z: 1.2 }
+        ];
+        function pathPos(p) {
+          var segs = [], total = 0, i;
+          for (i = 0; i < path.length - 1; i++) {
+            var dx = path[i + 1].x - path[i].x, dz = path[i + 1].z - path[i].z;
+            var len = Math.sqrt(dx * dx + dz * dz); segs.push(len); total += len;
+          }
+          var d = p * total;
+          for (i = 0; i < segs.length; i++) {
+            if (d <= segs[i] || i === segs.length - 1) {
+              var f = segs[i] === 0 ? 0 : Math.min(1, d / segs[i]);
+              return {
+                x: path[i].x + (path[i + 1].x - path[i].x) * f,
+                z: path[i].z + (path[i + 1].z - path[i].z) * f,
+                dx: path[i + 1].x - path[i].x, dz: path[i + 1].z - path[i].z
+              };
+            }
+            d -= segs[i];
+          }
+          return { x: path[3].x, z: path[3].z, dx: 0, dz: -1 };
+        }
+
+        /* Neighbour figures from real candle rows (latest 8) */
+        var neighbourGroup = new THREE.Group(); scene.add(neighbourGroup);
+        var neighbourMeshes = [];
+        var seats = [
+          { x: -2.5, z: 2.6 }, { x: 2.1, z: 2.6 }, { x: -2.0, z: 1.2 }, { x: 2.6, z: 1.2 },
+          { x: -2.6, z: -0.2 }, { x: 2.0, z: -0.2 }, { x: -2.1, z: -1.6 }, { x: 2.5, z: -1.6 }
+        ];
+        function buildNeighbours(rows) {
+          while (neighbourGroup.children.length) neighbourGroup.remove(neighbourGroup.children[0]);
+          neighbourMeshes = [];
+          rows.slice(0, 8).forEach(function (row, i) {
+            var f = makeFigure3D(appearanceFor(row), false);
+            f.position.set(seats[i].x, 0.30, seats[i].z + 0.05);
+            f.scale.setScalar(0.96);
+            f.userData.record = row;
+            neighbourGroup.add(f);
+            neighbourMeshes.push(f);
+          });
+        }
+
+        /* Sitting state for the visitor */
+        var sitting = false;
+        function setSitting(v) {
+          sitting = v;
+          var u = visitor.userData;
+          u.eyeL.visible = u.eyeR.visible = !v;
+        }
+
+        /* Tap picking */
+        var raycaster = new THREE.Raycaster();
+        var pointer = new THREE.Vector2();
+        renderer.domElement.addEventListener("pointerdown", function (ev) {
+          var rect = renderer.domElement.getBoundingClientRect();
+          pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
+          pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
+          raycaster.setFromCamera(pointer, camera);
+          var targets = [];
+          neighbourMeshes.forEach(function (m) { m.traverse(function (c) { c.userData.__root = m; targets.push(c); }); });
+          candleMeshes.forEach(function (m) { m.traverse(function (c) { c.userData.__root = m; targets.push(c); }); });
+          var hits = raycaster.intersectObjects(targets, false);
+          if (hits.length) {
+            var root = hits[0].object.userData.__root;
+            if (root && root.userData.record) onTap(root.userData.record);
+          }
+        });
+
+        function resize() {
+          var w = container.clientWidth, h = container.clientHeight;
+          if (!w || !h) return;
+          renderer.setSize(w, h);
+          camera.aspect = w / h; camera.updateProjectionMatrix();
+        }
+        resize();
+
+        var clockStart = performance.now();
+        function frame(now) {
+          var t = (now - clockStart) / 1000;
+          /* stained-glass light drifts VERY slowly */
+          patch.position.x = Math.sin(t * 0.045) * 0.55;
+          patch.position.z = -3.4 + Math.sin(t * 0.03 + 1.2) * 0.3;
+          patch.material.opacity = 0.46 + Math.sin(t * 0.05) * 0.04;
+          /* visitor walk-in */
+          if (!walk.done) {
+            walk.t += 1 / 60;
+            var p = Math.min(1, walk.t / walk.dur);
+            var eased = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+            var pos = pathPos(eased);
+            visitor.position.x = pos.x; visitor.position.z = pos.z;
+            visitor.position.y = Math.abs(Math.sin(walk.t * 5.2)) * 0.03;
+            if (pos.dx || pos.dz) visitor.rotation.y = Math.atan2(pos.dx, pos.dz);
+            if (p >= 1) {
+              walk.done = true;
+              visitor.rotation.y = Math.PI; /* face the front window */
+              visitor.position.y = 0.30;    /* seated on the pew */
+            }
+          } else {
+            /* gentle breathing while seated */
+            var target = sitting ? 0.30 : 0.30;
+            visitor.position.y = target;
+            var br = sitting ? (0.5 + 0.5 * Math.sin(t * (Math.PI * 2 / 8))) : 0;
+            visitor.scale.y = 1 + br * 0.022;
+            visitor.userData.head.position.y = 0.98 + br * 0.012;
+          }
+          /* candle flames flicker, barely */
+          candleMeshes.forEach(function (cg, i) {
+            var f = cg.userData.flame;
+            var s = 1 + Math.sin(t * 7 + i * 1.7) * 0.10;
+            f.scale.set(s, 1.7 * (1 + Math.sin(t * 9 + i) * 0.08), s);
+          });
+          if (candleMeshes.length) flameLight.intensity = 0.5 + Math.sin(t * 8) * 0.06;
+          /* neighbours breathe faintly */
+          neighbourMeshes.forEach(function (m, i) {
+            m.scale.y = 0.96 * (1 + Math.sin(t * 0.8 + i * 2.1) * 0.008);
+          });
+          renderer.render(scene, camera);
+        }
+
+        return {
+          frame: frame,
+          resize: resize,
+          setCandles: function (rows) { buildCandles(rows); buildNeighbours(rows); },
+          setSitting: setSitting
+        };
+      }
+</script>
+
+    <script>
+      "use strict";
+      /* ================= 2D canvas fallback scene ================= */
+      function createScene2D(container, onTap) {
+        var canvas = document.createElement("canvas");
+        container.appendChild(canvas);
+        var ctx = canvas.getContext("2d");
+        var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+        function resize() {
+          W = container.clientWidth; H = container.clientHeight;
+          if (!W || !H) return;
+          canvas.width = W * dpr; canvas.height = H * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resize();
+
+        var rows = [];
+        var sitting = false;
+        var start = performance.now();
+        var hits = []; /* {x,y,r,record} */
+
+        function drawFigure(x, y, s, app, opts) {
+          opts = opts || {};
+          var css = function (hex) { return "#" + ("000000" + hex.toString(16)).slice(-6); };
+          ctx.save(); ctx.translate(x, y); ctx.scale(s, s * (opts.breath || 1));
+          // tapered body
+          ctx.fillStyle = css(app.coat);
+          ctx.beginPath();
+          ctx.moveTo(-13, 26); ctx.quadraticCurveTo(-11, -6, -6, -14);
+          ctx.lineTo(6, -14); ctx.quadraticCurveTo(11, -6, 13, 26);
+          ctx.closePath(); ctx.fill();
+          // head
+          ctx.fillStyle = css(app.skin);
+          ctx.beginPath(); ctx.arc(0, -26, 12.5, 0, Math.PI * 2); ctx.fill();
+          // eyes
+          ctx.strokeStyle = "#2b2118"; ctx.lineWidth = 1.6; ctx.lineCap = "round";
+          if (opts.eyesClosed) {
+            ctx.beginPath();
+            ctx.moveTo(-6.5, -25); ctx.quadraticCurveTo(-4, -23.4, -1.5, -25);
+            ctx.moveTo(1.5, -25); ctx.quadraticCurveTo(4, -23.4, 6.5, -25);
+            ctx.stroke();
+          } else {
+            ctx.fillStyle = "#2b2118";
+            ctx.beginPath(); ctx.arc(-4.2, -25.5, 1.5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(4.2, -25.5, 1.5, 0, Math.PI * 2); ctx.fill();
+          }
+          // hat: brim + crown
+          ctx.fillStyle = css(app.hat);
+          ctx.beginPath(); ctx.ellipse(0, -35, 17, 4.2, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(-9, -35); ctx.lineTo(-7.6, -48); ctx.quadraticCurveTo(0, -51, 7.6, -48); ctx.lineTo(9, -35);
+          ctx.closePath(); ctx.fill();
+          ctx.restore();
+        }
+
+        function frame(now) {
+          if (!W) resize();
+          var t = (now - start) / 1000;
+          hits = [];
+          // walls & floor
+          var wallG = ctx.createLinearGradient(0, 0, 0, H);
+          wallG.addColorStop(0, "#f7efdb"); wallG.addColorStop(0.62, "#f1e5cb"); wallG.addColorStop(0.621, "#c49a68"); wallG.addColorStop(1, "#a87f52");
+          ctx.fillStyle = wallG; ctx.fillRect(0, 0, W, H);
+          var horizon = H * 0.62, cx = W / 2;
+
+          // stained-glass window
+          var ww = Math.min(W * 0.30, 130), wh = ww * 1.8;
+          var wx = cx - ww / 2, wy = H * 0.06;
+          var paneCols = ["#c94f42", "#3f6fb5", "#e0a83c", "#4d8a5a", "#7a4a8c", "#d97b2f", "#4a90a4"];
+          ctx.save();
+          ctx.beginPath(); ctx.rect(wx, wy, ww, wh); ctx.clip();
+          var pw = ww / 3, ph = wh / 5;
+          for (var i = 0; i < 3; i++) for (var j = 0; j < 5; j++) {
+            ctx.fillStyle = paneCols[(i * 2 + j * 3) % paneCols.length];
+            ctx.fillRect(wx + i * pw + 1.5, wy + j * ph + 1.5, pw - 3, ph - 3);
+          }
+          ctx.fillStyle = "#f3d489";
+          ctx.beginPath(); ctx.arc(cx, wy + wh * 0.34, ww * 0.17, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = "#6d4f30"; ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(cx, wy + wh * 0.34 - ww * 0.13); ctx.lineTo(cx, wy + wh * 0.34 + ww * 0.13);
+          ctx.moveTo(cx - ww * 0.11, wy + wh * 0.34 - ww * 0.045); ctx.lineTo(cx + ww * 0.11, wy + wh * 0.34 - ww * 0.045);
+          ctx.stroke();
+          ctx.restore();
+          ctx.strokeStyle = "#6d4f30"; ctx.lineWidth = 5; ctx.strokeRect(wx, wy, ww, wh);
+
+          // small cross, left of window
+          ctx.fillStyle = "#6d4f30";
+          ctx.fillRect(cx - ww * 0.85 - 3, wy + wh * 0.2, 6, wh * 0.34);
+          ctx.fillRect(cx - ww * 0.85 - 16, wy + wh * 0.2 + wh * 0.1, 38, 6);
+
+          // drifting colored light on the floor (VERY slow)
+          var drift = Math.sin(t * 0.045) * W * 0.05;
+          ctx.save();
+          ctx.globalAlpha = 0.30;
+          ctx.translate(cx + drift, horizon + (H - horizon) * 0.38);
+          ctx.rotate(0.3); ctx.scale(1, 0.42);
+          var lg = ctx.createRadialGradient(0, 0, 8, 0, 0, W * 0.24);
+          lg.addColorStop(0, "#e0a83c"); lg.addColorStop(0.45, "#c96a54"); lg.addColorStop(0.75, "#5a7fb5"); lg.addColorStop(1, "rgba(255,255,255,0)");
+          ctx.fillStyle = lg;
+          ctx.beginPath(); ctx.arc(0, 0, W * 0.24, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+
+          // aisle runner
+          ctx.fillStyle = "#9e4f43";
+          ctx.beginPath();
+          ctx.moveTo(cx - W * 0.045, horizon); ctx.lineTo(cx + W * 0.045, horizon);
+          ctx.lineTo(cx + W * 0.11, H); ctx.lineTo(cx - W * 0.11, H);
+          ctx.closePath(); ctx.fill();
+
+          // pews (two columns, four rows)
+          var pewRowsY = [0.70, 0.79, 0.88, 0.965];
+          ctx.fillStyle = "#8a6844";
+          pewRowsY.forEach(function (fy) {
+            var y = H * fy, wP = W * 0.30, hP = H * 0.028;
+            [-1, 1].forEach(function (side) {
+              var x0 = side < 0 ? cx - W * 0.135 - wP : cx + W * 0.135;
+              ctx.fillStyle = "#6d4f30"; ctx.fillRect(x0, y - hP * 1.5, wP, hP * 0.8);
+              ctx.fillStyle = "#8a6844"; ctx.fillRect(x0, y - hP * 0.6, wP, hP);
+              ctx.fillStyle = "#755631"; ctx.fillRect(x0, y + hP * 0.4, wP, hP * 0.5);
+            });
+          });
+
+          // neighbours seated (from real rows, latest 8)
+          var seatSpots = [
+            { fx: -0.26, fy: 0.665 }, { fx: 0.24, fy: 0.665 }, { fx: -0.33, fy: 0.755 }, { fx: 0.31, fy: 0.755 },
+            { fx: -0.24, fy: 0.845 }, { fx: 0.35, fy: 0.845 }, { fx: -0.36, fy: 0.928 }, { fx: 0.22, fy: 0.928 }
+          ];
+          rows.slice(0, 8).forEach(function (row, i) {
+            var sp = seatSpots[i];
+            var x = cx + sp.fx * W, y = H * sp.fy;
+            var s = 0.62 + (sp.fy - 0.66) * 0.9;
+            drawFigure(x, y, s, appearanceFor(row), { breath: 1 + Math.sin(t * 0.8 + i * 2.1) * 0.008 });
+            hits.push({ x: x, y: y - 20 * s, r: 34 * s + 8, record: row });
+          });
+
+          // candle stand (front right)
+          var sx = W * 0.845, sy = H * 0.60;
+          ctx.fillStyle = "#6d4f30";
+          ctx.fillRect(sx - W * 0.085, sy, W * 0.17, 5);
+          ctx.fillRect(sx - W * 0.075, sy + 5, 5, H * 0.10);
+          ctx.fillRect(sx + W * 0.075 - 5, sy + 5, 5, H * 0.10);
+          rows.slice(0, 24).forEach(function (row, i) {
+            var col = i % 8, r2 = Math.floor(i / 8);
+            var cxx = sx - W * 0.070 + col * (W * 0.14 / 7);
+            var cyy = sy - 4 - r2 * 13;
+            ctx.fillStyle = "#f6ecd4"; ctx.fillRect(cxx - 2.2, cyy - 9, 4.4, 9);
+            var fl = 1 + Math.sin(t * 7 + i * 1.7) * 0.15;
+            ctx.fillStyle = "#ffc45e";
+            ctx.beginPath(); ctx.ellipse(cxx, cyy - 12.5, 2.4, 4.2 * fl, 0, 0, Math.PI * 2); ctx.fill();
+            hits.push({ x: cxx, y: cyy - 8, r: 11, record: row });
+          });
+
+          // visitor: walks down the aisle, then sits (left pew, second row)
+          var walkDur = 6.2;
+          var p = Math.min(1, t / walkDur);
+          var eased = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+          var vx, vy, vs;
+          if (p < 1) {
+            // from horizon (door) toward viewer along the aisle, slight turn at the end
+            var along = eased;
+            vy = horizon + (H * 0.80 - horizon) * along;
+            vx = cx + Math.sin(along * Math.PI) * 2 - (along > 0.9 ? (along - 0.9) * W * 0.9 : 0);
+            vs = 0.45 + along * 0.75;
+            vy += Math.abs(Math.sin(t * 5.2)) * -2;
+          } else {
+            vx = cx - W * 0.245; vy = H * 0.755; vs = 1.06;
+          }
+          var breath = 1;
+          var eyesClosed = false;
+          if (p >= 1 && sitting) {
+            var ph = (t % 8) / 8;
+            breath = 1 + Math.sin(ph * Math.PI * 2) * 0.02;
+            eyesClosed = true;
+          }
+          drawFigure(vx, vy, vs, { coat: 0x74563c, skin: 0xf0c08a, hat: 0x4a3b2c }, { breath: breath, eyesClosed: eyesClosed });
+        }
+
+        canvas.addEventListener("pointerdown", function (ev) {
+          var rect = canvas.getBoundingClientRect();
+          var x = ev.clientX - rect.left, y = ev.clientY - rect.top;
+          for (var i = hits.length - 1; i >= 0; i--) {
+            var dx = x - hits[i].x, dy = y - hits[i].y;
+            if (dx * dx + dy * dy <= hits[i].r * hits[i].r) { onTap(hits[i].record); return; }
+          }
+        });
+
+        return {
+          frame: frame,
+          resize: resize,
+          setCandles: function (r) { rows = r || []; },
+          setSitting: function (v) { sitting = v; }
+        };
+      }
+
+      /* ================= Scene boot (3D, else 2D fallback) ================= */
+      var sceneBox = document.getElementById("sceneBox");
+      var activeScene = null;
+      function showReading(row) {
+        if (!row) return;
+        document.getElementById("readLine").textContent = row.line || "";
+        document.getElementById("readName").textContent = t().readBy(row.name || "");
+        document.getElementById("panelRead").hidden = false;
+        document.getElementById("panelRead").scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      function bootScene() {
+        var use3D = false;
+        try {
+          if (window.THREE) {
+            var testCanvas = document.createElement("canvas");
+            var gl = testCanvas.getContext("webgl") || testCanvas.getContext("experimental-webgl");
+            if (gl) use3D = true;
+          }
+        } catch (e) { use3D = false; }
+        if (use3D) {
+          try {
+            activeScene = createScene3D(sceneBox, showReading);
+          } catch (e) {
+            activeScene = null;
+          }
+        }
+        if (!activeScene) {
+          activeScene = createScene2D(sceneBox, showReading);
+        }
+        window.__scene = activeScene;
+        activeScene.setCandles(storeState.rows);
+        window.addEventListener("resize", function () { activeScene.resize(); });
+        function loop(now) {
+          activeScene.frame(now);
+          requestAnimationFrame(loop);
+        }
+        requestAnimationFrame(loop);
+      }
+</script>
+
+    <script>
+      "use strict";
+      /* ================= Audio (WebAudio, off by default) ================= */
+      var AudioEngine = {
+        ctx: null, master: null, pad: null, padOn: false, hymnOn: false, hymnTimer: null, hymnStep: 0,
+        ensure: function () {
+          if (this.ctx) { if (this.ctx.state === "suspended") this.ctx.resume(); return; }
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          this.ctx = new AC();
+          this.master = this.ctx.createGain();
+          this.master.gain.value = 0.9;
+          this.master.connect(this.ctx.destination);
+        },
+        /* --- faint meditation pad (sound toggle) --- */
+        startPad: function () {
+          this.ensure(); if (!this.ctx || this.pad) return;
+          var ctx = this.ctx;
+          var gain = ctx.createGain(); gain.gain.value = 0;
+          gain.gain.linearRampToValueAtTime(0.035, ctx.currentTime + 2.5);
+          var filter = ctx.createBiquadFilter(); filter.type = "lowpass"; filter.frequency.value = 520;
+          filter.connect(gain); gain.connect(this.master);
+          var oscs = [];
+          [196.0, 246.94, 293.66].forEach(function (f, i) {
+            var o = ctx.createOscillator();
+            o.type = i === 0 ? "sine" : "triangle";
+            o.frequency.value = f; o.detune.value = (i - 1) * 4;
+            o.connect(filter); o.start(); oscs.push(o);
+          });
+          var lfo = ctx.createOscillator(); lfo.frequency.value = 0.07;
+          var lfoGain = ctx.createGain(); lfoGain.gain.value = 90;
+          lfo.connect(lfoGain); lfoGain.connect(filter.frequency); lfo.start();
+          this.pad = { oscs: oscs, gain: gain, lfo: lfo };
+          this.padOn = true;
+        },
+        stopPad: function () {
+          if (!this.pad) { this.padOn = false; return; }
+          var pad = this.pad, ctx = this.ctx;
+          pad.gain.gain.cancelScheduledValues(ctx.currentTime);
+          pad.gain.gain.setValueAtTime(pad.gain.gain.value, ctx.currentTime);
+          pad.gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.2);
+          setTimeout(function () {
+            pad.oscs.forEach(function (o) { try { o.stop(); } catch (e) {} });
+            try { pad.lfo.stop(); } catch (e) {}
+          }, 1400);
+          this.pad = null; this.padOn = false;
+        },
+        /* --- quiet organ: Amazing Grace (public-domain melody) --- */
+        melody: [
+          ["D4", 1], ["G4", 2], ["B4", 1], ["G4", 1], ["B4", 1], ["A4", 2], ["G4", 1],
+          ["E4", 2], ["D4", 1], ["D4", 1], ["G4", 2], ["B4", 1], ["G4", 1], ["B4", 1],
+          ["A4", 2], ["D5", 1], ["D5", 2], ["B4", 1], ["D5", 1], ["B4", 1], ["G4", 1],
+          ["D4", 1], ["E4", 1], ["G4", 2], ["E4", 1], ["D4", 3]
+        ],
+        freq: function (note) {
+          var map = { D4: 293.66, E4: 329.63, G4: 392.0, A4: 440.0, B4: 493.88, D5: 587.33 };
+          return map[note] || 392;
+        },
+        playNote: function (freq, dur) {
+          var ctx = this.ctx;
+          var t0 = ctx.currentTime;
+          var gain = ctx.createGain();
+          gain.gain.setValueAtTime(0, t0);
+          gain.gain.linearRampToValueAtTime(0.055, t0 + 0.09);
+          gain.gain.setValueAtTime(0.055, t0 + Math.max(0.1, dur - 0.12));
+          gain.gain.linearRampToValueAtTime(0, t0 + dur);
+          var filter = ctx.createBiquadFilter(); filter.type = "lowpass"; filter.frequency.value = 1500;
+          filter.connect(gain); gain.connect(this.master);
+          [[1, 1.0], [2, 0.42], [3, 0.16], [4, 0.07]].forEach(function (h) {
+            var o = ctx.createOscillator();
+            o.type = "sine"; o.frequency.value = freq * h[0];
+            var og = ctx.createGain(); og.gain.value = h[1];
+            o.connect(og); og.connect(filter);
+            o.start(t0); o.stop(t0 + dur + 0.05);
+          });
+        },
+        scheduleStep: function () {
+          if (!this.hymnOn) return;
+          var beat = 0.92;
+          var item = this.melody[this.hymnStep % this.melody.length];
+          var dur = item[1] * beat;
+          this.playNote(this.freq(item[0]), dur);
+          this.hymnStep++;
+          var self = this;
+          this.hymnTimer = setTimeout(function () { self.scheduleStep(); }, dur * 1000);
+        },
+        startHymn: function () {
+          this.ensure(); if (!this.ctx) return;
+          this.hymnOn = true; this.hymnStep = 0;
+          this.scheduleStep();
+        },
+        stopHymn: function () {
+          this.hymnOn = false;
+          if (this.hymnTimer) { clearTimeout(this.hymnTimer); this.hymnTimer = null; }
+        }
+      };
+
+      /* ================= UI wiring ================= */
+      var $ = function (id) { return document.getElementById(id); };
+      var sittingState = { on: false, startedAt: 0, timerInt: null };
+
+      function applyLang() {
+        setHtmlLang();
+        var s = t();
+        document.querySelectorAll("[data-i18n]").forEach(function (el) {
+          var key = el.getAttribute("data-i18n");
+          if (s[key]) el.textContent = s[key];
+        });
+        // sitting button may be in its "stop" state
+        if (sittingState.on) {
+          document.querySelector('#btnSit .a-label').textContent = s.sitStop;
+          document.querySelector('#btnSit .a-sub').textContent = s.sitStopSub;
+        }
+        if (AudioEngine.hymnOn) {
+          document.querySelector('#btnHymn .a-label').textContent = s.hymnStop;
+          document.querySelector('#btnHymn .a-sub').textContent = s.hymnStopSub;
+        }
+        $("introLine").textContent = s.intro;
+        $("sceneHint").textContent = s.hint;
+        $("soundToggle").textContent = AudioEngine.padOn ? s.soundOn : s.soundOff;
+        $("langToggle").textContent = lang === "zh" ? "EN" : "中文";
+        $("cName").placeholder = s.namePh;
+        $("cLine").placeholder = s.linePh;
+        $("candleSubmit").textContent = s.lightIt;
+        $("readClose").textContent = s.close;
+        $("standTitle").textContent = s.standTitle;
+        $("standEmpty").textContent = s.standEmpty;
+        $("footerLine").textContent = s.footer;
+        var v = verseForToday();
+        $("verseText").textContent = lang === "zh" ? v.zh : v.en;
+        $("verseRef").textContent = lang === "zh" ? v.refZh : v.refEn;
+        renderCount();
+        renderStandList();
+        updateCharCounts();
+      }
+
+      function renderCount() {
+        if (storeState.total === null) $("countLine").innerHTML = t().countUnknown;
+        else $("countLine").innerHTML = t().count(storeState.total);
+      }
+
+      function renderStandList() {
+        var wrap = $("standChips");
+        wrap.innerHTML = "";
+        var rows = storeState.rows;
+        $("standEmpty").hidden = rows.length > 0;
+        rows.forEach(function (row) {
+          var b = document.createElement("button");
+          b.type = "button"; b.className = "candle-chip";
+          var dot = document.createElement("span"); dot.className = "dot";
+          b.appendChild(dot);
+          b.appendChild(document.createTextNode(row.name || ""));
+          b.addEventListener("click", function () { showReading(row); });
+          wrap.appendChild(b);
+        });
+      }
+
+      /* --- language & sound toggles --- */
+      $("langToggle").addEventListener("click", function () {
+        lang = lang === "zh" ? "en" : "zh";
+        applyLang();
+      });
+      $("soundToggle").addEventListener("click", function () {
+        if (AudioEngine.padOn) AudioEngine.stopPad(); else AudioEngine.startPad();
+        this.setAttribute("aria-pressed", AudioEngine.padOn ? "true" : "false");
+        this.textContent = AudioEngine.padOn ? t().soundOn : t().soundOff;
+      });
+
+      /* --- 1. Sit a while --- */
+      function fmtElapsed(ms) {
+        var sec = Math.floor(ms / 1000);
+        var m = Math.floor(sec / 60), s = sec % 60;
+        return m + ":" + (s < 10 ? "0" : "") + s;
+      }
+      $("btnSit").addEventListener("click", function () {
+        var s = t();
+        if (!sittingState.on) {
+          sittingState.on = true;
+          sittingState.startedAt = Date.now();
+          $("panelSit").hidden = false;
+          this.setAttribute("aria-pressed", "true");
+          document.querySelector('#btnSit .a-label').textContent = s.sitStop;
+          document.querySelector('#btnSit .a-sub').textContent = s.sitStopSub;
+          if (window.__scene) window.__scene.setSitting(true);
+          $("breathTimer").textContent = "0:00";
+          sittingState.timerInt = setInterval(function () {
+            $("breathTimer").textContent = fmtElapsed(Date.now() - sittingState.startedAt);
+          }, 500);
+          $("panelSit").scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } else {
+          sittingState.on = false;
+          clearInterval(sittingState.timerInt);
+          $("panelSit").hidden = true;
+          this.setAttribute("aria-pressed", "false");
+          document.querySelector('#btnSit .a-label').textContent = s.sit;
+          document.querySelector('#btnSit .a-sub').textContent = s.sitSub;
+          if (window.__scene) window.__scene.setSitting(false);
+        }
+      });
+      /* breathing ring: 4s in, 4s out, synced word */
+      (function breathLoop() {
+        var core = $("breathCore"), word = $("breathWord");
+        function tick(now) {
+          if (sittingState.on) {
+            var ph = (now % 8000) / 8000;
+            var scale, w;
+            if (ph < 0.5) { var f = ph / 0.5; scale = 0.72 + 0.28 * (0.5 - 0.5 * Math.cos(f * Math.PI)); w = t().breatheIn; }
+            else { var f2 = (ph - 0.5) / 0.5; scale = 1.0 - 0.28 * (0.5 - 0.5 * Math.cos(f2 * Math.PI)); w = t().breatheOut; }
+            core.style.transform = "scale(" + scale.toFixed(3) + ")";
+            if (word.textContent !== w) word.textContent = w;
+          }
+          requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      })();
+
+      /* --- 2. Hear the hymn --- */
+      $("btnHymn").addEventListener("click", function () {
+        var s = t();
+        if (AudioEngine.hymnOn) {
+          AudioEngine.stopHymn();
+          this.setAttribute("aria-pressed", "false");
+          document.querySelector('#btnHymn .a-label').textContent = s.hymn;
+          document.querySelector('#btnHymn .a-sub').textContent = s.hymnSub;
+        } else {
+          AudioEngine.startHymn();
+          this.setAttribute("aria-pressed", "true");
+          document.querySelector('#btnHymn .a-label').textContent = s.hymnStop;
+          document.querySelector('#btnHymn .a-sub').textContent = s.hymnStopSub;
+        }
+      });
+
+      /* --- 3. A verse for today --- */
+      $("btnVerse").addEventListener("click", function () {
+        var panel = $("panelVerse");
+        var show = panel.hidden;
+        panel.hidden = !show;
+        this.setAttribute("aria-pressed", show ? "true" : "false");
+        if (show) panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+
+      /* --- 4. Light a candle --- */
+      $("btnCandle").addEventListener("click", function () {
+        var panel = $("panelCandle");
+        var show = panel.hidden;
+        panel.hidden = !show;
+        this.setAttribute("aria-pressed", show ? "true" : "false");
+        if (show) { panel.scrollIntoView({ behavior: "smooth", block: "nearest" }); $("cName").focus(); }
+      });
+      function updateCharCounts() {
+        $("nameCount").textContent = $("cName").value.length + " / 24";
+        $("lineCount").textContent = $("cLine").value.length + " / 80";
+      }
+      $("cName").addEventListener("input", updateCharCounts);
+      $("cLine").addEventListener("input", updateCharCounts);
+
+      $("candleForm").addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        var s = t();
+        var name = $("cName").value.trim().slice(0, 24);
+        var line = $("cLine").value.trim().slice(0, 80);
+        var note = $("formNote");
+        note.className = "form-note";
+        if (!name || !line) { note.textContent = s.needBoth; return; }
+        if (isBlocked(name) || isBlocked(line)) { note.textContent = s.filterMsg; return; }
+        var btn = $("candleSubmit");
+        btn.disabled = true;
+        postCandle(name, line).then(function () {
+          note.className = "form-note ok";
+          note.textContent = s.thanks;
+          $("cName").value = ""; $("cLine").value = "";
+          updateCharCounts();
+          btn.disabled = false;
+          refreshStore();
+        }).catch(function () {
+          note.textContent = s.resting;
+          btn.disabled = false;
+        });
+      });
+
+      $("readClose").addEventListener("click", function () { $("panelRead").hidden = true; });
+
+      /* ================= Boot ================= */
+      applyLang();
+      bootScene();
+      refreshStore();
+</script>
+  </body>
+</html>
